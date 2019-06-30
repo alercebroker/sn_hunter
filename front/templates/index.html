@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{url_for('static', filename='img/logos/icon.png')}}">
+
+    <title>ALeRCE SNe Hunter</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{url_for('static',filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> -->
+    <link href="{{url_for('static',filename='vendor/d3-celestial/celestial.css')}}" rel="stylesheet">
+
+    <style media="screen">
+      .auto-adjust{
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container-fullwidth" >
+      <!-- Image and text -->
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="{{url_for('static',filename='img/logos/footerAlerce.png')}}" width="30" height="30" class="d-inline-block align-top" alt="">
+           ALeRCE SNe Hunter
+        </a>
+      </nav>
+
+      <div class="col-md-3 offset-md-5" id="loading" style="padding-top: 10%;">
+        <div class="spinner-border " role="status">
+          <span class="sr-only">Loading...</span>
+        </div> <span style=" font-weight: bold; font-size:30px;">Loading...</span>
+      </div>
+
+      <div id="results"  class="d-none">
+        <div class="row">
+          <div class="auto-adjust col-md-7">
+            <div style="overflow:hidden;">
+              <div style="overflow:hidden;"><div id="celestial-map"></div></div>
+              <div id="celestial-form"></div>
+            <p class="text-center">Smaller circles means lower probability</p>
+            </div>
+
+          </div> <!-- col-md-8-->
+          <div class="col-md-5">
+            <h5 class="text-center">Top 100 SNe Candidates</h5>
+            <table id="sneCandidates" class="table table-striped table-bordered" style="height:100%">
+              <thead>
+                <tr>
+                    <th>ObjectID</th>
+                    <th>RA</th>
+                    <th>Dec</th>
+                    <th>Prob</th>
+                </tr>
+            </thead>
+            </table>
+          </div> <!-- col-md-4-->
+
+
+        </div> <!--row-->
+      </div>
+    </div> <!-- /container -->
+    <!-- Footer -->
+    <footer class="page-footer font-small blue">
+
+
+    </footer>
+    <!-- Footer -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static',filename='vendor/jquery/js/jquery-3.4.1.min.js')}}"><\/script>')</script>
+    <script src="{{url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{url_for('static',filename='vendor/d3-celestial/lib/d3.min.js')}}"></script>
+    <script src="{{url_for('static',filename='vendor/d3-celestial/lib/d3.geo.projection.min.js')}}"></script>
+    <script src="{{url_for('static',filename='vendor/d3-celestial/celestial.js')}}"></script>
+
+
+    <script type="text/javascript">
+    $(document).ready( function () {
+        function dateToJD(date) {
+            var mjulianDate = date / 86400000 + 40588;
+            return mjulianDate;
+        }
+        Date.prototype.subsDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() - days);
+            return date;
+        }
+
+        var date = new Date($.now());
+
+        var now_mjd = dateToJD(date);
+        var last_mjd = dateToJD(date.subsDays(7));
+        var points = new Array();
+
+        var table = $('#sneCandidates').DataTable({
+          "order": [[ 3, "desc" ]],
+          "searching": true, "info": false,"lengthChange":false,
+          "ajax": {
+            "url": "http://alerce.xyz:8085/query",
+            "contentType": "application/json",
+            "type": "POST",
+            "data": function(d){
+              return JSON.stringify(
+                {"records_per_pages":100,
+                 "query_parameters":
+                    {"filters":
+                      {"classearly": 2},
+                    "dates":
+                      {"firstmjd":
+                        {"min":last_mjd,"max":now_mjd}
+                      }},
+                 "sortBy": "pclassearly",
+                 "total":100
+               })
+              },
+              "dataSrc": function(json){
+                  var data = new Array();
+
+                  $.each(json["result"],function(key,value){
+                    url_object = '<a href="http://alerce.xyz/vue/object/'+key+'" target="_blank">'+key+'</a>'
+                    ra =value["meanra"].toFixed(3);
+                    dec =value["meandec"].toFixed(3);
+                    prob = value["pclassearly"].toFixed(3);
+                    data.push([url_object,ra,dec,prob]);
+                    points.push({
+                       "type":"Feature",
+                       "id":key,
+                       "properties": {
+                         // Name
+                         "name":key,
+                         "type":"snr",
+                         // magnitude, dimension in arcseconds or any other size criterion
+                         //"mag": 10,
+                         //"dim": 30
+                         "prob": value["pclassearly"]
+                       }, "geometry":{
+                         // the location of the object as a [ra, dec] array in degrees [-180..180, -90..90]
+                         "type":"Point",
+                         "coordinates": [value["meanra"],value["meandec"]]
+                       }
+                     });
+                  });
+
+
+
+                      var config = {
+                         datapath: "{{url_for('static',filename='vendor/d3-celestial/data')}}",
+                         planets:  { show: false },
+                         stars: {show: false},
+                         dsos: {show:false, limit:30},
+                         constellations: {show:false},
+                         transform: "equatorial",
+                         // projection: "equirectangular"
+                      }
+
+                      var jsonSN = {
+                        "type":"FeatureCollection",
+                        // this is an array, add as many objects as you want
+                        "features": points
+                        };
+
+                        var pointStyle = {
+                              stroke: "#f0f",
+                              width: 3,
+                              fill: "rgba(255, 204, 255, 0.8)"
+                            };
+                        var textStyle = {
+                              font: "bold 15px Helvetica, Arial, sans-serif",
+                              align: "left",
+                              baseline: "bottom"
+                            };
+
+
+
+                      Celestial.add({type:"raw",
+                                    callback: function(error, json) {
+                                      if (error) return console.warn(error);
+                                      // Load the geoJSON file and transform to correct coordinate system, if necessary
+                                      var dsn = Celestial.getData(jsonSN, config.transform);
+
+                                      // Add to celestial objects container in d3
+                                      Celestial.container.selectAll(".snrs")
+                                        .data(dsn.features)
+                                        .enter().append("path")
+                                        .attr("class", "snr");
+                                      // Trigger redraw to display changes
+                                      Celestial.redraw();
+                                    },
+                                    redraw: function() {
+                                        // Select the added objects by class name as given previously
+                                        Celestial.container.selectAll(".snr").each(function(d) {
+                                          // If point is visible (this doesn't work automatically for points)
+                                          if (Celestial.clip(d.geometry.coordinates)) {
+                                            // get point coordinates
+                                            var pt = Celestial.mapProjection(d.geometry.coordinates);
+                                            // object radius in pixel, could be varable depending on e.g. dimension or magnitude
+                                            var r = 5*Math.pow(d.properties.prob,32); // replace 20 with dimmest magnitude in the data
+
+                                            // draw on canvas
+                                            //  Set object styles fill color, line color & width etc.
+                                            Celestial.setStyle(pointStyle);
+                                            // Start the drawing path
+                                            Celestial.context.beginPath();
+                                            // Thats a circle in html5 canvas
+                                            Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
+                                            // Finish the drawing path
+                                            Celestial.context.closePath();
+                                            // Draw a line along the path with the prevoiusly set stroke color and line width
+                                            Celestial.context.stroke();
+                                            // Fill the object path with the prevoiusly set fill color
+                                            Celestial.context.fill();
+
+                                            // Set text styles
+                                            Celestial.setTextStyle(textStyle);
+                                            // and draw text on canvas
+                                            Celestial.context.fillText(d.properties.name, pt[0] + r - 1, pt[1] - r + 1);
+                                          }
+                                        });
+                                      }
+                                    });
+
+                  //Showing results
+                  $("#loading").addClass('d-none');
+                  $("#results").removeClass('d-none');
+                  Celestial.display(config);
+                  return data
+                }
+              }
+            });
+
+        });
+    </script>
+
+  </body>
+</html>
