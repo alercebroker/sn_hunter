@@ -200,8 +200,15 @@
                              fill: "#ffffff",
                              opacity: 0.3
                            }
-                         }
-                         // projection: "equirectangular"
+                         },
+                          lines:{
+                              graticule: { show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines
+                          			// grid values: "outline", "center", or [lat,...] specific position
+                                lon: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"},
+                          			// grid values: "outline", "center", or [lon,...] specific position
+                          		  lat: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"}},
+                          }
+
                       }
 
                       var jsonSN = {
@@ -311,7 +318,7 @@
                 if(zoomed){
                   anim.push({param:"zoom", value:0.8, duration:1});
                 }
-                anim.push({param:"center", value:pt, duration:2500, callback:showSNe(ra,dec,oid)});
+                anim.push({param:"center", value:pt, duration:250});
                 anim.push({param:"zoom", value:5, duration:1});
 
                 Celestial.animate(anim, false);
