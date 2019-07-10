@@ -412,7 +412,6 @@
                 df = rawData[oid];
                 $.post("http://ztf.alerce.online/get_detections", JSON.stringify({"oid":oid}), function(data){
                     alerts = data["result"]["detections"];
-                    console.log(alerts);
                     if(alerts.length > 1){
                       var firstmjd = 1/0;
                       var first_alert;
@@ -442,7 +441,6 @@
                     $("#band").html(band);
                     mag = Math.round(selected["magpsf_corr"]*100)/100;
                     err = Math.round(selected["sigmapsf_corr"]*100)/100;
-                    console.log(selected);
                     $("#mag").html(mag);
                     $("#err").html(err);
                     mjd = Math.round(selected["mjd"]*100)/100
