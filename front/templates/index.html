@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"> -->
     <link href="{{url_for('static',filename='vendor/d3-celestial/celestial.css')}}" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style media="screen">
       .auto-adjust{
         margin-top: auto;
@@ -34,63 +34,133 @@
     </nav>
 
     <div class="container-fluid" >
-      <!-- Image and text -->
-
-      <!-- <div class="col-sm-3 offset-sm-5" id="loading" style="padding-top: 10%;">
-        <div class="spinner-border " role="status">
-          <span class="sr-only">Loading...</span>
-        </div> <span style=" font-weight: bold; font-size:30px;">Loading...</span>
-      </div> -->
-
-      <!-- <div id="results"  class="d-none"> -->
-      <div id="results">
-          <div class="row">
-            <div class="col-md-12">
-              <h5 class="text-center">Top 100 SNe Candidates</h5> <hr style="margin:0 0 0 0">
-              <p class="text-center">Click row for more information. </p>
-            </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h5 class="text-center">Top 100 SNe Candidates</h5> <hr style="margin:0 0 0 0">
+            <p class="text-center">Click row for more information. </p>
           </div>
-          <div class="row">
-            <div class="auto-adjust col-md-7">
-              <div style="overflow:hidden;">
-                <div style="overflow:hidden;">
-                  <div id="celestial-map">
+        </div>
+
+        <div class="row d-none" id="moreInfo">
+          <div id="accordion" class="col-md-12">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                   <i id="collapseIcon" class="material-icons" style="font-size:15px; vertical-align: middle;">keyboard_arrow_down</i> <span id="collapseText">Hide</span>
+                </button>
+              </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">
+                <div class="row">
+                  <div class=" text-center col-md-6">
+                    <!-- <h4 class="text-center"> Alerts Data</h4> -->
+                    <h4 class="text-center" id="oid"></h4><hr>
+
+                      <div class="row">
+                        <div class="text-center col-md-8">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">explore</i> Position: <span id="position"></span>
+                        </div>
+                        <div class="text-center col-md-4">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">filter_frames</i>  Band:<span id="band"></span>
+                        </div>
+                      </div> <!--position - band -->
+                      <hr>
+                      <div class="row">
+                        <div class="text-center col-md-8">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">star</i> Magnitude: <span id="mag"></span> (<span id="err"></span>)
+                        </div>
+                        <div class="text-center col-md-4">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">date_range</i> MJD: <span id="mjd"></span>
+                        </div>
+                    </div><!-- mag - err -->
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <a id="alerce" target="_blank" class="btn btn-success"><span class="font-weight-bold">ALeRCE</span></a>
+                        <!-- <a id="ned" target="_blank" class="btn btn-primary"><span class="font-weight-bold">NED</span></a> -->
+                        <a id="tns" target="_blank" class="btn btn-warning"><span class="font-weight-bold">TNS</span></a>
+                        <a id="simbad" target="_blank" class="btn btn-light"><span class="font-weight-bold">SIMBAD</span></a>
+                      </div>
+                    </div><!-- links -->
+
+
+
+                  </div>
+                  <div class="col-md-6">
+                    <!-- <h4 class="text-center">Stamps</h4> -->
+                    <div class="row">
+                      <div class="text-center  col-sm-4">
+                        <p>Template</p>
+                        <img src="http://placekitten.com/150/150" id="templateStamp" alt="Science Stamp" class="img-fluid img-thumbnail" style="width:150px; height:150px;">
+                      </div>
+                      <div class="text-center  col-sm-4">
+                        <p>Science</p>
+                        <img src="http://placekitten.com/150/150" id="scienceStamp" alt="Science Stamp" class="img-fluid img-thumbnail" style="width:150px; height:150px;">
+                      </div>
+                      <div class="text-center col-sm-4">
+                        <p>Difference</p>
+                        <img src="http://placekitten.com/150/150" id="differenceStamp" alt="Science Stamp" class="img-fluid img-thumbnail" style="width:150px; height:150px;">
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div id="celestial-form"></div>
-                <p class="text-center">Smaller circles means lower probability</p>
-              </div>
 
-            </div> <!-- col-md-8-->
-            <div class="col-md-5">
-              <div class="row">
-                <div class="col-md-6">
-                  <select id="timePicker" class="browser-default custom-select">
-                    <option selected value="2">Last 48 Hours</option>
-                    <option value="3">Last 72 Hours</option>
-                    <option value="7">Last Week</option>
-                  </select>
+
                 </div>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Search" id="searchDataTable">
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        </div>
+
+        <div class="row">
+          <div class="auto-adjust col-md-7">
+            <div style="overflow:hidden;">
+              <div style="overflow:hidden;">
+                <div id="celestial-map">
                 </div>
               </div>
-              <table id="sneCandidates" class="table table-hover table-bordered" style="height:100%">
-                <thead>
-                  <tr>
-                      <th>ObjectID</th>
-                      <th>RA</th>
-                      <th>Dec</th>
-                      <th>Prob</th>
-                      <th></th>
-                  </tr>
-              </thead>
-              <tbody>
-              </tbody>
-              </table>
-            </div> <!-- col-md-4-->
-          </div>
-      </div>
+              <div id="celestial-form"></div>
+              <p class="text-center">Smaller circles means lower probability</p>
+            </div>
+
+          </div> <!-- col-md-8-->
+          <div class="col-md-5">
+            <div class="row">
+              <div class="col-md-6">
+                <select id="timePicker" class="browser-default custom-select">
+                  <option selected value="2">Last 48 Hours</option>
+                  <option value="3">Last 72 Hours</option>
+                  <option value="7">Last Week</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Search" id="searchDataTable">
+              </div>
+            </div>
+            <table id="sneCandidates" class="table table-hover table-bordered" style="height:100%">
+              <thead>
+                <tr>
+                    <th>ObjectID</th>
+                    <th>Discovery Date</th>
+                    <th>Prob</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            </table>
+            <p class="text-center">Click a row for more information</p>
+          </div> <!-- col-md-4-->
+        </div>
+
+
     </div> <!-- /container -->
     <!-- Footer -->
     <footer class="page-footer font-small blue">
@@ -113,45 +183,54 @@
     <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.geo.projection.v0.min.js"></script>
     <script type="text/javascript" src="https://ofrohn.github.io/celestial.min.js"></script>
-
+    <script type="text/javascript" src="http://cdn.datatables.net/plug-ins/1.10.15/dataRender/datetime.js"></script>
     <script type="text/javascript">
 
-                var config = {
-                   datapath: "{{url_for('static',filename='vendor/d3-celestial/data')}}",
-                   planets:  { show: false },
-                   stars: {show: false},
-                   dsos: {show:false, limit:30},
-                   constellations: {show:false},
-                   transform: "equatorial",
-                   background:{
-                    fill: "#8778d2",
-                    opacity:1
-                    },
-                   mw:{
-                     show:true,
-                     style:{
-                       fill: "#ffffff",
-                       opacity: 0.3
-                     }
-                   },
-                    lines:{
-                        graticule: { show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines
-                          // grid values: "outline", "center", or [lat,...] specific position
-                          lon: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"},
-                          // grid values: "outline", "center", or [lon,...] specific position
-                          lat: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"}},
-                    }
+    var config = {
+       datapath: "{{url_for('static',filename='vendor/d3-celestial/data')}}",
+       planets:  { show: false },
+       stars: {show: false},
+       dsos: {show:false, limit:30},
+       constellations: {show:false},
+       transform: "equatorial",
+       background:{
+        fill: "#8778d2",
+        opacity:1
+        },
+       mw:{
+         show:true,
+         style:{
+           fill: "#ffffff",
+           opacity: 0.3
+         }
+       },
+        lines:{
+            graticule: { show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines
+              // grid values: "outline", "center", or [lat,...] specific position
+              lon: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"},
+              // grid values: "outline", "center", or [lon,...] specific position
+              lat: {pos: ["center"], fill: "#eee", font: "10px Helvetica, Arial, sans-serif"}},
+        }
 
-                }
+    }
+
+    function pad (str, max) {
+      str = str.toString();
+      return str.length < max ? pad("0" + str, max) : str;
+    }
 
     Date.prototype.subsDays = function(days) {
-      var date = new Date(this.valueOf());
+      var date = new Date();
       date.setDate(date.getDate() - days);
       return date;
     }
     function dateToJD(date) {
         var mjulianDate = date / 86400000 + 40588;
         return mjulianDate;
+    }
+    function jdToDate(jd){
+      var date = (jd - 40588) * 86400000;
+      return new Date(date)
     }
 
     function renderData(){
@@ -165,7 +244,7 @@
         Celestial.clear();
 
         $.each(data_table,function(index,value){
-          var oid = value[0], prob=value[3], ra=value[5], dec=value[6];
+          var oid = value[0], prob=value[2], ra=value[4], dec=value[5];
 
           points.push({
              "type":"Feature",
@@ -227,7 +306,7 @@
                                   // get point coordinates
                                   var pt = Celestial.mapProjection(d.geometry.coordinates);
                                   // object radius in pixel, could be varable depending on e.g. dimension or magnitude
-                                  var r = 5*Math.pow(d.properties.prob,32); // replace 20 with dimmest magnitude in the data
+                                  var r = 5*Math.pow(d.properties.prob,8); // replace 20 with dimmest magnitude in the data
 
                                   // draw on canvas
                                   //  Set object styles fill color, line color & width etc.
@@ -257,11 +336,12 @@
 
     $(document).ready( function () {
             var date = new Date($.now());
+            var rawData = new Object();
             var delta = 2;
             $('#sneCandidates').DataTable({
               "pageLength": 6,
               "dom":"t,p,r",
-              "order": [[ 3, "desc" ]],
+              "order": [[ 2, "desc" ]],
               "responsive": true,
               "searching": true, "info": false,"lengthChange":false,
               'processing': true,
@@ -275,7 +355,7 @@
                 "type": "POST",
                 "columnDefs": [
                   {
-                    "targets": [ 4,5],
+                    "targets": [ 3,4,5],
                     "visible": false,
                     "searchable": false
                   }],
@@ -301,12 +381,13 @@
                   var data = new Array();
 
                   $.each(json["result"],function(key,value){
+                    rawData[key] = value;
                     url_object = '<a href="http://alerce.xyz/vue/object/'+key+'" target="_blank">More</a>'
-                    ra =value["meanra"].toFixed(3);
-                    dec =value["meandec"].toFixed(3);
                     prob = value["pclassearly"].toFixed(3);
-
-                    data.push([key,ra,dec,prob,url_object,value["meanra"],value["meandec"]]);
+                    mjd = value["firstmjd"];
+                    date = jdToDate(mjd);
+                    dateStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
+                    data.push([key,dateStr,prob,url_object,value["meanra"],value["meandec"]]);
                   });
                   return data
                 }
@@ -326,15 +407,67 @@
                 $(this).attr("class","table-active")
                 var anim = Array();
                 var data = $("#sneCandidates").DataTable().row(this).data();
-                var ra = data[5],
-                    dec = data[6],
+                var ra = data[4],
+                    dec = data[5],
                     oid = data[0]
                 var pt = [ra,dec,0];//Celestial.mapProjection([ra,dec]);
+
+                df = rawData[oid];
+                $.post("http://ztf.alerce.online/get_detections", JSON.stringify({"oid":oid}), function(data){
+                    alerts = data["result"]["detections"];
+                    if(alerts.length > 1){
+                      var firstmjd = 1/0;
+                      var first_alert;
+                      $.each(alerts, function(id,value){
+                        if(firstmjd > value[mjd]){
+                          firstmjd = value[mjd];
+                          first_alert = id;
+                        }
+                      });
+                      selected = alerts[first_alert];
+                    }else{
+                      selected = alerts[0];
+                    }
+
+
+                    $("#oid").html('<a href="http://alerce.xyz/vue/object/'+selected["oid"]+'" target="_blank">'+selected["oid"]+'</a>')
+                    ra = Math.round(selected["ra"]*100)/100
+                    dec = Math.round(selected["ra"]*100)/100
+
+                    $("#position").html('<span class="font-weight-bold">RA:</span>'+ra+', <span class="font-weight-bold">DEC:</span>'+dec);
+                    filter = selected["fid"]
+                    if(filter == 2){
+                      band =' <span class="badge badge-danger">r</span>'
+                    }else{
+                      band =' <span class="badge badge-success">g</span>'
+                    }
+                    $("#band").html(band);
+                    mag = Math.round(selected["magpsf_corr"]*100)/100;
+                    err = Math.round(selected["sigmapsf_corr"]*100)/100;
+                    console.log(selected);
+                    $("#mag").html(mag);
+                    $("#err").html(err);
+                    mjd = Math.round(selected["mjd"]*100)/100
+                    $("#mjd").html(mjd);
+
+                    $("#alerce").attr("href",'http://alerce.xyz/vue/object/'+selected["oid"]);
+                    $("#tns").attr("href",'https://wis-tns.weizmann.ac.il/search?ra='+selected["ra"]+'&decl='+selected["dec"]+'&radius=5&coords_unit=arcsec');
+                    // $("#ned").attr("href",'http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon='+selected["ra"]+'&lat='+selected["dec"]+'&radius=0.08&search_type=Near+Position+Search');
+                    $("#simbad").attr("href",'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+selected["ra"]+"%20"+selected["dec"]+'&Radius=0.08');
+                    base = "http://avro.alerce.online/get_stamp?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
+                    $("#scienceStamp").attr("src", base+"science");
+                    $("#templateStamp").attr("src", base+"template");
+                    $("#differenceStamp").attr("src", base+"difference");
+                    $("#moreInfo").removeClass("d-none");
+
+                });
+
+
 
                 if(zoomed){
                   anim.push({param:"zoom", value:0.8, duration:1});
                 }
-                anim.push({param:"center", value:pt, duration:2500});
+                anim.push({param:"center", value:pt, duration:250});
                 anim.push({param:"zoom", value:5, duration:1});
 
                 Celestial.animate(anim, false);
@@ -353,6 +486,16 @@
             $('#searchDataTable').keyup(function(){
                   $("#sneCandidates").DataTable().search($(this).val()).draw() ;
             })
+
+            $("#collapseOne").on("hidden.bs.collapse", function(e){
+              $("#collapseText").text("Show")
+              $("#collapseIcon").text("keyboard_arrow_right")
+            });
+
+            $("#collapseOne").on("show.bs.collapse", function(e){
+              $("#collapseText").text("Hide")
+              $("#collapseIcon").text("keyboard_arrow_down")
+            });
         });
 
     </script>
