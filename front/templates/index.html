@@ -383,7 +383,7 @@
                     prob = value["pclassearly"].toFixed(3);
                     mjd = value["firstmjd"];
                     date = jdToDate(mjd);
-                    dateStr = date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
+                    dateStr = (date.getDate()+1) + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
                     data.push([key,dateStr,prob,url_object,value["meanra"],value["meandec"]]);
                   });
                   return data
