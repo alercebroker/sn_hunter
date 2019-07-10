@@ -55,32 +55,29 @@
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="card-body">
                 <div class="row">
-                  <div class=" text-center col-md-6">
+                  <div class=" text-center col-md-7">
                     <!-- <h4 class="text-center"> Alerts Data</h4> -->
                     <h4 class="text-center" id="oid"></h4><hr>
 
                       <div class="row">
-                        <div class="text-center col-md-8">
-                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">explore</i> Position: <span id="position"></span>
-                        </div>
                         <div class="text-center col-md-4">
-                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">filter_frames</i>  Band:<span id="band"></span>
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">explore</i><span id="position"></span>
                         </div>
-                      </div> <!--position - band -->
-                      <hr>
-                      <div class="row">
-                        <div class="text-center col-md-8">
-                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">star</i> Magnitude: <span id="mag"></span> (<span id="err"></span>)
+                        <div class="text-center col-md-2">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">filter_frames</i>Band:<span id="band"></span>
                         </div>
-                        <div class="text-center col-md-4">
+                        <div class="text-center col-md-3">
+                          <i class="material-icons"  style="font-size:15px; vertical-align: middle;">star</i> Mag: <span id="mag"></span> (<span id="err"></span>)
+                        </div>
+                        <div class="text-center col-md-3">
                           <i class="material-icons"  style="font-size:15px; vertical-align: middle;">date_range</i> MJD: <span id="mjd"></span>
                         </div>
-                    </div><!-- mag - err -->
+                      </div> <!--position - band -->
                     <hr>
                     <div class="row">
                       <div class="col-md-12 text-center">
                         <a id="alerce" target="_blank" class="btn btn-success"><span class="font-weight-bold">ALeRCE</span></a>
-                        <!-- <a id="ned" target="_blank" class="btn btn-primary"><span class="font-weight-bold">NED</span></a> -->
+                        <a id="ned" target="_blank" class="btn btn-primary"><span class="font-weight-bold">NED</span></a>
                         <a id="tns" target="_blank" class="btn btn-warning"><span class="font-weight-bold">TNS</span></a>
                         <a id="simbad" target="_blank" class="btn btn-light"><span class="font-weight-bold">SIMBAD</span></a>
                       </div>
@@ -89,7 +86,7 @@
 
 
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-5">
                     <!-- <h4 class="text-center">Stamps</h4> -->
                     <div class="row">
                       <div class="text-center  col-sm-4">
@@ -449,15 +446,10 @@
                     $("#err").html(err);
                     mjd = Math.round(selected["mjd"]*100)/100
                     $("#mjd").html(mjd);
-                    if(selected["sigmara"] > selected["sigmadec"]){
-                      rad = selected["sigmara"]
-                    }else{
-                      rad = selected["sigmadec"]
-                    }
                     $("#alerce").attr("href",'http://alerce.xyz/vue/object/'+selected["oid"]);
-                    $("#tns").attr("href",'https://wis-tns.weizmann.ac.il/search?ra='+selected["ra"]+'&decl='+selected["dec"]+'&radius='+rad+'&coords_unit=deg');
-                    // $("#ned").attr("href",'http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon='+selected["ra"]+'&lat='+selected["dec"]+'&radius=0.08&search_type=Near+Position+Search');
-                    $("#simbad").attr("href",'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+selected["ra"]+"%20"+selected["dec"]+'&Radius.unit=deg&Radius='+rad);
+                    $("#tns").attr("href",'https://wis-tns.weizmann.ac.il/search?ra='+selected["ra"]+'&decl='+selected["dec"]+'&radius=10&coords_unit=arcsec');
+                    $("#ned").attr("href",'http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon='+selected["ra"]+'d&lat='+selected["dec"]+'&radius=0.16&search_type=Near+Position+Search');
+                    $("#simbad").attr("href",'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+selected["ra"]+"%20"+selected["dec"]+'&Radius.unit=arcsec&Radius=10');
                     base = "http://avro.alerce.online/get_stamp?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
                     $("#scienceStamp").attr("src", base+"science");
                     $("#templateStamp").attr("src", base+"template");
@@ -468,11 +460,7 @@
 
 
 
-                if(zoomed){
-                  anim.push({param:"zoom", value:0.8, duration:1});
-                }
                 anim.push({param:"center", value:pt, duration:250});
-                anim.push({param:"zoom", value:5, duration:1});
 
                 Celestial.animate(anim, false);
 
