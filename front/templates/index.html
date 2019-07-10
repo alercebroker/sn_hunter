@@ -439,8 +439,8 @@
                       band =' <span class="badge badge-success">g</span>'
                     }
                     $("#band").html(band);
-                    mag = Math.round(selected["magpsf_corr"]*100)/100;
-                    err = Math.round(selected["sigmapsf_corr"]*100)/100;
+                    mag = Math.round(selected["magpsf"]*100)/100;
+                    err = Math.round(selected["sigmapsf"]*100)/100;
                     $("#mag").html(mag);
                     $("#err").html(err);
                     mjd = Math.round(selected["mjd"]*100)/100
