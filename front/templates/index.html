@@ -412,12 +412,13 @@
                 df = rawData[oid];
                 $.post("http://ztf.alerce.online/get_detections", JSON.stringify({"oid":oid}), function(data){
                     alerts = data["result"]["detections"];
+                    console.log(alerts);
                     if(alerts.length > 1){
                       var firstmjd = 1/0;
                       var first_alert;
                       $.each(alerts, function(id,value){
-                        if(firstmjd > value[mjd]){
-                          firstmjd = value[mjd];
+                        if(firstmjd > value["mjd"]){
+                          firstmjd = value["mjd"];
                           first_alert = id;
                         }
                       });
