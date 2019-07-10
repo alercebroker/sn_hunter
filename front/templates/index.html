@@ -449,11 +449,15 @@
                     $("#err").html(err);
                     mjd = Math.round(selected["mjd"]*100)/100
                     $("#mjd").html(mjd);
-
+                    if(selected["sigmara"] > selected["sigmadec"]){
+                      rad = selected["sigmara"]
+                    }else{
+                      rad = selected["sigmadec"]
+                    }
                     $("#alerce").attr("href",'http://alerce.xyz/vue/object/'+selected["oid"]);
-                    $("#tns").attr("href",'https://wis-tns.weizmann.ac.il/search?ra='+selected["ra"]+'&decl='+selected["dec"]+'&radius=5&coords_unit=arcsec');
+                    $("#tns").attr("href",'https://wis-tns.weizmann.ac.il/search?ra='+selected["ra"]+'&decl='+selected["dec"]+'&radius='+rad+'&coords_unit=deg');
                     // $("#ned").attr("href",'http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon='+selected["ra"]+'&lat='+selected["dec"]+'&radius=0.08&search_type=Near+Position+Search');
-                    $("#simbad").attr("href",'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+selected["ra"]+"%20"+selected["dec"]+'&Radius=0.08');
+                    $("#simbad").attr("href",'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+selected["ra"]+"%20"+selected["dec"]+'&Radius.unit=deg&Radius='+rad);
                     base = "http://avro.alerce.online/get_stamp?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
                     $("#scienceStamp").attr("src", base+"science");
                     $("#templateStamp").attr("src", base+"template");
