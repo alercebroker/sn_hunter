@@ -141,18 +141,21 @@
           </div> <!-- col-md-8-->
           <div class="col-md-5">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-sm-1">
+                <button type="button" id="reload" style="padding: 2px 2px 2px 2px;"  class="btn btn-light"> <i class="material-icons" style="padding-bottom: 0px; padding-top:5px; padding-left:5px; padding-right:5px;">cached</i>  </button>
+              </div>
+              <div class="col-sm-5">
                 <select id="timePicker" class="browser-default custom-select">
                   <option selected value="2">Last 48 Hours</option>
                   <option value="3">Last 72 Hours</option>
                   <option value="7">Last Week</option>
                 </select>
               </div>
-              <div class="col-md-6">
+              <div class="col-sm-6">
                 <input type="text" class="form-control" placeholder="Search" id="searchDataTable">
               </div>
             </div>
-            <table id="sneCandidates" class="table table-hover table-bordered" style="height:100%">
+            <table id="sneCandidates" class="table table-hover table-bordered" style="margin-top: 10px;">
               <thead>
                 <tr>
                     <th>ObjectID</th>
@@ -348,7 +351,7 @@
             $('#sneCandidates').DataTable({
               "pageLength": 6,
               "dom":"t,p,r",
-              "order": [[ 2, "desc" ]],
+              "order": [[ 2, "desc" ],[1,"desc"]],
               "responsive": true,
               "searching": true, "info": false,"lengthChange":false,
               'processing': true,
@@ -476,10 +479,15 @@
               }
             },'tr');
 
+            $("#reload").on("click", function(){
+              $("#sneCandidates").DataTable().clear().draw();
+              $("#sneCandidates").DataTable().ajax.reload();
+            });
+
             $("#timePicker").on("change", function(){
               var days = $( "#timePicker option:selected" ).val();
               delta = days;
-
+              $("#sneCandidates").DataTable().clear().draw();
               $("#sneCandidates").DataTable().ajax.reload(function(){
                 renderData();
               });
