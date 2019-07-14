@@ -1,6 +1,6 @@
 <template>
-  <!-- <v-expansion-panel v-model="panel" id="moreInfoPanel" class="d-none"> -->
-  <v-expansion-panel v-model="panel">
+  <v-expansion-panel v-model="panel" id="moreInfoPanel" class="d-none">
+  <!-- <v-expansion-panel v-model="panel"> -->
     <v-expansion-panel-content >
       <template v-slot:header>
         <div>SNe Candidate Info</div>
@@ -161,6 +161,7 @@
       this.$store.subscribe((mutations,state) => {
         switch (mutations.type) {
           case "SELECT_CANDIDATE":
+            $("#moreInfoPanel").removeClass("d-none");
             this.panel = 0;
           break;
         }
