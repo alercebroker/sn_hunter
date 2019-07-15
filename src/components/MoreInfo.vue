@@ -15,7 +15,7 @@
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">
-                  <v-icon class="infoIcon">explore</v-icon> <span class="font-weight-bold"> RA:</span> {{ra}}, <span class="font-weight-bold"> DEC:</span> {{dec}}
+                  <v-icon class="infoIcon">explore</v-icon> <span class="font-weight-bold"> RA:</span> {{ra}}, </br> <span class="font-weight-bold" style="margin-left:12px;"> DEC:</span> {{dec}}
                 </v-flex>
                 <v-flex xs2 full-width class="text-xs-center">
                   <v-icon class="infoIcon">filter_frames</v-icon> <span class="font-weight-bold"> Band: </span>
@@ -107,10 +107,10 @@
         return "http://alerce.xyz/vue/object/"+this.oid;
       },
       ra(){
-        return this.$store.getters.getAlert ? Math.round(this.$store.getters.getAlert.ra*1000)/1000 : "-";
+        return this.$store.getters.getAlert ? this.$store.getters.getAlert.ra : "-";
       },
       dec(){
-        return this.$store.getters.getAlert ? Math.round(this.$store.getters.getAlert.dec*1000)/1000 : "-";
+        return this.$store.getters.getAlert ? this.$store.getters.getAlert.dec : "-";
       },
       band(){
         var alert = this.$store.getters.getAlert;
