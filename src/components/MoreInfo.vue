@@ -39,7 +39,7 @@
                     </v-avatar>
                   </div>
                  </v-flex>
-                 <v-flex xs6 full-width class="text-xs-center">
+                 <v-flex xs5 full-width class="text-xs-center">
                    <v-layout column>
                      <v-flex xs6>
                        <v-icon class="infoIcon">star</v-icon> <span class="font-weight-bold"> Mag:</span> {{mag}}
