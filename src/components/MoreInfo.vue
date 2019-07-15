@@ -9,26 +9,45 @@
         <v-card-text>
           <v-layout row wrap>
             <v-flex md7>
-              <h1 class="text-md-center" >
+              <h1 class="text-xs-center" >
                 <a :href="oidUrl" target="_blank">{{oid}}</a>
               </h1>
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">
-                  <v-icon class="infoIcon">explore</v-icon> <span class="font-weight-bold"> RA:</span> {{ra}}, </br> <span class="font-weight-bold" style="margin-left:12px;"> DEC:</span> {{dec}}
+                  <v-layout row wrap>
+                      <v-flex xs12>
+                      </v-flex>
+                      <v-flex xs12>
+                        <v-layout column>
+                          <v-flex xs6>
+                            <span class="font-weight-bold"> RA:</span> {{ra}},
+                          </v-flex>
+                          <v-flex xs6>
+                            <span class="font-weight-bold"> DEC:</span> {{dec}}
+                          </v-flex>
+                        </v-layout>
+                    </v-flex>
+                  </v-layout>
+
                 </v-flex>
                 <v-flex xs2 full-width class="text-xs-center">
-                  <v-icon class="infoIcon">filter_frames</v-icon> <span class="font-weight-bold"> Band: </span>
-                  <v-avatar size=25 :color="bandColor">
-                     <span class="white--text" style="font-size=20%"> {{band}}</span>
-                   </v-avatar>
+                  <div class="" style="margin-top:auto; margin-bottom:auto">
+                    <v-icon class="infoIcon">filter_frames</v-icon> <span class="font-weight-bold"> Band: </span>
+                    <v-avatar size=25 :color="bandColor">
+                      <span class="white--text" style="font-size=20%"> {{band}}</span>
+                    </v-avatar>
+                  </div>
                  </v-flex>
-                 <v-flex xs2 full-width class="text-xs-center">
-                   <v-icon class="infoIcon">star</v-icon> <span class="font-weight-bold"> Mag:</span> {{mag}}
-                 </v-flex>
-
-                <v-flex xs3 full-width class="text-xs-center">
-                    <v-icon class="infoIcon">date_range</v-icon> <span class="font-weight-bold"> MJD:</span> {{mjd}}
+                 <v-flex xs6 full-width class="text-xs-center">
+                   <v-layout column>
+                     <v-flex xs6>
+                       <v-icon class="infoIcon">star</v-icon> <span class="font-weight-bold"> Mag:</span> {{mag}}
+                     </v-flex>
+                     <v-flex xs6>
+                       <v-icon class="infoIcon">date_range</v-icon> <span class="font-weight-bold"> MJD:</span> {{mjd}}
+                     </v-flex>
+                  </v-layout>
                 </v-flex>
               </v-layout>
 
@@ -141,10 +160,10 @@
         }
       },
       mjd(){
-        return this.$store.getters.getAlert ? Math.round(this.$store.getters.getAlert.mjd*1000)/1000 : "-";
+        return this.$store.getters.getAlert ? this.$store.getters.getAlert.mjd : "-";
       },
       mag(){
-        return this.$store.getters.getAlert ? Math.round(this.$store.getters.getAlert.magpsf*1000)/1000 : "-";
+        return this.$store.getters.getAlert ? this.$store.getters.getAlert.magpsf : "-";
       },
       nedUrl(){
         return this.$store.getters.getAlert ? 'http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?lon='+this.$store.getters.getAlert.ra+'d&lat='+this.$store.getters.getAlert.dec+'&radius=0.16&search_type=Near+Position+Search' : "#";
