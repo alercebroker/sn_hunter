@@ -9,11 +9,11 @@ Date.prototype.subsDays = function(days) {
   return date;
 }
 function dateToJD(date) {
-    var mjulianDate = date / 86400000 + 40588;
+    var mjulianDate = date / 86400000 + 40587;
     return mjulianDate;
 }
 function jdToDate(jd){
-  var date = (jd - 40588) * 86400000;
+  var date = (jd - 40587) * 86400000;
   return new Date(date)
 }
 function pad (str, max) {
@@ -58,7 +58,7 @@ export default new Vuex.Store({
       $.each(payload,function(key,value){
         var mjd = value["firstmjd"];
         var date = jdToDate(mjd);
-        var dateStr = pad((date.getDate()+1),2) + '/' + pad((date.getMonth() + 1),2) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
+        var dateStr = pad((date.getDate()),2) + '/' + pad((date.getMonth() + 1),2) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
         var prob = value["pclassearly"].toFixed(3);
         var obj ={
           oid: key,
