@@ -17,10 +17,10 @@
      </v-layout>  <!-- map-table row-->
 
       <v-layout row wrap>
-        <v-flex md8 fill-height>
+        <v-flex md7 fill-height>
           <Celestial/>
         </v-flex> <!-- table -->
-        <v-flex md4 fill-height>
+        <v-flex md5 fill-height>
           <Table/>
         </v-flex> <!-- table -->
       </v-layout>  <!-- map-table row-->

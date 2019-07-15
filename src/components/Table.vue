@@ -31,6 +31,7 @@
                 <th>ObjectID</th>
                 <th>Discovery Date</th>
                 <th>Prob</th>
+                <th>#Obs</th>
               </tr>
             </thead>
             <tbody>

@@ -60,10 +60,12 @@ export default new Vuex.Store({
         var date = jdToDate(mjd);
         var dateStr = pad((date.getDate()),2) + '/' + pad((date.getMonth() + 1),2) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
         var prob = value["pclassearly"].toFixed(3);
+        var nobs = value["nobs"]
         var obj ={
           oid: key,
           discovery_date: dateStr,
-          prob: prob
+          prob: prob,
+          nobs: nobs
         }
         candidates.push(obj)
       })
@@ -147,6 +149,7 @@ export default new Vuex.Store({
           { data: "oid" },
           { data: "discovery_date" },
           { data: "prob" },
+          { data: "nobs" }
         ],
       });
       context.commit("SET_TABLE",table)
