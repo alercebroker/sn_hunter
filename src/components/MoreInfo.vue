@@ -3,12 +3,12 @@
   <!-- <v-expansion-panel v-model="panel"> -->
     <v-expansion-panel-content >
       <template v-slot:header>
-        <div>SNe Candidate Info</div>
+        <div class="subheading">SNe Candidate First Detection Information</div>
       </template>
       <v-card>
-        <v-card-text>
-          <v-layout row wrap>
-            <v-flex md7>
+        <v-card-text class="justify-center">
+          <v-layout row wrap ml-3 mr-3>
+            <v-flex md6 xs12 sm12 >
               <h1 class="text-xs-center" >
                 <a :href="oidUrl" target="_blank">{{oid}}</a>
               </h1>
@@ -17,11 +17,9 @@
                 <v-flex xs4 full-width class="text-xs-center">
                   <v-layout row wrap>
                       <v-flex xs12>
-                      </v-flex>
-                      <v-flex xs12>
                         <v-layout column>
                           <v-flex xs6>
-                            <span class="font-weight-bold"> RA:</span> {{ra}},
+                            <span class="font-weight-bold"> RA:</span> {{ra}}
                           </v-flex>
                           <v-flex xs6>
                             <span class="font-weight-bold"> DEC:</span> {{dec}}
@@ -51,8 +49,6 @@
                 </v-flex>
               </v-layout>
 
-              <v-divider></v-divider>
-
               <v-layout row wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
                   <v-btn round :href="oidUrl" target="_blank" dark>ALeRCE</v-btn>
@@ -64,22 +60,57 @@
               </v-layout>
 
             </v-flex>
-            <v-flex md5>
-              <v-layout row wrap>
+            <v-spacer></v-spacer>
+            <v-flex md6>
+              <v-layout row wrap class="justify-center">
                 <v-flex xs4 class="text-xs-center">
-                  <h5>Science</h5>
-                  <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Science
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Science is the current image from an object.</span>
+                  </v-tooltip>                     <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
                 </v-flex> <!-- table -->
                 <v-flex xs4 class="text-xs-center">
-                  <h5>Template</h5>
-                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Template
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Template is the first image from an object.</span>
+                  </v-tooltip>                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
                 </v-flex> <!-- table -->
                 <v-flex xs4 class="text-xs-center">
-                  <h5>Difference</h5>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Difference
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Difference is the change between science and template stamp.</span>
+                  </v-tooltip>
                   <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
                 </v-flex> <!-- table -->
                 <v-flex>
-                  <h4 class="text-xs-center">Discovery Stamps</h4>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h4 class="text-xs-center">Discovery Stamps
+                              <v-icon>help</v-icon>
+                            </h4>
+                          </span>
+                    </template>
+                    <span>Discovery Stamp is the first stamp retrieve for an object.</span>
+                  </v-tooltip>
                 </v-flex>
               </v-layout>
             </v-flex> <!-- table -->

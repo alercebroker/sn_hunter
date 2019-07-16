@@ -1,7 +1,7 @@
 <template>
-  <v-layout row wrap>
-      <v-flex md10 offset-md1 mt-4>
-        <h1 class="title">Frequently Asked Questions</h1>
+  <v-layout row >
+      <v-flex xs10 offset-xs1 mt-4>
+        <h1 class="display-1">Frequently Asked Questions</h1>
         <v-divider></v-divider>
         <v-expansion-panel >
           <v-expansion-panel-content>

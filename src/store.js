@@ -137,7 +137,7 @@ export default new Vuex.Store({
       var table = $("#sneCandidates").DataTable({
         "pageLength": 6,
         "dom":"t,p,r",
-        "order": [[ 2, "desc" ],[1,"desc"]],
+        "order": [[ 2, "desc" ],[3,"desc"],[1,"desc"]],
         "responsive": true,
         "searching": true, "info": false,"lengthChange":false,
         'processing': true,

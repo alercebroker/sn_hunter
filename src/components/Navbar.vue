@@ -5,10 +5,15 @@
     </v-toolbar-side-icon>
 
     <v-toolbar-title :to="{'path':'/'}" class="white--text">
-      ALeRCE SNe Hunter
+      <span class="hidden-sm-and-down">
+        ALeRCE
+      </span>
+      <span>
+        SNe Hunter
+      </span>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-<!-- 
+<!--
       <v-btn :to="{'path':'/quickstart'}">
         <v-icon class="icon">help</v-icon> Quick Start
       </v-btn> -->
