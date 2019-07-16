@@ -1,6 +1,7 @@
 <template>
   <div class="" style="margin-left:2%; margin-right:2%;">
       <h4 class="text-xs-center">Top 100 SNe Early Classified Candidates</h4>
+      <h6 class="text-xs-center">Click a candidate for more information</h6>
       <v-form >
         <v-layout>
              <v-flex xs8 >

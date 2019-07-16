@@ -1,13 +1,12 @@
 <template>
-  <div id="celestialDiv">
-    <div class="auto-adjust" id="celestial-map"></div>
-    <p class="text-md-center">Smaller circles means lower probability</p>
-    <!-- <div class="text-md-center">
-      <v-btn @click="introTour()">
-        <v-icon class="icon">help</v-icon> Quick Start
-      </v-btn> -->
-    </div>
-  </div>
+  <v-layout row wrap full-height>
+    <v-flex md10 offset-md1>
+      <div  id="celestialDiv">
+        <div id="celestial-map"></div>
+        <p class="text-xs-center">Smaller circles means lower probability</p>
+      </div>
+    </v-flex>
+  </v-layout>
 
 </template>
 
