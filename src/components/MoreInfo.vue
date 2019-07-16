@@ -96,7 +96,7 @@
                             </h5>
                           </span>
                     </template>
-                    <span>Difference is the change between science and template stamp.</span>
+                    <span>Difference is the change between science and template images.</span>
                   </v-tooltip>
                   <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
                 </v-flex> <!-- table -->
@@ -109,7 +109,7 @@
                             </h4>
                           </span>
                     </template>
-                    <span>Discovery Stamp is the first stamp retrieve for an object.</span>
+                    <span>Discovery Stamps are the first stamps retrieved for an object.</span>
                   </v-tooltip>
                 </v-flex>
               </v-layout>
