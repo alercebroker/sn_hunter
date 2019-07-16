@@ -15,7 +15,7 @@
                 side project in his spare time to help astronomers <span class="font-weight-bold"> discover new SNe in a early time </span>.
               </p>
               <p>
-                This tool uses <a href="http://alerce.science">ALeRCE</a> ZTF Database API to get SNe Early classification, and display them in a
+                This tool uses <a href="http://alerce.science">ALeRCE</a> ZTF Database API to get early classified SNe candidates, and display them in a
                 simple interface.
               </p>
             </v-card-text>
@@ -33,8 +33,8 @@
               SNe candidates.
             </p>
             <p>
-              ALeRCE Early Classification model (paper pending), uses the stamp information to create a quick classification of objects, the SNe hunter takes
-              the top 100 candidates by the model probability.
+              ALeRCE Early Classification model (paper pending) get information from the first detection to create a quick classification of objects, then SNe Hunter takes
+              the top 100 SNe candidates sorted by the model probability.
             </p>
           </v-card-text>
         </v-card>
@@ -73,8 +73,10 @@
       <v-card-text>
         <p>
           For this tool we only selected the top 100 candidates for an easier visualization on the celestial map.
+        </p>
+        <p>
           If you need to analyze more candidates please check the <a href="http://alerce.xyz">ALeRCE ZTF DB access plataform</a>.
-         </p>
+        </p>
       </v-card-text>
     </v-card>
   </v-expansion-panel-content>
@@ -86,13 +88,14 @@
   <v-card>
     <v-card-text>
       <p>
-        All help is appriciated, you can send me an <a href="mailto:camilo.valenzuel@alumnos.usm.cl">email</a> with feedback. Maybe a list of possible subjects are:
+        All help is appreciated, you can send me an <a href="mailto:camilo.valenzuel@alumnos.usm.cl">email</a> with feedback. A list of possible subjects are:
        </p>
       <ul>
         <li>Bugs in the tool</li>
         <li>Some visualization tips to improve the experience</li>
         <li>If you found a missclassified object (This is really important to improve the model accuracy).</li>
         <li>Anything you want to know about SNe Hunter or ALeRCE project.</li>
+        <li>If you are in Chile and you want to have a Coffee and talk about astronomy/tech.</li>
       </ul>
     </v-card-text>
   </v-card>
