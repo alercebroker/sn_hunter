@@ -1,4 +1,7 @@
 <template>
+  <div class="">
+
+
   <v-layout row >
       <v-flex xs10 offset-xs1 mt-4>
         <h1 class="display-1">Frequently Asked Questions</h1>
@@ -11,12 +14,7 @@
           <v-card>
             <v-card-text>
               <p>
-                <span class="font-weight-bold">SN Hunter</span> is a tool develop by <a href="http://cvalenzuela.me"> Camilo Valenzuela </a> as a
-                side project in his spare time to help astronomers <span class="font-weight-bold"> discover new SN in a early time </span>.
-              </p>
-              <p>
-                This tool uses <a href="http://alerce.science">ALeRCE</a> ZTF Database API to get early classified SN candidates, and display them in a
-                simple interface.
+                  <span class="font-weight-bold">SN Hunter</span> is a tool that uses the  <a href="http://alerce.science">ALeRCE</a> ZTF Database API to help astronomers discover very young SNe.
               </p>
             </v-card-text>
           </v-card>
@@ -28,14 +26,8 @@
         </template>
         <v-card>
           <v-card-text>
-            <p>
-              <span class="font-weight-bold">SN Hunter</span> uses the probability given by ALeRCE Early Classification model to select the most probable
-              SN candidates.
-            </p>
-            <p>
-              ALeRCE Early Classification model (paper pending) get information from the first detection to create a quick classification of objects, then SN Hunter takes
-              the top 100 SN candidates sorted by the model probability.
-            </p>
+          <p>SN Hunter uses the probability given by the ALeRCE Early Classification model to select the most probable SN candidates.</p>
+          <p>The ALeRCE Early Classification model (paper pending) classifies objects based on their first detection image. The SN Hunter takes the top 100 SN candidates sorted by model probability.</p>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -47,20 +39,11 @@
       </template>
       <v-card>
         <v-card-text>
-          <p>For ZTF a Stamp is a image taken for an specific object.
-          The process to create a stamp is the following: </p>
-          <ul>
-            <li>ZTF takes an images of a zone of the sky approximately every 1 minute.</li>
-            <li>This image is then compared to the first one ever taken (maybe it can change in every public data release).</li>
-            <li>If there is a change between the first image and the last taken, an alert is sended.    </li>
-            <li>The alert contains Three stamps:</li>
-              <ul>
-                <li>Science: Current image from the object.</li>
-                <li>Template: First image used for comparison.</li>
-                <li>Difference: Change between the current and first image.</li>
-              </ul>
-          </ul>
-          We as a Broker takes the alert with the stamps and classify it.
+          <p>A Stamp is an image taken for a given object at a given time. The process to create a stamp is the following: </p>
+          <p>ZTF takes an image of a region of the sky approximately every 1 minute, this is called the science image. This image is then compared to a template image of the same region of the sky (which may be a stack of several images).</p>
+          <p>If there is a new source in the difference image (science minus aligned and convolved template) and it is classified as real by ZTF, an alert is triggered.</p>
+          <p>The alert contains the science, template and difference images, as well as other meta data.</p>
+          <p>We as a Broker ingest alerts and classify their associated objects. We use two classifiers: an early classifier based on the first detected image and a late classifier based on the object's light curve.</p>
         </v-card-text>
       </v-card>
     </v-expansion-panel-content>
@@ -105,4 +88,21 @@
       </v-expansion-panel>
       </v-flex>
   </v-layout>
+  <v-layout row>
+    <v-flex xs10 offset-xs1 mt-4>
+      <h1 class="display-1">Credits to:</h1>
+      <v-divider></v-divider>
+
+      <v-card>
+        <v-card-text>
+          <ul>
+            <li>This tool was develop by <a href="http://cvalenzuela.me"> Camilo Valenzuela</a> for the ALeRCE broker as a side project in his spare time. </li>
+          </ul>
+        </v-card-text>
+      </v-card>
+
+    </v-flex>
+  </v-layout>
+
+  </div>
 </template>
