@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar dark color="dark">
+  <v-toolbar dark color="dark" >
     <v-toolbar-side-icon :to="{'path':'/'}"> <v-img :src="require('../assets/logos/footerAlerceWhite.png')">
     </v-img>
     </v-toolbar-side-icon>

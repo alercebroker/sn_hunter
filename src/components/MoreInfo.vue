@@ -1,7 +1,6 @@
 <template>
-  <v-expansion-panel v-model="panel" id="moreInfoPanel" class="d-none">
-  <!-- <v-expansion-panel v-model="panel"> -->
-    <v-expansion-panel-content >
+  <v-expansion-panel v-model="panel">
+    <v-expansion-panel-content id="moreInfoDiv" :disabled="expandiblePanel" >
       <template v-slot:header>
         <div class="subheading">SNe Candidate First Detection Information</div>
       </template>
@@ -61,7 +60,7 @@
 
             </v-flex>
             <v-spacer></v-spacer>
-            <v-flex md6>
+            <v-flex md6 id="StampInfo">
               <v-layout row wrap class="justify-center">
                 <v-flex xs4 class="text-xs-center">
                   <v-tooltip bottom>
@@ -204,6 +203,12 @@
       },
       simbadUrl(){
         return this.$store.getters.getAlert ? 'http://simbad.u-strasbg.fr/simbad/sim-coo?Coord='+this.$store.getters.getAlert.ra+"%20"+this.$store.getters.getAlert.dec+'&Radius.unit=arcsec&Radius=10' : "#";
+      },
+      expandiblePanel(){
+        if(this.$store.getters.getSelected){
+          return false
+        }
+        return true
       }
 
     },
@@ -211,7 +216,6 @@
       this.$store.subscribe((mutations,state) => {
         switch (mutations.type) {
           case "SELECT_CANDIDATE":
-            $("#moreInfoPanel").removeClass("d-none");
             this.panel = 0;
           break;
         }

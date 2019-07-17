@@ -177,12 +177,7 @@
         anim.push({"param":"zoom", "value":1.3, "duration":2});
 
         Celestial.animate(anim, false);
-      },
-
-      introTour(){
-        alert("Turisteando");
       }
-
     }
 
 
