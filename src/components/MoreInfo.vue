@@ -83,7 +83,7 @@
                             </h5>
                           </span>
                     </template>
-                    <span>Template is the first image from an object.</span>
+                    <span>Template is an template image of the same region of the sky (Maybe a stack of several images).</span>
                   </v-tooltip>                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
                 </v-flex> <!-- table -->
                 <v-flex xs4 class="text-xs-center">
