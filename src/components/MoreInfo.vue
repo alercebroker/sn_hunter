@@ -2,7 +2,7 @@
   <v-expansion-panel v-model="panel">
     <v-expansion-panel-content id="moreInfoDiv" :disabled="expandiblePanel" >
       <template v-slot:header>
-        <div class="subheading">SNe Candidate First Detection Information</div>
+        <div class="subheading">SN Candidate First Detection Information</div>
       </template>
       <v-card>
         <v-card-text class="justify-center">

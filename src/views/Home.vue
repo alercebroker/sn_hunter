@@ -46,7 +46,7 @@ export default {
       steps: [
           {
             target: '#sneCandidates',
-            content: 'Here are the top 100 SNe Candidates.'
+            content: 'Here are the top 100 SN Candidates.'
           },
           {
             target: '#celestialDiv',

@@ -9,7 +9,7 @@
         ALeRCE
       </span>
       <span>
-        SNe Hunter
+        SN Hunter
       </span>
     </v-toolbar-title>
     <v-spacer></v-spacer>

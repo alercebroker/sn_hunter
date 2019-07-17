@@ -6,16 +6,16 @@
         <v-expansion-panel >
           <v-expansion-panel-content>
           <template v-slot:header>
-            <div class="font-weight-bold">What is SNe Hunter?</div>
+            <div class="font-weight-bold">What is SN Hunter?</div>
           </template>
           <v-card>
             <v-card-text>
               <p>
-                <span class="font-weight-bold">SNe Hunter</span> is a tool develop by <a href="http://cvalenzuela.me"> Camilo Valenzuela </a> as a
-                side project in his spare time to help astronomers <span class="font-weight-bold"> discover new SNe in a early time </span>.
+                <span class="font-weight-bold">SN Hunter</span> is a tool develop by <a href="http://cvalenzuela.me"> Camilo Valenzuela </a> as a
+                side project in his spare time to help astronomers <span class="font-weight-bold"> discover new SN in a early time </span>.
               </p>
               <p>
-                This tool uses <a href="http://alerce.science">ALeRCE</a> ZTF Database API to get early classified SNe candidates, and display them in a
+                This tool uses <a href="http://alerce.science">ALeRCE</a> ZTF Database API to get early classified SN candidates, and display them in a
                 simple interface.
               </p>
             </v-card-text>
@@ -24,17 +24,17 @@
 
         <v-expansion-panel-content>
         <template v-slot:header>
-          <div class="font-weight-bold">How does SNe Hunter Select Candidates</div>
+          <div class="font-weight-bold">How does SN Hunter Select Candidates</div>
         </template>
         <v-card>
           <v-card-text>
             <p>
-              <span class="font-weight-bold">SNe Hunter</span> uses the probability given by ALeRCE Early Classification model to select the most probable
-              SNe candidates.
+              <span class="font-weight-bold">SN Hunter</span> uses the probability given by ALeRCE Early Classification model to select the most probable
+              SN candidates.
             </p>
             <p>
-              ALeRCE Early Classification model (paper pending) get information from the first detection to create a quick classification of objects, then SNe Hunter takes
-              the top 100 SNe candidates sorted by the model probability.
+              ALeRCE Early Classification model (paper pending) get information from the first detection to create a quick classification of objects, then SN Hunter takes
+              the top 100 SN candidates sorted by the model probability.
             </p>
           </v-card-text>
         </v-card>
@@ -94,7 +94,7 @@
         <li>Bugs in the tool</li>
         <li>Some visualization tips to improve the experience</li>
         <li>If you found a missclassified object (This is really important to improve the model accuracy).</li>
-        <li>Anything you want to know about SNe Hunter or ALeRCE project.</li>
+        <li>Anything you want to know about SN Hunter or ALeRCE project.</li>
         <li>If you are in Chile and you want to have a Coffee and talk about astronomy/tech.</li>
       </ul>
     </v-card-text>
