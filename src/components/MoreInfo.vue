@@ -7,7 +7,7 @@
       <v-card>
         <v-card-text class="justify-center">
           <v-layout row wrap ml-3 mr-3>
-            <v-flex md6 xs12 sm12 >
+            <v-flex md4 xs12 sm12 >
               <h1 class="text-xs-center" >
                 <a :href="oidUrl" target="_blank">{{oid}}</a>
               </h1>
@@ -59,8 +59,11 @@
               </v-layout>
 
             </v-flex>
+            <v-flex md4 xs12 sm12 pa-4>
+              <Aladin/>
+            </v-flex>
             <v-spacer></v-spacer>
-            <v-flex md6 id="StampInfo">
+            <v-flex md4  xs12 sm12  id="StampInfo" style="margin-top: auto; margin-bottom:auto;">
               <v-layout row wrap class="justify-center">
                 <v-flex xs4 class="text-xs-center">
                   <v-tooltip bottom>
@@ -122,12 +125,17 @@
 
 
 <script>
+  import Aladin from './Aladin'
+
   var base_url = "http://avro.alerce.online/get_stamp"
   // ?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
   export default{
+    components:{
+      Aladin
+    },
     data: function(){
       return {
-        panel: [],
+        panel: 0,
       }
     },
     computed:{

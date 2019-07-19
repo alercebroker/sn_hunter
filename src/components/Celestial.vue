@@ -43,8 +43,6 @@
 
       }
       Celestial.display(config);
-
-
       this.$store.subscribe((mutations,state) => {
         switch (mutations.type) {
           case "SET_CANDIDATES":
@@ -77,8 +75,8 @@
                                 Celestial.container.selectAll(".sn")
                                   .data(dsn.features)
                                   .enter().append("path")
-                                  .attr("class", "sn");
-                                // Trigger redraw to display changes
+                                  .attr("class", "sn")
+                                  .attr("id", function(d){d.properties.name});                                // Trigger redraw to display changes
                                 Celestial.redraw();
                               },
                               redraw: function() {
@@ -113,7 +111,6 @@
                                   });
                                 }
                               });
-
                               Celestial.display(config);
             break;
 
