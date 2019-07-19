@@ -28,9 +28,14 @@ export default new Vuex.Store({
     alertCandidate:null,
     deltaDays: null,
     zoomed: false,
-    table: null
+    table: null,
+    aladin: null
   },
   mutations: {
+    SET_ALADIN(state){
+      var aladin = state.aladin ? state.aladin : A.aladin('#aladin-lite-div', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.02, cooFrame: "J2000d"});
+      state.aladin = aladin;
+    },
     SET_CANDIDATES(state,payload){
       state.sneCandidates = payload;
     },
@@ -73,6 +78,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setAladin(context){
+      context.commit("SET_ALADIN");
+    },
     retrieveAlert(context,oid){
       var parameters = {"oid":oid}
       axios.post("http://ztf.alerce.online/get_detections",parameters).then(function(response){
@@ -173,6 +181,9 @@ export default new Vuex.Store({
     },
     getTable(state){
       return state.table;
+    },
+    getAladin(state){
+      return state.aladin;
     }
   }
 })

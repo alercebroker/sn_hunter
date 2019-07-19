@@ -59,7 +59,7 @@
               </v-layout>
 
             </v-flex>
-            <v-flex md4 xs12 sm12 pa-4>
+            <v-flex  md4 xs12 sm12 pa-4>
               <Aladin/>
             </v-flex>
             <v-spacer></v-spacer>
@@ -135,7 +135,7 @@
     },
     data: function(){
       return {
-        panel: 0,
+        panel: null,
       }
     },
     computed:{
@@ -225,6 +225,7 @@
         switch (mutations.type) {
           case "SELECT_CANDIDATE":
             this.panel = 0;
+            this.$store.dispatch("setAladin");
           break;
         }
       })

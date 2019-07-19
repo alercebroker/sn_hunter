@@ -10,15 +10,11 @@
                 aladin: null
             }
         },
-        mounted(){
-            this.aladin = A.aladin('#aladin-lite-div', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.02, cooFrame: "J2000d"});
-            if(this.coordinates.ra && this.coordinates.dec) this.aladin.gotoRaDec(this.coordinates.ra, this.coordinates.dec)
-        },
         watch:{
             coordinates(newCoord){
-                if(this.aladin)
+                if(this.$store.getters.getAladin)
                   {
-                    this.aladin.gotoRaDec(newCoord.ra, newCoord.dec)
+                    this.$store.getters.getAladin.gotoRaDec(newCoord.ra, newCoord.dec)
                   }
             }
         },
