@@ -23,8 +23,7 @@
         </v-flex> <!-- table -->
       </v-layout>  <!-- map-table row-->
 
-      <v-tour name="quickStart" :steps="steps"></v-tour>
-      {{clickStep}}
+      <v-tour name="quickStart" :action="clickStep" :steps="steps"></v-tour>
     </v-container> <!-- contianer -->
   </v-app>
 </template>
@@ -90,7 +89,7 @@ export default {
     },
     clickStep: function(){
       if(this.tours){
-        if(this.$tours['quickStart'].currentStep == 7){
+        if(this.$tours['quickStart'].currentStep == 6){
           this.clickRow()
         }
       }

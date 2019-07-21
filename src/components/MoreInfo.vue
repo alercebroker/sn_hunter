@@ -1,11 +1,11 @@
 <template>
   <v-expansion-panel v-model="panel">
-    <v-expansion-panel-content id="moreInfoDiv" :disabled="expandiblePanel" >
+    <v-expansion-panel-content  :disabled="expandiblePanel" >
       <template v-slot:header>
         <div class="subheading">SN Candidate First Detection Information</div>
       </template>
       <v-card>
-        <v-card-text class="justify-center">
+        <v-card-text id="moreInfoDiv" class="justify-center">
           <v-layout row wrap ml-3 mr-3>
             <v-flex md4 xs12 sm12 >
               <h1 class="text-xs-center" >

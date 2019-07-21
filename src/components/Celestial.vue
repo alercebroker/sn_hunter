@@ -47,6 +47,11 @@
         switch (mutations.type) {
           case "SET_CANDIDATES":
 
+          if ($('#celestialDiv').length){
+
+
+
+
           Celestial.clear();
           var jsonSN = {
                   "type":"FeatureCollection",
@@ -112,10 +117,17 @@
                                 }
                               });
                               Celestial.display(config);
+                            }
             break;
 
             case "SELECT_CANDIDATE":
-              this.zoomSN();
+              try{
+                this.zoomSN();
+              }catch{
+                this.$store.dispatch("setAladin");
+                this.zoomSN();
+              }
+
 
             break;
         }
