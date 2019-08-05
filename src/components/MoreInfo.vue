@@ -2,7 +2,7 @@
   <v-expansion-panel v-model="panel">
     <v-expansion-panel-content  :disabled="expandiblePanel" >
       <template v-slot:header>
-        <div class="subheading">SN Candidate First Detection Information</div>
+        <span class="subheading">SN Candidate First Detection Information</span>
       </template>
       <v-card>
         <v-card-text id="moreInfoDiv" class="justify-center">
@@ -11,6 +11,9 @@
               <h1 class="text-xs-center" >
                 <a :href="oidUrl" target="_blank">{{oid}}</a>
               </h1>
+              <div class="text-xs-center overline">
+                First Detection Information
+              </div>
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">

@@ -30,7 +30,7 @@
             <thead>
               <tr>
                 <th>ObjectID</th>
-                <th>Discovery Date</th>
+                <th class="text-xs-center">Discovery Date</th>
                 <th>Score</th>
                 <th>#Obs</th>
               </tr>
