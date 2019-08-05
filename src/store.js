@@ -63,7 +63,7 @@ export default new Vuex.Store({
       $.each(payload,function(key,value){
         var mjd = value["firstmjd"];
         var date = jdToDate(mjd);
-        var dateStr = pad((date.getDate()),2) + '/' + pad((date.getMonth() + 1),2) + '/' +  date.getFullYear() + ' ' + pad(date.getHours(),2) + ":" + pad(date.getMinutes(),2) + ":" + pad(date.getSeconds(),2)
+        var dateStr = pad((date.getUTCDate()),2) + '/' + pad((date.getUTCMonth() + 1),2) + '/' +  date.getUTCFullYear() + ' ' + pad(date.getUTCHours(),2) + ":" + pad(date.getUTCMinutes(),2) + ":" + pad(date.getUTCSeconds(),2) + " UT" 
         var prob = value["pclassearly"].toFixed(3);
         var nobs = value["nobs"]
         var obj ={
