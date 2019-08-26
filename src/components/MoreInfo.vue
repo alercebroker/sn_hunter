@@ -51,6 +51,32 @@
                 </v-flex>
               </v-layout>
 
+              <div v-if="panSTARRS_info" class="text-xs-center overline">
+                PanSTARRS X-Match Information.
+              </div>
+              <v-divider></v-divider>
+              <v-layout align-center v-if="panSTARRS_info" row wrap>
+                <v-flex xs4 full-width class="text-xs-center">
+                  ObjectID : {{panSTARRS_info.objectidps}}
+                </v-flex>
+                <v-flex xs4 full-width class="text-xs-center">
+                  Distance : {{panSTARRS_info.distpsnr.toFixed(3)}} arcsec
+                </v-flex>
+                <v-flex xs4 full-width class="text-xs-center">
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <span>
+                            <v-icon  class="hidden-sm-and-down">help</v-icon>  Star Galaxy Score :
+                            {{panSTARRS_info.sgscore.toFixed(3)}}
+                            </span>
+                          </span>
+                    </template>
+                    <span>Star/Galaxy score of closest source from PS1 catalog. Closer to 1 implies higher likelihood of being a star.</span>
+                  </v-tooltip>
+                </v-flex>
+              </v-layout>
+
               <v-layout row wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
                   <v-btn round :href="oidUrl" target="_blank" dark>ALeRCE</v-btn>
@@ -142,6 +168,17 @@
       }
     },
     computed:{
+      avro_info(){
+        return this.$store.getters.getAvro;
+      },
+      panSTARRS_info(){
+        if(this.$store.getters.getAvro){
+          return {"distpsnr":this.$store.getters.getAvro.candidate.distpsnr1, "objectidps":this.$store.getters.getAvro.candidate.objectidps1, "sgscore":this.$store.getters.getAvro.candidate.sgscore1}
+        }
+        else{
+          return null;
+        }
+      },
       stampUrl(){
         var alert = this.$store.getters.getAlert;
         if(alert){

@@ -3,6 +3,9 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+var avro_url = "http://avro.alerce.online/get_avro_info"
+
+
 Date.prototype.subsDays = function(days) {
   var date = new Date();
   date.setDate(date.getDate() - days);
@@ -29,12 +32,19 @@ export default new Vuex.Store({
     deltaDays: null,
     zoomed: false,
     table: null,
-    aladin: null
+    aladin: null,
+    avro: null
   },
   mutations: {
+    CLEAN_AVRO(state){
+      state.avro = null;
+    },
     SET_ALADIN(state){
       var aladin = state.aladin ? state.aladin : A.aladin('#aladin-lite-div', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.02, cooFrame: "J2000d"});
       state.aladin = aladin;
+    },
+    SET_AVRO(state,payload){
+      state.avro = payload;
     },
     SET_CANDIDATES(state,payload){
       state.sneCandidates = payload;
@@ -82,6 +92,16 @@ export default new Vuex.Store({
     setAladin(context){
       context.commit("SET_ALADIN");
     },
+    retrieveAVRO(context,data){
+      var url = avro_url + "?oid="+ data["oid"] + "&candid=" + data["candid"]
+      var data
+      axios.get(url).then(function(response){
+        // if (response.status==200){
+          // data = response["data"]
+          context.commit("SET_AVRO",response.data)
+        // }
+      });
+    },
     retrieveAlert(context,oid){
       var parameters = {"oid":oid}
       axios.post("http://ztf.alerce.online/get_detections",parameters).then(function(response){
@@ -99,6 +119,8 @@ export default new Vuex.Store({
         }else{
           var selected = alerts[0];
         }
+        context.commit("CLEAN_AVRO");
+        context.dispatch("retrieveAVRO",{"oid":oid,"candid":selected["candid_str"]});
         context.commit("SET_CANDIDATE_ALERT",selected);
       },function(){
         console.log("Error")
@@ -185,6 +207,9 @@ export default new Vuex.Store({
     },
     getAladin(state){
       return state.aladin;
+    },
+    getAvro(state){
+      return state.avro
     }
   }
 })
