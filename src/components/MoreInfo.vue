@@ -2,7 +2,7 @@
   <v-expansion-panel v-model="panel">
     <v-expansion-panel-content  :disabled="expandiblePanel" >
       <template v-slot:header>
-        <span class="subheading">SN Candidate First Detection Information</span>
+        <span class="subheading">SN Candidate First Detection Information {{ displayReport }}</span>
       </template>
       <v-card>
         <v-card-text id="moreInfoDiv" class="justify-center">
@@ -13,6 +13,11 @@
               </h1>
               <div class="text-xs-center overline">
                 First Detection Information
+              </div>
+              <div class="text-center">
+                <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
+                  <v-icon left>report</v-icon> Report
+                </v-btn>
               </div>
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
@@ -220,6 +225,14 @@
           return false
         }
         return true
+      },
+      displayReport: {
+        get(){
+          return this.$store.getters.getDisplayReport;
+        },
+        set(value){
+          this.$store.dispatch("displayReport", value)
+        }
       }
 
     },

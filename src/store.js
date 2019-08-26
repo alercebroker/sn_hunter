@@ -29,7 +29,8 @@ export default new Vuex.Store({
     deltaDays: null,
     zoomed: false,
     table: null,
-    aladin: null
+    aladin: null,
+    report: false
   },
   mutations: {
     SET_ALADIN(state){
@@ -76,6 +77,9 @@ export default new Vuex.Store({
         candidates.push(obj)
       })
       state.table.rows.add(candidates).draw(false);
+    },
+    SET_SHOW_REPORT(state, value){
+      state.report = value
     }
   },
   actions: {
@@ -162,6 +166,9 @@ export default new Vuex.Store({
         ],
       });
       context.commit("SET_TABLE",table)
+    },
+    displayReport(context, show){
+      context.commit("SET_SHOW_REPORT", show)
     }
   },
   getters:{
@@ -185,6 +192,9 @@ export default new Vuex.Store({
     },
     getAladin(state){
       return state.aladin;
+    },
+    getDisplayReport(state){
+      return state.report;
     }
   }
 })

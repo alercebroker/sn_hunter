@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <ReportModal/>
     <v-container fluid id="home">
      <v-layout row wrap >
        <v-flex md12 fill-height>
@@ -32,13 +33,15 @@
 import Table from '../components/Table'
 import Celestial from '../components/Celestial'
 import MoreInfo from '../components/MoreInfo'
+import ReportModal from '../components/ReportModal'
 
 export default {
   name: 'Home',
   components: {
     Table,
     Celestial,
-    MoreInfo
+    MoreInfo,
+    ReportModal
   },
   data () {
     return {
