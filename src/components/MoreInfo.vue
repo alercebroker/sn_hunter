@@ -249,7 +249,7 @@
   }
 </script>
 
-<style>
+<style scoped>
    #mainInfo{
      font-size:15px;
    }

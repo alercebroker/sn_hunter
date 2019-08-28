@@ -1,9 +1,8 @@
 <template>
-  <v-toolbar dark color="dark" >
-    <v-toolbar-side-icon :to="{'path':'/'}"> <v-img :src="require('../assets/logos/footerAlerceWhite.png')">
-    </v-img>
+  <v-toolbar dark color="dark">
+    <v-toolbar-side-icon :to="{'path':'/'}"> 
+      <v-img :src="require('../assets/logos/footerAlerceWhite.png')"></v-img>
     </v-toolbar-side-icon>
-
     <v-toolbar-title :to="{'path':'/'}" class="white--text">
       <span class="hidden-sm-and-down">
         ALeRCE
@@ -13,21 +12,31 @@
       </span>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-<!--
-      <v-btn :to="{'path':'/quickstart'}">
-        <v-icon class="icon">help</v-icon> Quick Start
-      </v-btn> -->
-
-    <v-btn :to="{'path':'/faq'}">
-      FAQ
+    <v-toolbar-items>
+      <v-btn flat to="/faq">
+        FAQ
+      </v-btn>
+    </v-toolbar-items>
+     <v-btn icon @click="onLogin">
+      <v-icon>account_circle</v-icon>
     </v-btn>
+    
 
   </v-toolbar>
+  
 </template>
-
-
-<style>
-  .toolbar-icon{
-    padding-right: 5px;
-  }
-</style>
+<script>
+export default {
+  methods: {
+    onLogin() {
+        this.$gAuth.signIn().then(GoogleUser => 
+        {
+            this.$store.dispatch("login", GoogleUser);
+        })
+        /*.catch(reason => {
+            // TODO: commit error
+        })*/
+    },
+  },
+}
+</script>

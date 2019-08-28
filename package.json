@@ -12,6 +12,7 @@
     "core-js": "^2.6.5",
     "jquery": "^3.4.1",
     "vue": "^2.6.10",
+    "vue-google-oauth2": "^1.4.0",
     "vue-router": "^3.0.3",
     "vue-tour": "^1.1.0",
     "vuetify": "^1.5.5",

@@ -241,7 +241,7 @@
 
 </script>
 
-<style>
+<style scoped>
   .auto-adjust{
     margin-top: auto;
     margin-bottom: auto;
