@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import reportApi from "./services/reportApi.js"
 
 Vue.use(Vuex)
 
@@ -30,7 +31,9 @@ export default new Vuex.Store({
     zoomed: false,
     table: null,
     aladin: null,
-    report: false
+    report: false,
+    reports: null,
+    response: null,
   },
   mutations: {
     SET_ALADIN(state){
@@ -80,6 +83,12 @@ export default new Vuex.Store({
     },
     SET_SHOW_REPORT(state, value){
       state.report = value
+    },
+    SET_RESPONSE_REPORT(state, value){
+      state.response = value.data
+    },
+    SET_REPORTS(state, value){
+      state.reports = value.data
     }
   },
   actions: {
@@ -169,6 +178,23 @@ export default new Vuex.Store({
     },
     displayReport(context, show){
       context.commit("SET_SHOW_REPORT", show)
+    },
+    doReport(context, data){
+      reportApi.report(data).then(response => {
+        context.commit("SET_RESPONSE_REPORT", response)
+        context.dispatch("getReports", "jaavier")
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
+    getReports(context, data){
+      reportApi.getReports(data).then(response => {
+        context.commit("SET_REPORTS", response)
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
     }
   },
   getters:{
@@ -195,6 +221,9 @@ export default new Vuex.Store({
     },
     getDisplayReport(state){
       return state.report;
+    },
+    getReports(state){
+      return state.reports.filter( x => x.solved == false).map( x => x.object)
     }
   }
 })

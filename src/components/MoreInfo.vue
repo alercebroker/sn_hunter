@@ -14,11 +14,11 @@
               <div class="text-xs-center overline">
                 First Detection Information
               </div>
-              <div class="text-center">
+              <!--div class="text-center">
                 <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
                   <v-icon left>report</v-icon> Report
                 </v-btn>
-              </div>
+              </div-->
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">

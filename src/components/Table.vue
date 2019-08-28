@@ -13,11 +13,18 @@
                  @change="reloadTable()"
                ></v-select>
               </v-flex>
-              <v-flex xs4 >
+              <v-flex xs2 >
                 <v-btn @click="reloadTable()" style="margin-top:15px;">
                   <v-icon>
                     cached
                   </v-icon> Refresh
+                </v-btn>
+              </v-flex>
+              <v-flex xs2 v-if="this.$store.getters.getSelected != null">
+                <v-btn @click="clickBogus" color="warning" style="margin-top:15px;">
+                  <v-icon>
+                    report
+                  </v-icon> {{ this.reports.includes(this.candidate)? "Reported" : "Bogus" }}
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -64,9 +71,10 @@
         {text: "Last 72 Hours", value:3},
         {text: "Last Week", value:7},
       ],
-      table: null
+      table: null,
     }),
     mounted: function(){
+      this.$store.dispatch("getReports", {email: "jaavier"})
       this.$store.dispatch("retrieveCandidates",this.delta);
       this.$store.dispatch("createTable");
       var app = this;
@@ -86,7 +94,38 @@
       reloadTable(){
         this.$store.dispatch("cleanCandidates");
         this.$store.dispatch("retrieveCandidates",this.delta);
+      },
+      clickBogus(){
+        /*If bogus already has been reported */
+        if(this.reports.includes(this.candidate )) {
+          console.log("Eliminar ")
+        }
+        else{
+          console.log(this.candidate)
+          let report = {
+            object: this.candidate,
+            observation: "Bogus",
+            reason: "Bogus",
+            author: 1,
+            source: "SN Hunter"
+          }
+          this.$store.dispatch("doReport", report)
+          
+        }
       }
     },
+    computed: {
+      reports: {
+        get() {
+          return this.$store.getters.getReports;
+        },
+        set(value){
+          this.$store.dispatch("getReports", {email: value})
+        }
+      },
+      candidate(){
+        return this.$store.getters.getSelected.oid;
+      },
+    }
   }
 </script>

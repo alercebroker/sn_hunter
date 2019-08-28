@@ -121,7 +121,7 @@
                                     }
                                   });
                                   Celestial.container.selectAll(".selectedSN").each(function(d) {
-                                    console.log(d);
+                                    //console.log(d);
                                     // If point is visible (this doesn't work automatically for points)
                                     if (Celestial.clip(d.geometry.coordinates)) {
                                       // get point coordinates
