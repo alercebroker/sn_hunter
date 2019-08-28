@@ -77,7 +77,10 @@
                 </v-flex>
               </v-layout>
 
-              <v-layout row wrap class="infoTab" id="buttons">
+
+
+
+              <v-layout row pt-0 pb-0 wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
                   <v-btn round :href="oidUrl" target="_blank" dark>ALeRCE</v-btn>
                   <v-btn round :href="nedUrl" target="_blank" dark color="green">NED</v-btn>
@@ -86,6 +89,43 @@
 
               </v-flex>
               </v-layout>
+              <div v-if="avro_info" class="text-xs-center">
+                <template>
+                  <v-layout pa-0 text-xs-center>
+                    <v-dialog v-model="dialog" max-width="700px" >
+                      <template v-slot:activator="{ on }">
+                        <v-btn color="primary" flat block dark v-on="on">Full Alert Information</v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="headline">Alert Information</span>
+                        </v-card-title>
+                        <v-card-text >
+                          <p>For more information read <a target="_blank" href="https://zwickytransientfacility.github.io/ztf-avro-alert/schema.html">the ZTF Schema.</a></p>
+                          <table class="table table-striped" id="alertTable">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="row in table_avro_info">
+                                <td>{{row[0]}}</td>
+                                <td>{{row[1]}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn color="primary darken-1" text @click="dialog = false">Close</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-layout>
+                </template>
+              </div>
 
             </v-flex>
             <v-flex  md4 xs12 sm12 pa-4>
@@ -165,9 +205,18 @@
     data: function(){
       return {
         panel: null,
+        dialog: false,
+        headers: [{text:"Key", value:"key"},{text:"Value", value:"value"}]
       }
     },
     computed:{
+      table_avro_info(){
+        var values = []
+        for(var key in this.avro_info.candidate){
+          values.push([ key,this.avro_info.candidate[key]])
+        }
+        return values
+      },
       avro_info(){
         return this.$store.getters.getAvro;
       },
@@ -285,4 +334,8 @@
      margin-top: 3%;
      margin-bottom: 3%;
    }
+   #alertTable {
+    margin: auto;
+    width: 50% !important;
+  }
 </style>
