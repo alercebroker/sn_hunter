@@ -34,6 +34,11 @@ export default new Vuex.Store({
     report: false,
     reports: null,
     response: null,
+    user: {
+      name: null,
+      mail: null,
+      avatar: null
+    }
   },
   mutations: {
     SET_ALADIN(state){
@@ -89,6 +94,9 @@ export default new Vuex.Store({
     },
     SET_REPORTS(state, value){
       state.reports = value.data
+    },
+    SET_USER(state, data){
+      state.user = data
     }
   },
   actions: {
@@ -195,6 +203,13 @@ export default new Vuex.Store({
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
       })
+    },
+    loginUser(context, data){
+      context.commit("SET_USER", {
+        name: data.w3.ig,
+        email: data.w3.U3,
+        avatar: data.w3.Paa
+      })
     }
   },
   getters:{
@@ -223,7 +238,10 @@ export default new Vuex.Store({
       return state.report;
     },
     getReports(state){
-      return state.reports.filter( x => x.solved == false).map( x => x.object)
+      return state.reports.filter( x => x.solved == false).map( x => x.object);
+    },
+    getUser(state){
+      return state.user;
     }
   }
 })

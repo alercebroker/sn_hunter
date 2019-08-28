@@ -31,7 +31,7 @@ export default {
     onLogin() {
         this.$gAuth.signIn().then(GoogleUser => 
         {
-            this.$store.dispatch("login", GoogleUser);
+            this.$store.dispatch("loginUser", GoogleUser);
         })
         /*.catch(reason => {
             // TODO: commit error

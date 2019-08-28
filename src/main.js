@@ -13,10 +13,9 @@ Vue.config.productionTip = false
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)
 Vue.use(GAuth, {
-  clientId: '321796684930-h19g04r8q4aoh805btuba5d0gl64m7h4.apps.googleusercontent.com',
+  clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
   scope: 'profile email',
   prompt: 'select_account',
-  hosted_domain: 'usach.cl'
 })
 
 new Vue({
