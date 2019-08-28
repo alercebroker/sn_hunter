@@ -74,7 +74,6 @@
       table: null,
     }),
     mounted: function(){
-      this.$store.dispatch("getReports", {email: "jaavier"})
       this.$store.dispatch("retrieveCandidates",this.delta);
       this.$store.dispatch("createTable");
       var app = this;

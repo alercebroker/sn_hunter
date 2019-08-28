@@ -35,6 +35,7 @@ export default new Vuex.Store({
     reports: null,
     response: null,
     user: {
+      id: null,
       name: null,
       mail: null,
       avatar: null
@@ -205,10 +206,18 @@ export default new Vuex.Store({
       })
     },
     loginUser(context, data){
-      context.commit("SET_USER", {
-        name: data.w3.ig,
-        email: data.w3.U3,
-        avatar: data.w3.Paa
+      reportApi.existUser(data.w3.U3).then(response => {
+        if(response.data.exist) {
+          context.commit("SET_USER", {
+            name: data.w3.ig,
+            email: data.w3.U3,
+            avatar: data.w3.Paa,
+            id: response.data.user_id
+          })
+        }
+        else {
+          this.$gAuth.signOut()
+        }
       })
     }
   },

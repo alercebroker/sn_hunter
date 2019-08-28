@@ -15,5 +15,8 @@ export default {
     },
     getReports(email) {
         return apiClient.get("/reports/email?email="+email);
+    },
+    existUser(email) {
+        return apiClient.get("/users/exist?email="+email);
     }
 };
