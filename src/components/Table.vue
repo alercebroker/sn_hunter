@@ -20,7 +20,7 @@
                   </v-icon> Refresh
                 </v-btn>
               </v-flex>
-              <v-flex xs2 v-if="this.$store.getters.getSelected != null">
+              <v-flex xs2 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
                 <v-btn @click="clickBogus" color="warning" style="margin-top:15px;">
                   <v-icon>
                     report
@@ -96,8 +96,9 @@
       },
       clickBogus(){
         /*If bogus already has been reported */
-        if(this.reports.includes(this.candidate )) {
-          console.log("Eliminar ")
+        if(this.reports.includes(this.candidate)) {
+          // TODO: delete report
+          //this.$store.dispatch("deleteReport", {object: this.candidate, userId: this.user.id})
         }
         else{
           console.log(this.candidate)
@@ -116,7 +117,7 @@
     computed: {
       reports: {
         get() {
-          return this.$store.getters.getReports;
+          return this.$store.getters.getReports.map( x => x.object)
         },
         set(value){
           this.$store.dispatch("getReports", {email: value})
@@ -125,6 +126,12 @@
       candidate(){
         return this.$store.getters.getSelected.oid;
       },
+      logged(){
+      return this.$store.getters.getUser.name == null? false : true;
+      },
+      user(){
+        return this.$store.getters.getUser;
+      }
     }
   }
 </script>

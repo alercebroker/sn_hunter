@@ -52,7 +52,7 @@
         <v-list subheader dense v-else>
           <v-subheader>{{ user.name }}</v-subheader>
           <!--Register-->
-          <v-list-tile avatar>
+          <v-list-tile @click="onLogout()" avatar>
             <v-list-tile-avatar>
               <v-icon>power_settings_new</v-icon>
             </v-list-tile-avatar>
@@ -79,6 +79,11 @@ export default {
             console.log(reason)
         })
     },
+    onLogout() {
+      this.$gAuth.signOut().then( () => 
+        this.$store.dispatch("logoutUser")
+      )
+    }
   },
   computed: {
     user(){

@@ -5,7 +5,6 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import GAuth from 'vue-google-oauth2'
-
 import VueTour from 'vue-tour'
 
 Vue.config.productionTip = false

@@ -37,7 +37,7 @@ export default new Vuex.Store({
     user: {
       id: null,
       name: null,
-      mail: null,
+      email: null,
       avatar: null
     }
   },
@@ -98,6 +98,12 @@ export default new Vuex.Store({
     },
     SET_USER(state, data){
       state.user = data
+    },
+    SET_NULL_USER(state){
+      state.user.id = null,
+      state.user.name = null,
+      state.user.email = null,
+      state.user.avatar = null
     }
   },
   actions: {
@@ -191,7 +197,7 @@ export default new Vuex.Store({
     doReport(context, data){
       reportApi.report(data).then(response => {
         context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports", "jaavier")
+        context.dispatch("getReports", context.state.user.email)
       })
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
@@ -208,6 +214,7 @@ export default new Vuex.Store({
     loginUser(context, data){
       reportApi.existUser(data.w3.U3).then(response => {
         if(response.data.exist) {
+          context.dispatch("getReports", data.w3.U3)
           context.commit("SET_USER", {
             name: data.w3.ig,
             email: data.w3.U3,
@@ -219,6 +226,9 @@ export default new Vuex.Store({
           this.$gAuth.signOut()
         }
       })
+    },
+    logoutUser(context) {
+      context.commit("SET_NULL_USER")
     }
   },
   getters:{
@@ -247,7 +257,7 @@ export default new Vuex.Store({
       return state.report;
     },
     getReports(state){
-      return state.reports.filter( x => x.solved == false).map( x => x.object);
+      return state.reports  == null? [] : state.reports;
     },
     getUser(state){
       return state.user;

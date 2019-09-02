@@ -18,5 +18,8 @@ export default {
     },
     existUser(email) {
         return apiClient.get("/users/exist?email="+email);
+    },
+    deleteReport(data) {
+        return apiClient.delete(`/reports/?object=${data.object}&userId=${data.userId}`)
     }
 };
