@@ -51,16 +51,16 @@
                 </v-flex>
               </v-layout>
 
-              <div v-if="panSTARRS_info" class="text-xs-center overline">
+              <div class="text-xs-center overline">
                 PanSTARRS X-Match Information.
               </div>
               <v-divider></v-divider>
-              <v-layout align-center v-if="panSTARRS_info" row wrap>
+              <v-layout align-center  row wrap>
                 <v-flex xs4 full-width class="text-xs-center">
-                  ObjectID : {{panSTARRS_info.objectidps}}
+                  ObjectID : {{panSTARRS_info? panSTARRS_info.objectidps : "-"}}
                 </v-flex>
                 <v-flex xs4 full-width class="text-xs-center">
-                  Distance : {{panSTARRS_info.distpsnr.toFixed(3)}} arcsec
+                  Distance : {{panSTARRS_info? panSTARRS_info.distpsnr.toFixed(3): "-"}} arcsec
                 </v-flex>
                 <v-flex xs4 full-width class="text-xs-center">
                   <v-tooltip bottom>
@@ -68,7 +68,7 @@
                           <span v-on="on">
                             <span>
                             <v-icon  class="hidden-sm-and-down">help</v-icon>  Star Galaxy Score :
-                            {{panSTARRS_info.sgscore.toFixed(3)}}
+                            {{panSTARRS_info? panSTARRS_info.sgscore.toFixed(3): "-"}}
                             </span>
                           </span>
                     </template>
@@ -89,12 +89,12 @@
 
               </v-flex>
               </v-layout>
-              <div v-if="avro_info" class="text-xs-center">
+              <div class="text-xs-center">
                 <template>
                   <v-layout pa-0 text-xs-center>
                     <v-dialog v-model="dialog" max-width="700px" >
                       <template v-slot:activator="{ on }">
-                        <v-btn color="primary" flat block dark v-on="on">Full Alert Information</v-btn>
+                        <v-btn color="primary" flat block dark v-on="on" :disabled="!avro_info">Full Alert Information</v-btn>
                       </template>
                       <v-card>
                         <v-card-title>
@@ -102,7 +102,7 @@
                         </v-card-title>
                         <v-card-text >
                           <p>For more information read <a target="_blank" href="https://zwickytransientfacility.github.io/ztf-avro-alert/schema.html">the ZTF Schema.</a></p>
-                          <table class="table table-striped" id="alertTable">
+                          <table v-if="avro_info" class="table table-striped" id="alertTable">
                             <thead class="thead-dark">
                               <tr>
                                 <th>Key</th>
