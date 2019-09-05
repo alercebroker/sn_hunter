@@ -250,7 +250,7 @@
         return this.$store.getters.getSelected ? this.$store.getters.getSelected.oid : "---";
       },
       oidUrl(){
-        return "http://alerce.online/vue/object/"+this.oid;
+        return "http://alerce.online/object/"+this.oid;
       },
       ra(){
         return this.$store.getters.getAlert ? this.$store.getters.getAlert.ra : "-";
