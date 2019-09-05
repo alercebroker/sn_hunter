@@ -13,16 +13,18 @@
       </span>
     </v-toolbar-title>
 
-    <v-spacer></v-spacer>
+    <!-- <v-spacer></v-spacer> -->
 
 
-    <div class="hidden-sm-and-down">
-            <v-btn
-             v-for="item in items"
-             :href="item.link"
-             outline
-           >{{ item.title }}</v-btn>
-    </div>
+    <v-toolbar-items  class="ml-3 hidden-sm-and-down">
+      <v-btn
+          flat
+           v-for="item in items"
+           :href="item.link"
+           class="text-capitalize"
+         >{{ item.title }}</v-btn>
+       </v-toolbar-items>
+
    <v-menu
     full-width
     :z-index="priority"
@@ -49,13 +51,10 @@
 <script>
   export default {
     data: () => ({
-      priority: 10,
+      priority: 30,
       items: [
         { title: 'ZTF Explorer' , link:"http://alerce.online"},
         { title: 'About', link:"http://alerce.science" },
-        // { title: 'AGN Ranger' , link:"http://alerce.online"},
-        // { title: 'VS Scout' , link:"http://alerce.online"},
-
       ],
     }),
   }

@@ -1,5 +1,4 @@
 <template>
-  <v-app>
     <v-container fluid id="home">
      <v-layout row wrap >
        <v-flex md12 fill-height>
@@ -25,7 +24,6 @@
 
       <v-tour name="quickStart" :action="clickStep" :steps="steps"></v-tour>
     </v-container> <!-- contianer -->
-  </v-app>
 </template>
 
 <script>
