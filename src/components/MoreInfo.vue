@@ -82,10 +82,10 @@
 
               <v-layout row pt-0 pb-0 wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
-                  <v-btn round :href="oidUrl" target="_blank" dark>ALeRCE</v-btn>
-                  <v-btn round :href="nedUrl" target="_blank" dark color="green">NED</v-btn>
-                  <v-btn round :href="tnsUrl" target="_blank" dark color="orange">TNS</v-btn>
-                  <v-btn round :href="simbadUrl" target="_blank" dark color="primary">SIMBAD</v-btn>
+                  <v-btn :href="oidUrl" target="_blank" dark color="primary">ALeRCE</v-btn>
+                  <v-btn :href="nedUrl" target="_blank" dark color="primary">NED</v-btn>
+                  <v-btn :href="tnsUrl" target="_blank" dark color="primary">TNS</v-btn>
+                  <v-btn :href="simbadUrl" target="_blank" dark color="primary">SIMBAD</v-btn>
 
               </v-flex>
               </v-layout>

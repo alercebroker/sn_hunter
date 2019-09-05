@@ -11,7 +11,7 @@
         <v-flex md7 fill-height>
           <Celestial/>
           <div class="text-xs-center">
-            <v-btn id="quickStartBtn" @click="startTour()" dark :disabled="quickStart">
+            <v-btn id="quickStartBtn" @click="startTour()" dark color="primary" :disabled="quickStart">
               <v-icon>play_for_work</v-icon>
               Quick Start
             </v-btn>
