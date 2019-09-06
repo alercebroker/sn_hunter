@@ -196,7 +196,7 @@
 <script>
   import Aladin from './Aladin'
 
-  var base_url = "http://avro.alerce.online/get_stamp"
+  var base_url = "https://avro.alerce.online/get_stamp"
   // ?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
   export default{
     components:{

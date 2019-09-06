@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-var avro_url = "http://avro.alerce.online/get_avro_info"
+var avro_url = "https://avro.alerce.online/get_avro_info"
 
 
 Date.prototype.subsDays = function(days) {
@@ -104,7 +104,7 @@ export default new Vuex.Store({
     },
     retrieveAlert(context,oid){
       var parameters = {"oid":oid}
-      axios.post("http://ztf.alerce.online/get_detections",parameters).then(function(response){
+      axios.post("https://ztf.alerce.online/get_detections",parameters).then(function(response){
         var alerts = response.data.result.detections;
         if(alerts.length > 1){
           var firstmjd = 1/0;
@@ -146,7 +146,7 @@ export default new Vuex.Store({
               "sortBy": "pclassearly",
               "total":100
       };
-      axios.post("http://ztf.alerce.online/query",parameters).then(function(response){
+      axios.post("https://ztf.alerce.online/query",parameters).then(function(response){
         context.commit("SET_CANDIDATES", response.data.result);
         context.commit("CHANGE_DELTA",delta);
         context.commit("SET_ZOOM",false);
