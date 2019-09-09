@@ -56,15 +56,81 @@
                 </v-flex>
               </v-layout>
 
-              <v-layout row wrap class="infoTab" id="buttons">
+              <div class="text-xs-center overline">
+                PanSTARRS X-Match Information.
+              </div>
+              <v-divider></v-divider>
+              <v-layout align-center  row wrap>
+                <v-flex xs4 full-width class="text-xs-center">
+                  ObjectID : {{panSTARRS_info? panSTARRS_info.objectidps : "-"}}
+                </v-flex>
+                <v-flex xs4 full-width class="text-xs-center">
+                  Distance : {{panSTARRS_info? panSTARRS_info.distpsnr.toFixed(3): "-"}} arcsec
+                </v-flex>
+                <v-flex xs4 full-width class="text-xs-center">
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <span>
+                            <v-icon  class="hidden-sm-and-down">help</v-icon>  Star Galaxy Score :
+                            {{panSTARRS_info? panSTARRS_info.sgscore.toFixed(3): "-"}}
+                            </span>
+                          </span>
+                    </template>
+                    <span>Star/Galaxy score of closest source from PS1 catalog. Closer to 1 implies higher likelihood of being a star.</span>
+                  </v-tooltip>
+                </v-flex>
+              </v-layout>
+
+
+
+
+              <v-layout row pt-0 pb-0 wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
-                  <v-btn round :href="oidUrl" target="_blank" dark>ALeRCE</v-btn>
-                  <v-btn round :href="nedUrl" target="_blank" dark color="green">NED</v-btn>
-                  <v-btn round :href="tnsUrl" target="_blank" dark color="orange">TNS</v-btn>
-                  <v-btn round :href="simbadUrl" target="_blank" dark color="primary">SIMBAD</v-btn>
+                  <v-btn class="text-capitalize" :href="oidUrl" target="_blank" dark color="primary">ALeRCE</v-btn>
+                  <v-btn class="text-capitalize" :href="nedUrl" target="_blank" dark color="primary">NED</v-btn>
+                  <v-btn class="text-capitalize" :href="tnsUrl" target="_blank" dark color="primary">TNS</v-btn>
+                  <v-btn class="text-capitalize" :href="simbadUrl" target="_blank" dark color="primary">SIMBAD</v-btn>
 
               </v-flex>
               </v-layout>
+              <div class="text-xs-center">
+                <template>
+                  <v-layout pa-0 text-xs-center>
+                    <v-dialog v-model="dialog" max-width="700px" >
+                      <template v-slot:activator="{ on }">
+                        <v-btn color="primary" flat block dark v-on="on" :disabled="!avro_info">Full Alert Information</v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="headline">Alert Information</span>
+                        </v-card-title>
+                        <v-card-text >
+                          <p>For more information read <a target="_blank" href="https://zwickytransientfacility.github.io/ztf-avro-alert/schema.html">the ZTF Schema.</a></p>
+                          <table v-if="avro_info" class="table table-striped" id="alertTable">
+                            <thead class="thead-dark">
+                              <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="row in table_avro_info">
+                                <td>{{row[0]}}</td>
+                                <td>{{row[1]}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn color="primary darken-1" text @click="dialog = false">Close</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-layout>
+                </template>
+              </div>
 
             </v-flex>
             <v-flex  md4 xs12 sm12 pa-4>
@@ -146,7 +212,7 @@
 <script>
   import Aladin from './Aladin'
 
-  var base_url = "http://avro.alerce.online/get_stamp"
+  var base_url = "https://avro.alerce.online/get_stamp"
   // ?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
   export default{
     components:{
@@ -155,9 +221,29 @@
     data: function(){
       return {
         panel: null,
+        dialog: false,
+        headers: [{text:"Key", value:"key"},{text:"Value", value:"value"}]
       }
     },
     computed:{
+      table_avro_info(){
+        var values = []
+        for(var key in this.avro_info.candidate){
+          values.push([ key,this.avro_info.candidate[key]])
+        }
+        return values
+      },
+      avro_info(){
+        return this.$store.getters.getAvro;
+      },
+      panSTARRS_info(){
+        if(this.$store.getters.getAvro){
+          return {"distpsnr":this.$store.getters.getAvro.candidate.distpsnr1, "objectidps":this.$store.getters.getAvro.candidate.objectidps1, "sgscore":this.$store.getters.getAvro.candidate.sgscore1}
+        }
+        else{
+          return null;
+        }
+      },
       stampUrl(){
         var alert = this.$store.getters.getAlert;
         if(alert){
@@ -180,7 +266,7 @@
         return this.$store.getters.getSelected ? this.$store.getters.getSelected.oid : "---";
       },
       oidUrl(){
-        return "http://alerce.online/vue/object/"+this.oid;
+        return "http://alerce.online/object/"+this.oid;
       },
       ra(){
         return this.$store.getters.getAlert ? this.$store.getters.getAlert.ra : "-";
@@ -223,7 +309,7 @@
         return this.$store.getters.getAlert ? this.$store.getters.getAlert.magpsf : "-";
       },
       nedUrl(){
-        return this.$store.getters.getAlert ? "https://ned.ipac.caltech.edu/conesearch?search_type=Near+Position+Search&iau_style=liberal&objname=&coordinates="+Math.round(this.$store.getters.getAlert.ra*1000)/1000+"d,"+Math.round(this.$store.getters.getAlert.dec*1000)/1000+"d&iau_name=&radius=0.17&in_csys=Equatorial&in_equinox=J2000&in_csys_IAU=Equatorial&in_equinox_IAU=B1950&z_constraint=Unconstrained&z_value1=&z_value2=&z_unit=z&ot_include=ANY&nmp_op=ANY&hconst=67.8&omegam=0.308&omegav=0.692&wmap=4&corr_z=1&out_csys=Same+as+Input&out_equinox=Same+as+Input&obj_sort=Distance+to+search+center&op=Go&form_build_id=form-a28snc2SSIQl3faGUe4otq7_NcjnMwxxxPoVxw5LHzg&form_id=conesearch" : "#";
+        return this.$store.getters.getAlert ? "https://ned.ipac.caltech.edu/conesearch?search_type=Near+Position+Search&iau_style=liberal&objname=&coordinates="+this.$store.getters.getAlert.ra+"d,"+this.$store.getters.getAlert.dec+"d&iau_name=&radius=0.17&in_csys=Equatorial&in_equinox=J2000&in_csys_IAU=Equatorial&in_equinox_IAU=B1950&z_constraint=Unconstrained&z_value1=&z_value2=&z_unit=z&ot_include=ANY&nmp_op=ANY&hconst=67.8&omegam=0.308&omegav=0.692&wmap=4&corr_z=1&out_csys=Same+as+Input&out_equinox=Same+as+Input&obj_sort=Distance+to+search+center&op=Go&form_build_id=form-a28snc2SSIQl3faGUe4otq7_NcjnMwxxxPoVxw5LHzg&form_id=conesearch" : "#";
       },
       tnsUrl(){
         return this.$store.getters.getAlert ? 'https://wis-tns.weizmann.ac.il/search?ra='+this.$store.getters.getAlert.ra+'&decl='+this.$store.getters.getAlert.dec+'&radius=10&coords_unit=arcsec' : "#";
@@ -306,4 +392,8 @@
      margin-top: 3%;
      margin-bottom: 3%;
    }
+   #alertTable {
+    margin: auto;
+    width: 50% !important;
+  }
 </style>

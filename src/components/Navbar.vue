@@ -11,6 +11,33 @@
         SN Hunter
       </span>
     </v-toolbar-title>
+
+    <!-- <v-spacer></v-spacer> -->
+
+
+    <v-toolbar-items  class="ml-3 hidden-sm-and-down">
+      <v-btn
+          flat
+           v-for="item in items"
+           :href="item.link"
+           class="text-capitalize"
+         >{{ item.title }}</v-btn>
+       </v-toolbar-items>
+
+   <v-menu
+    full-width
+    :z-index="priority"
+    class="hidden-md-and-up">
+     <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
+     <v-list>
+       <div v-for="item in items">
+         <v-list-tile :href="item.link" >
+             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+         </v-list-tile>
+       </div>
+     </v-list>
+   </v-menu>
+
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
