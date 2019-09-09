@@ -115,7 +115,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="row in table_avro_info">
+                              <tr v-for="(row, index) in table_avro_info" v-bind:key="index">
                                 <td>{{row[0]}}</td>
                                 <td>{{row[1]}}</td>
                               </tr>

@@ -33,7 +33,7 @@ export default new Vuex.Store({
     deltaDays: null,
     zoomed: false,
     table: null,
-    avro: null
+    avro: null,
     aladin: null,
     report: false,
     reports: null,

@@ -18,9 +18,10 @@
     <v-toolbar-items  class="ml-3 hidden-sm-and-down">
       <v-btn
           flat
-           v-for="item in items"
+           v-for="(item, index) in items"
            :href="item.link"
            class="text-capitalize"
+           v-bind:key="index"
          >{{ item.title }}</v-btn>
        </v-toolbar-items>
 
@@ -30,7 +31,7 @@
     class="hidden-md-and-up">
      <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
      <v-list>
-       <div v-for="item in items">
+       <div v-for="(item, index) in items" v-bind:key="index">
          <v-list-tile :href="item.link" >
              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
          </v-list-tile>
@@ -87,6 +88,13 @@
 export default {
   /* eslint-disable */
   name: "navbar",
+  data: () => ({
+  priority: 30,
+  items: [
+    { title: 'ZTF Explorer' , link:"http://alerce.online"},
+    { title: 'About', link:"http://alerce.science" },
+    ],
+  }),
   methods: {
     onLogin() {
         this.$gAuth.signIn().then(GoogleUser => 

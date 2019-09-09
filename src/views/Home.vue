@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <ReportModal/>
     <v-container fluid id="home">
      <v-layout row wrap >
@@ -26,6 +26,7 @@
 
       <v-tour name="quickStart" :action="clickStep" :steps="steps"></v-tour>
     </v-container> <!-- contianer -->
+  </div>
 </template>
 
 <script>
