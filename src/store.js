@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import reportApi from "./services/reportApi.js"
+/* eslint-disable */
 Vue.use(Vuex)
 
 var avro_url = "https://avro.alerce.online/get_avro_info"
@@ -32,8 +33,17 @@ export default new Vuex.Store({
     deltaDays: null,
     zoomed: false,
     table: null,
+    avro: null,
     aladin: null,
-    avro: null
+    report: false,
+    reports: null,
+    response: null,
+    user: {
+      id: null,
+      name: null,
+      email: null,
+      avatar: null
+    }
   },
   mutations: {
     CLEAN_AVRO(state){
@@ -86,6 +96,24 @@ export default new Vuex.Store({
         candidates.push(obj)
       })
       state.table.rows.add(candidates).draw(false);
+    },
+    SET_SHOW_REPORT(state, value){
+      state.report = value
+    },
+    SET_RESPONSE_REPORT(state, value){
+      state.response = value.data
+    },
+    SET_REPORTS(state, value){
+      state.reports = value.data
+    },
+    SET_USER(state, data){
+      state.user = data
+    },
+    SET_NULL_USER(state){
+      state.user.id = null,
+      state.user.name = null,
+      state.user.email = null,
+      state.user.avatar = null
     }
   },
   actions: {
@@ -185,6 +213,46 @@ export default new Vuex.Store({
         ],
       });
       context.commit("SET_TABLE",table)
+    },
+    displayReport(context, show){
+      context.commit("SET_SHOW_REPORT", show)
+    },
+    doReport(context, data){
+      reportApi.report(data).then(response => {
+        context.commit("SET_RESPONSE_REPORT", response)
+        context.dispatch("getReports", context.state.user.email)
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
+    getReports(context, data){
+      reportApi.getReports(data).then(response => {
+        context.commit("SET_REPORTS", response)
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
+    loginUser(context, data){
+      let user = {email: data.w3.U3, avatar: data.w3.Paa,}
+      reportApi.existUser(user).then(response => {
+        if(response.data.exist) {
+          context.dispatch("getReports", data.w3.U3)
+          context.commit("SET_USER", {
+            name: data.w3.ig,
+            email: data.w3.U3,
+            avatar: data.w3.Paa,
+            id: response.data.user_id
+          })
+        }
+        else {
+          this.$gAuth.signOut()
+        }
+      })
+    },
+    logoutUser(context) {
+      context.commit("SET_NULL_USER")
     }
   },
   getters:{
@@ -209,8 +277,18 @@ export default new Vuex.Store({
     getAladin(state){
       return state.aladin;
     },
+    getDisplayReport(state){
+      return state.report;
+    },
+    getReports(state){
+      return state.reports  == null? [] : state.reports;
+    },
+    getUser(state){
+      return state.user;
+    },
     getAvro(state){
       return state.avro
     }
   }
 })
+/* eslint-enable */

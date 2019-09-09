@@ -29,7 +29,7 @@
     }
 </script>
 
-<style media="screen">
+<style media="screen" scoped>
   #aladin-lite-div{
     /* margin-left:auto; */
     /* margin-right: auto; */
