@@ -52,6 +52,7 @@
 </template>
 
 <script>
+/* eslint-disable */
   function jdToDate(jd){
     var date = (jd - 40588) * 86400000;
     return new Date(date)
@@ -101,12 +102,11 @@
           //this.$store.dispatch("deleteReport", {object: this.candidate, userId: this.user.id})
         }
         else{
-          console.log(this.candidate)
           let report = {
             object: this.candidate,
             observation: "Bogus",
             reason: "Bogus",
-            author: 1,
+            author: this.user.id,
             source: "SN Hunter"
           }
           this.$store.dispatch("doReport", report)
@@ -134,4 +134,5 @@
       }
     }
   }
+/* eslint-enable */
 </script>

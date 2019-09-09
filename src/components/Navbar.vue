@@ -38,15 +38,6 @@
               <v-list-tile-title> Sign in</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <!--Register-->
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <v-icon>group_add</v-icon>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title> Register</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
         </v-list>
         <!-- Logged -->
         <v-list subheader dense v-else>
@@ -67,6 +58,7 @@
 </template>
 <script>
 export default {
+  /* eslint-disable */
   name: "navbar",
   methods: {
     onLogin() {
@@ -94,4 +86,5 @@ export default {
     }
   }
 }
+/* eslint-enable */
 </script>

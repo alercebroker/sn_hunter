@@ -16,8 +16,8 @@ export default {
     getReports(email) {
         return apiClient.get("/reports/email?email="+email);
     },
-    existUser(email) {
-        return apiClient.get("/users/exist?email="+email);
+    existUser(user) {
+        return apiClient.post("/users/login", user);
     },
     deleteReport(data) {
         return apiClient.delete(`/reports/?object=${data.object}&userId=${data.userId}`)

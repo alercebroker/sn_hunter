@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import reportApi from "./services/reportApi.js"
-
+/* eslint-disable */
 Vue.use(Vuex)
 
 Date.prototype.subsDays = function(days) {
@@ -212,7 +212,8 @@ export default new Vuex.Store({
       })
     },
     loginUser(context, data){
-      reportApi.existUser(data.w3.U3).then(response => {
+      let user = {email: data.w3.U3, avatar: data.w3.Paa,}
+      reportApi.existUser(user).then(response => {
         if(response.data.exist) {
           context.dispatch("getReports", data.w3.U3)
           context.commit("SET_USER", {
@@ -264,3 +265,4 @@ export default new Vuex.Store({
     }
   }
 })
+/* eslint-enable */
