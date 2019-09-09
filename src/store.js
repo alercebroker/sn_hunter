@@ -165,6 +165,7 @@ export default new Vuex.Store({
       context.commit("SET_ZOOM",true);
     },
     createTable(context,id){
+      $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm:SS UT' );
       var table = $("#sneCandidates").DataTable({
         "pageLength": 6,
         "dom":"t,p,r",
@@ -178,7 +179,7 @@ export default new Vuex.Store({
         },
         "columns": [
           { data: "oid" },
-          { data: "discovery_date" },
+          { data: "discovery_date"},
           { data: "prob" },
           { data: "nobs" }
         ],
