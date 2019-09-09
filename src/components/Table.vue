@@ -20,13 +20,6 @@
                   </v-icon> Refresh
                 </v-btn>
               </v-flex>
-              <v-flex xs2 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
-                <v-btn @click="clickBogus" color="warning" style="margin-top:15px;">
-                  <v-icon>
-                    report
-                  </v-icon> {{ this.reports.includes(this.candidate)? "Reported" : "Bogus" }}
-                </v-btn>
-              </v-flex>
             </v-layout>
       </v-form>
       <v-layout row>
@@ -95,34 +88,8 @@
         this.$store.dispatch("cleanCandidates");
         this.$store.dispatch("retrieveCandidates",this.delta);
       },
-      clickBogus(){
-        /*If bogus already has been reported */
-        if(this.reports.includes(this.candidate)) {
-          // TODO: delete report
-          //this.$store.dispatch("deleteReport", {object: this.candidate, userId: this.user.id})
-        }
-        else{
-          let report = {
-            object: this.candidate,
-            observation: "Bogus",
-            reason: "Bogus",
-            author: this.user.id,
-            source: "SN Hunter"
-          }
-          this.$store.dispatch("doReport", report)
-          
-        }
-      }
     },
     computed: {
-      reports: {
-        get() {
-          return this.$store.getters.getReports.map( x => x.object)
-        },
-        set(value){
-          this.$store.dispatch("getReports", {email: value})
-        }
-      },
       candidate(){
         return this.$store.getters.getSelected.oid;
       },

@@ -73,44 +73,7 @@
             <v-spacer></v-spacer>
             <v-flex md4  xs12 sm12  id="StampInfo" style="margin-top: auto; margin-bottom:auto;">
               <v-layout row wrap class="justify-center">
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Science
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Science is the current image from an object.</span>
-                  </v-tooltip>                     <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Template
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Template is an template image of the same region of the sky (Maybe a stack of several images).</span>
-                  </v-tooltip>                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Difference
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Difference is the change between science and template images.</span>
-                  </v-tooltip>
-                  <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex>
+                <v-flex xs12>
                   <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                           <span v-on="on">
@@ -121,6 +84,54 @@
                     </template>
                     <span>Discovery Stamps are the first stamps retrieved for an object.</span>
                   </v-tooltip>
+                </v-flex>
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Science
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Science is the current image from an object.</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Template
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Template is an template image of the same region of the sky (Maybe a stack of several images).</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Difference
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Difference is the change between science and template images.</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
+                   <div class="text-center">
+                    <v-btn @click="clickBogus" color="warning" style="margin-top:15px;">
+                      <v-icon>
+                        report
+                      </v-icon> {{ this.reports.includes(this.candidate)? "Reported" : "Bogus" }}
+                    </v-btn>
+                   </div>
                 </v-flex>
               </v-layout>
             </v-flex> <!-- table -->
@@ -233,7 +244,21 @@
         set(value){
           this.$store.dispatch("displayReport", value)
         }
-      }
+      },
+      reports: {
+        get() {
+          return this.$store.getters.getReports.map( x => x.object)
+        },
+        set(value){
+          this.$store.dispatch("getReports", {email: value})
+        }
+      },
+      user(){
+        return this.$store.getters.getUser;
+      },
+      candidate(){
+        return this.$store.getters.getSelected.oid;
+      },
 
     },
     mounted: function(){
@@ -245,6 +270,26 @@
           break;
         }
       })
+    },
+    methods: {
+      clickBogus(){
+        /*If bogus already has been reported */
+        if(this.reports.includes(this.candidate)) {
+          // TODO: delete report
+          //this.$store.dispatch("deleteReport", {object: this.candidate, userId: this.user.id})
+        }
+        else{
+          let report = {
+            object: this.candidate,
+            observation: "Bogus",
+            reason: "Bogus",
+            author: this.user.id,
+            source: "SN Hunter"
+          }
+          this.$store.dispatch("doReport", report)
+          
+        }
+      }
     }
   }
 </script>
