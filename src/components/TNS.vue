@@ -31,8 +31,8 @@
                   <td>
                     {{props.item["Obj. Type"]}}
                   </td>
-                  <td>{{ props.item.RA }}</td>
-                  <td>{{ props.item.DEC }}</td>
+                  <td>{{ props.item.RA.toFixed(3) }}</td>
+                  <td>{{ props.item.DEC.toFixed(3) }}</td>
                   <td>{{props.item["Discovery Date (UT)"]}}</td>
                   <td>{{props.item["Discovery Mag"]}}</td>
                   <td>{{props.item.Redshift? props.item.Redshift.toFixed(3) : "-"}}</td>
@@ -66,8 +66,8 @@
                       {{props.item['Disc. Internal Name']}}
                     </a>
                   </td>
-                  <td>{{ props.item.RA }}</td>
-                  <td>{{ props.item.DEC }}</td>
+                  <td>{{ props.item.RA.toFixed(3) }}</td>
+                  <td>{{ props.item.DEC.toFixed(3) }}</td>
                   <td>{{props.item["Discovery Date (UT)"]}}</td>
                   <td>{{props.item["Discovery Mag"]}}</td>
                   <td>{{props.item["Host Name"]}}</td>
@@ -88,6 +88,8 @@ export default{
   data(){
     return {
       aladin: null,
+      classifiedCatalog : null,
+      candidatesCatalog: null,
       headersClassified:[
         {"text":"TNS Name", "value":"Name"},
         {"text":"ALeRCE Name", "value":"Disc. Internal Name"},
@@ -115,13 +117,39 @@ export default{
     }
   },
   mounted:function(){
-    this.aladin =  A.aladin('#tns_aladin', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:720, cooFrame: "J2000d"});
+    this.aladin =  A.aladin('#tns_aladin', {survey: "P/DSS2/color", fov:720, cooFrame: "J2000d"});
+    this.classifiedCatalog = this.classifiedCatalog? this.classifiedCatalog : A.catalog({name:"Classified SN", color : '#FE012B'});
+    this.candidatesCatalog = this.candidatesCatalog? this.candidatesCatalog : A.catalog({name:"Candidates SN", color : '#FEE501'});
+    this.aladin.addCatalog(this.classifiedCatalog);
+    this.aladin.addCatalog(this.candidatesCatalog);
   },
   computed: {
     classified(){
+      var points = []
+      this.$store.getters.getTNS.classified.forEach(function(row){
+        points.push(
+          A.marker(
+            row.RA,row.DEC,
+            {popupTitle: row.Name}
+          )
+        );
+      });
+      this.classifiedCatalog = this.classifiedCatalog? this.classifiedCatalog : A.catalog({name:"Classified SN", color : '#FE012B'});
+      this.classifiedCatalog.addSources(points);
       return this.$store.getters.getTNS.classified
     },
     candidates(){
+      var points = []
+      this.$store.getters.getTNS.candidates.forEach(function(row){
+        points.push(
+          A.marker(
+            row.RA,row.DEC,
+            {popupTitle: row.Name}
+          )
+        );
+      });
+      this.candidatesCatalog = this.candidatesCatalog? this.candidatesCatalog : A.catalog({name:"Candidates SN", color : '#FEE501'});
+      this.candidatesCatalog.addSources(points);
       return this.$store.getters.getTNS.candidates
     }
   }
