@@ -4,8 +4,8 @@ import reportApi from "./services/reportApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
 
-var avro_url = "https://avro.alerce.online/get_avro_info"
-
+var avro_url = process.env.VUE_APP_STAMPS_API+"/get_avro_info"
+var ztf_url = process.env.VUE_APP_PSQL_API
 
 Date.prototype.subsDays = function(days) {
   var date = new Date();
@@ -43,9 +43,17 @@ export default new Vuex.Store({
       name: null,
       email: null,
       avatar: null
-    }
+    },
+    alerceClassified : [],
+    alerceCandidates : [],
+    loadingTNS : true
   },
   mutations: {
+    SET_TNS(state,payload){
+      state.alerceClassified = payload.classified;
+      state.alerceCandidates = payload.candidates;
+      state.loadingTNS = payload.loadingTNS;
+    },
     CLEAN_AVRO(state){
       state.avro = null;
     },
@@ -117,6 +125,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    getAlerceTNS(context){
+      axios.get(ztf_url+"/get_alerce_tns").then(function(response){
+        var candidates = response.data.results.candidates;
+        var classified = response.data.results.classified;
+
+        context.commit("SET_TNS",{"candidates":candidates,"classified":classified,"loadingTNS":false})
+      }).catch(function(){
+        context.commit("SET_TNS",{"candidates":[],"classified":[],"loadingTNS":false})
+      });
+    },
     setAladin(context){
       context.commit("SET_ALADIN");
     },
@@ -132,7 +150,7 @@ export default new Vuex.Store({
     },
     retrieveAlert(context,oid){
       var parameters = {"oid":oid}
-      axios.post("https://ztf.alerce.online/get_detections",parameters).then(function(response){
+      axios.post(ztf_url+"/get_detections",parameters).then(function(response){
         var alerts = response.data.result.detections;
         if(alerts.length > 1){
           var firstmjd = 1/0;
@@ -165,16 +183,16 @@ export default new Vuex.Store({
             "query_parameters":
             {
               "filters":
-                      {"classearly": 2},
+                      {"classearly": 19},
               "dates":
                       {"firstmjd":
-                        {"min":last_mjd,"max":now_mjd}
+                        {"min":last_mjd}
                       }
               },
               "sortBy": "pclassearly",
               "total":100
       };
-      axios.post("https://ztf.alerce.online/query",parameters).then(function(response){
+      axios.post(ztf_url+"/query",parameters).then(function(response){
         context.commit("SET_CANDIDATES", response.data.result);
         context.commit("CHANGE_DELTA",delta);
         context.commit("SET_ZOOM",false);
@@ -288,6 +306,13 @@ export default new Vuex.Store({
     },
     getAvro(state){
       return state.avro
+    },
+    getTNS(state){
+      return {
+        classified : state.alerceClassified,
+        candidates: state.alerceCandidates,
+        loading: state.loadingTNS,
+      }
     }
   }
 })

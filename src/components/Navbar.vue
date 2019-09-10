@@ -1,6 +1,6 @@
 <template>
   <v-toolbar dark color="dark">
-    <v-toolbar-side-icon :to="{'path':'/'}"> 
+    <v-toolbar-side-icon :to="{'path':'/'}">
       <v-img :src="require('../assets/logos/footerAlerceWhite.png')"></v-img>
     </v-toolbar-side-icon>
     <v-toolbar-title :to="{'path':'/'}" class="white--text">
@@ -42,6 +42,10 @@
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
+      <v-btn flat to="/candidates">
+        Candidates
+      </v-btn>
+
       <v-btn flat to="/faq">
         FAQ
       </v-btn>
@@ -97,7 +101,7 @@ export default {
   }),
   methods: {
     onLogin() {
-        this.$gAuth.signIn().then(GoogleUser => 
+        this.$gAuth.signIn().then(GoogleUser =>
         {
             this.$store.dispatch("loginUser", GoogleUser);
         })
@@ -107,7 +111,7 @@ export default {
         })
     },
     onLogout() {
-      this.$gAuth.signOut().then( () => 
+      this.$gAuth.signOut().then( () =>
         this.$store.dispatch("logoutUser")
       )
     }

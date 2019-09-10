@@ -58,7 +58,7 @@
 
   export default {
     data: () => ({
-      delta: 2,
+      delta: process.env.VUE_APP_DELTA,
       selectedSN: null,
       deltaTimes:[
         {text: "Last 48 Hours", value:2},
