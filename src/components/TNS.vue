@@ -2,7 +2,7 @@
   <div class="">
     <v-layout row wrap>
       <v-flex xs4>
-        <div id="tns_aladin"></div>
+        <div id="tns_aladin" :style="aladinHeight" ></div>
       </v-flex>
       <v-flex xs8>
             <v-layout row wrap>
@@ -119,6 +119,9 @@ export default{
     this.aladin.addCatalog(this.candidatesCatalog);
   },
   computed: {
+    loading(){
+      return this.$store.getters.getTNS.loading
+    },
     classified(){
       var points = []
       this.$store.getters.getTNS.classified.forEach(function(row){
@@ -146,16 +149,13 @@ export default{
       this.candidatesCatalog = this.candidatesCatalog? this.candidatesCatalog : A.catalog({name:"Candidates SN", color : '#FEE501'});
       this.candidatesCatalog.addSources(points);
       return this.$store.getters.getTNS.candidates
+    },
+    aladinHeight(){
+      if(this.$vuetify.breakpoint.xsOnly){
+        return "min-height: 500px;"
+      }
+      return "min-height: 600px;"
     }
   }
-
-
 }
 </script>
-
-<style media="screen">
-  #tns_aladin{
-    min-height: 500px;
-    /* max-width:500px; */
-  }
-</style>
