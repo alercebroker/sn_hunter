@@ -5,9 +5,8 @@
         <div id="tns_aladin"></div>
       </v-flex>
       <v-flex xs8>
-          <v-layout row wrap>
             <v-layout row wrap>
-              <v-flex xs12>
+              <v-flex xs10 offset-xs1>
                 <h3>Classified SN</h3>
                 <v-divider></v-divider>
                 <v-data-table
@@ -42,10 +41,7 @@
 
               </v-data-table>
               </v-flex>
-            </v-layout>
-
-            <v-layout row wrap>
-              <v-flex xs12>
+              <v-flex xs10 offset-xs1>
                 <h3>Candidates</h3>
                 <v-divider></v-divider>
                 <v-data-table
@@ -77,7 +73,6 @@
               </v-data-table>
             </v-flex>
             </v-layout>
-          </v-layout>
         </v-flex>
     </v-layout>
   </div>
@@ -161,6 +156,6 @@ export default{
 <style media="screen">
   #tns_aladin{
     min-height: 500px;
-    max-width:500px;
+    /* max-width:500px; */
   }
 </style>
