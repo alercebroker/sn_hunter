@@ -192,10 +192,9 @@
                 </v-flex> <!-- table -->
                 <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
                    <div class="text-center">
-                    <v-btn @click="clickBogus" color="warning" style="margin-top:15px;">
-                      <v-icon>
-                        report
-                      </v-icon> {{ this.reports.includes(this.candidate)? "Reported" : "Bogus" }}
+                    <v-btn block color="warning" @click="clickBogus">
+                      <v-icon left> report_problem </v-icon>
+                      {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
                     </v-btn>
                    </div>
                 </v-flex>
