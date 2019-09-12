@@ -67,23 +67,22 @@
                </div>
                <div v-else>
                  <LightCurve :detections="detections" :non_detections="non_detections"/>
-                  <v-tooltip bottom>
+                  <v-tooltip v-if="last_non_detection" bottom>
                       <template v-slot:activator="{ on }">
                         <span v-on="on">
                           <span class="font-weight-black">
-                            Raise Time:
+                            Rise ({{first_detection.fid =="1"? "g-ZTF": "r-ZTF"}}):
                           </span>
-                           {{(first_detection.mjd-last_non_detection.mjd).toFixed(3)}} Days
+                           {{((last_non_detection.diffmaglim-first_detection.magpsf)/(first_detection.mjd-last_non_detection.mjd)).toFixed(3)}} ({{(first_detection.sigmapsf/(first_detection.mjd-last_non_detection.mjd)).toFixed(3)}}) [dm/dt]
                         </span>
                       </template>
-                      <span>Time between the last non detection and the first detection </span>
+                      <span> Magnitude rise ratio between last non-detection and first detection. </span>
                     </v-tooltip>
-
+                    <div v-else>
+                      No non-detections before first detection
+                    </div>
+                  </div>
                  </div>
-                 <div v-else>
-                   No non detections before first detection
-                 </div>
-               </div>
              </v-flex>
              <v-flex  v-if="!loading" xs12>
                <h5>
@@ -141,12 +140,21 @@ export default{
       return {detections: this.detections, non_detections: this.non_detections}
     },
     differenceStamp(){
+      if(this.first_detection == null){
+        return require('../assets/logos/footerAlerce.png')
+      }
       return base_url+"?oid="+this.first_detection.oid+"&candid="+ this.first_detection.candid_str +"&type=difference&format=png"
     },
     templateStamp(){
+      if(this.first_detection == null){
+        return require('../assets/logos/footerAlerce.png')
+      }
       return base_url+"?oid="+this.first_detection.oid+"&candid="+ this.first_detection.candid_str +"&type=template&format=png"
     },
     scienceStamp(){
+      if(this.first_detection == null){
+        return require('../assets/logos/footerAlerce.png')
+      }
       return base_url+"?oid="+this.first_detection.oid+"&candid="+ this.first_detection.candid_str +"&type=science&format=png"
     },
   },
@@ -173,7 +181,7 @@ export default{
           }
         })
         newVal.non_detections.forEach(function(non_detection){
-          if( non_detection.mjd < first_detection.mjd && last_non_detection.mjd < non_detection.mjd){
+          if( non_detection.fid == first_detection.fid && non_detection.mjd < first_detection.mjd && last_non_detection.mjd < non_detection.mjd){
               last_non_detection = non_detection
           }
         })
