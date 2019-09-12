@@ -59,7 +59,7 @@
                <span class="font-weight-black">Dec:</span>
                {{data.DEC}}
              </v-flex>
-             <v-flex xs10 offset-xs1>
+             <v-flex xs12>
                <div v-if="loading">
                  <v-progress-linear
                     indeterminate
