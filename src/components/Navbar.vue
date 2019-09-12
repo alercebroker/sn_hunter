@@ -42,6 +42,9 @@
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
+      <v-btn flat to="/classified">
+        Classified SN
+      </v-btn>
       <v-btn flat to="/candidates">
         Candidates
       </v-btn>

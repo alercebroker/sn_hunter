@@ -9,7 +9,7 @@ import TNS from "@/components/TNS"
 export default {
   data(){
     return {
-      type: "candidates"
+      type: "classified"
     }
   },
   components:{
