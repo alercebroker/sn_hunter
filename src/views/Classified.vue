@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
        <TNS :type="type"/>
   </v-container>
 </template>

@@ -61,6 +61,7 @@
       delta: process.env.VUE_APP_DELTA,
       selectedSN: null,
       deltaTimes:[
+        {text: "Last 24 Hours", value:1},
         {text: "Last 48 Hours", value:2},
         {text: "Last 72 Hours", value:3},
         {text: "Last Week", value:7},

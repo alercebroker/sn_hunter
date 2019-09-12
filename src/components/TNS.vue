@@ -37,11 +37,12 @@
               <v-pagination
               v-model="page"
               :length="len"
+              :total-visible="7"
               ></v-pagination>
             </v-flex>
           </v-layout>
         </v-flex>
-      </v-layout>
+    </v-layout>
 </template>
 
 <script>
@@ -71,9 +72,6 @@ export default{
       return this.$store.getters.getTNS.candidates;
     },
     classifiedLen(){
-      console.log(this.$store.getters.getTNS.classified.length )
-      console.log(this.$store.getters.getTNS.classified.length/ this.pagination.rowsPerPage )
-
       return Math.ceil(this.$store.getters.getTNS.classified.length / this.pagination.rowsPerPage);
     },
     candidatesLen(){
