@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid grid-list-xs>
        <TNS/>
   </v-container>
 </template>
