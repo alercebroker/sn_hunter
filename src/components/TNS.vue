@@ -19,8 +19,13 @@
              </v-flex>
            </v-layout>
        </v-flex>
-       <v-flex v-else v-for="item in classified.slice((this.classifiedPage-1)* this.pagination.rowsPerPage, this.classifiedPage* this.pagination.rowsPerPage)" xs6   sm3>
+       <v-flex v-else v-for="item in classified.slice((this.classifiedPage-1)* this.pagination.rowsPerPage, this.classifiedPage* this.pagination.rowsPerPage)" hidden-xs-only   sm12 md3>
          <CandidateInfo :tns="item.Name" :alerce="item['Disc. Internal Name']" :data="item" />
+       </v-flex>
+       <v-flex hidden-sm-and-up>
+         <v-alert type="warning" :value="true">
+           Flip Phone
+         </v-alert>
        </v-flex>
      </v-layout>
      <v-layout row wrap text-xs-center>
@@ -50,8 +55,13 @@
              </v-flex>
            </v-layout>
        </v-flex>
-       <v-flex v-else v-for="item in candidates.slice((this.candidatesPage-1)* this.pagination.rowsPerPage, this.candidatesPage* this.pagination.rowsPerPage)" xs6   sm3>
+       <v-flex v-else v-for="item in candidates.slice((this.candidatesPage-1)* this.pagination.rowsPerPage, this.candidatesPage* this.pagination.rowsPerPage)" hidden-xs-only   sm12 md3>
          <CandidateInfo :tns="item.Name" :alerce="item['Disc. Internal Name']" :data="item" />
+       </v-flex>
+       <v-flex hidden-sm-and-up>
+         <v-alert type="warning" :value="true">
+           Flip Phone
+         </v-alert>
        </v-flex>
      </v-layout>
      <v-layout row wrap text-xs-center>
