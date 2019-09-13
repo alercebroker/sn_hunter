@@ -52,30 +52,18 @@
       <v-btn flat to="/faq">
         FAQ
       </v-btn>
-
-
-      <v-menu offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon v-if="!user.avatar" size="36px">account_circle</v-icon>
-            <v-avatar v-else size="36px"> <img :src="user.avatar"></v-avatar>
-          </v-btn>
-        </template>
-        <!-- If not logged -->
-        <v-list subheader dense v-if="!logged">
-          <v-subheader>Account</v-subheader>
-          <!--Sign in-->
-          <v-list-tile @click="onLogin()" avatar>
-            <v-list-tile-avatar>
-              <v-icon>group</v-icon>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title> Sign in</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-        <!-- Logged -->
-        <v-list subheader dense v-else>
+    </v-toolbar-items>
+    <v-btn v-if="!logged" class="ma-2" tile outline @click="onLogin()">
+      <v-icon left>account_circle</v-icon> Sign in
+    </v-btn>
+    <v-menu v-else offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn icon v-on="on">
+          <v-avatar v-if="user.avatar" size="36px"> <img :src="user.avatar"></v-avatar>
+        </v-btn>
+      </template>
+      <!-- Logged -->
+        <v-list subheader dense>
           <v-subheader>{{ user.name }}</v-subheader>
           <!--Register-->
           <v-list-tile @click="onLogout()" avatar>
@@ -87,8 +75,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-      </v-menu>
-    </v-toolbar-items>
+    </v-menu>
   </v-toolbar>
 </template>
 <script>
