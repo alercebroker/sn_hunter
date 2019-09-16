@@ -1,4 +1,4 @@
-# sne_hunter_vue
+# SN Hunter
 
 ## Project setup
 ```
