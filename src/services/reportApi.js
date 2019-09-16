@@ -19,7 +19,7 @@ export default {
     existUser(user) {
         return apiClient.post("/users/login", user);
     },
-    deleteReport(data) {
-        return apiClient.delete(`/reports/?object=${data.object}&userId=${data.userId}`)
+    deleteReport(id) {
+        return apiClient.delete("/reports/?reportId="+id);
     }
 };

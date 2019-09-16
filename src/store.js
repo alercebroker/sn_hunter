@@ -252,6 +252,15 @@ export default new Vuex.Store({
         context.commit("SET_RESPONSE_REPORT", reason)
       })
     },
+    deleteReport(context, data){
+      reportApi.deleteReport(data).then(response => {
+        context.commit("SET_RESPONSE_REPORT", response)
+        context.dispatch("getReports", context.state.user.email)
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
     loginUser(context, data){
       let user = {email: data.w3.U3, avatar: data.w3.Paa,}
       reportApi.existUser(user).then(response => {
