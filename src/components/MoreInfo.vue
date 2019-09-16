@@ -360,8 +360,8 @@
       clickBogus(){
         /*If bogus already has been reported */
         if(this.reports.includes(this.candidate)) {
-          // TODO: delete report
-          //this.$store.dispatch("deleteReport", {object: this.candidate, userId: this.user.id})
+          let report = this.$store.getters.getReports.find( x => x.object == this.candidate);
+          this.$store.dispatch("deleteReport", report.id)
         }
         else{
           let report = {
