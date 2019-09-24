@@ -14,6 +14,11 @@
               <div class="text-xs-center overline">
                 First Detection Information
               </div>
+              <!--div class="text-center">
+                <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
+                  <v-icon left>report</v-icon> Report
+                </v-btn>
+              </div-->
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">
@@ -110,7 +115,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="row in table_avro_info">
+                              <tr v-for="(row, index) in table_avro_info" v-bind:key="index">
                                 <td>{{row[0]}}</td>
                                 <td>{{row[1]}}</td>
                               </tr>
@@ -134,44 +139,7 @@
             <v-spacer></v-spacer>
             <v-flex md4  xs12 sm12  id="StampInfo" style="margin-top: auto; margin-bottom:auto;">
               <v-layout row wrap class="justify-center">
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Science
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Science is the current image from an object.</span>
-                  </v-tooltip>                     <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Template
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Template is an template image of the same region of the sky (Maybe a stack of several images).</span>
-                  </v-tooltip>                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex xs4 class="text-xs-center">
-                  <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on">
-                            <h5 class="subheading text-xs-center">Difference
-                              <v-icon class="hidden-sm-and-down">help</v-icon>
-                            </h5>
-                          </span>
-                    </template>
-                    <span>Difference is the change between science and template images.</span>
-                  </v-tooltip>
-                  <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
-                </v-flex> <!-- table -->
-                <v-flex>
+                <v-flex xs12>
                   <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                           <span v-on="on">
@@ -182,6 +150,53 @@
                     </template>
                     <span>Discovery Stamps are the first stamps retrieved for an object.</span>
                   </v-tooltip>
+                </v-flex>
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="scienceStamp" alt="Science Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Science
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Science is the current image from an object.</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="templateStamp" alt="Template Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Template
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Template is an template image of the same region of the sky (Maybe a stack of several images).</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 class="text-xs-center">
+                  <v-img :src="differenceStamp" alt="Difference Stamp" ></v-img>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <span v-on="on">
+                            <h5 class="subheading text-xs-center">Difference
+                              <v-icon class="hidden-sm-and-down">help</v-icon>
+                            </h5>
+                          </span>
+                    </template>
+                    <span>Difference is the change between science and template images.</span>
+                  </v-tooltip>
+                </v-flex> <!-- table -->
+                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
+                   <div class="text-center">
+                    <v-btn block color="warning" @click="clickBogus">
+                      <v-icon left> report_problem </v-icon>
+                      {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
+                    </v-btn>
+                   </div>
                 </v-flex>
               </v-layout>
             </v-flex> <!-- table -->
@@ -306,7 +321,29 @@
           return false
         }
         return true
-      }
+      },
+      displayReport: {
+        get(){
+          return this.$store.getters.getDisplayReport;
+        },
+        set(value){
+          this.$store.dispatch("displayReport", value)
+        }
+      },
+      reports: {
+        get() {
+          return this.$store.getters.getReports.map( x => x.object)
+        },
+        set(value){
+          this.$store.dispatch("getReports", {email: value})
+        }
+      },
+      user(){
+        return this.$store.getters.getUser;
+      },
+      candidate(){
+        return this.$store.getters.getSelected.oid;
+      },
 
     },
     mounted: function(){
@@ -318,11 +355,31 @@
           break;
         }
       })
+    },
+    methods: {
+      clickBogus(){
+        /*If bogus already has been reported */
+        if(this.reports.includes(this.candidate)) {
+          let report = this.$store.getters.getReports.find( x => x.object == this.candidate);
+          this.$store.dispatch("deleteReport", report.id)
+        }
+        else{
+          let report = {
+            object: this.candidate,
+            observation: "Bogus",
+            reason: "Bogus",
+            author: this.user.id,
+            source: "SN Hunter"
+          }
+          this.$store.dispatch("doReport", report)
+          
+        }
+      }
     }
   }
 </script>
 
-<style>
+<style scoped>
    #mainInfo{
      font-size:15px;
    }

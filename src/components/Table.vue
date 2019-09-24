@@ -13,7 +13,7 @@
                  @change="reloadTable()"
                ></v-select>
               </v-flex>
-              <v-flex xs4 >
+              <v-flex xs2 >
                 <v-btn @click="reloadTable()" style="margin-top:15px;">
                   <v-icon>
                     cached
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable */
   function jdToDate(jd){
     var date = (jd - 40588) * 86400000;
     return new Date(date)
@@ -57,14 +58,15 @@
 
   export default {
     data: () => ({
-      delta: 2,
+      delta: process.env.VUE_APP_DELTA,
       selectedSN: null,
       deltaTimes:[
+        {text: "Last 24 Hours", value:1},
         {text: "Last 48 Hours", value:2},
         {text: "Last 72 Hours", value:3},
         {text: "Last Week", value:7},
       ],
-      table: null
+      table: null,
     }),
     mounted: function(){
       this.$store.dispatch("retrieveCandidates",this.delta);
@@ -86,7 +88,19 @@
       reloadTable(){
         this.$store.dispatch("cleanCandidates");
         this.$store.dispatch("retrieveCandidates",this.delta);
-      }
+      },
     },
+    computed: {
+      candidate(){
+        return this.$store.getters.getSelected.oid;
+      },
+      logged(){
+      return this.$store.getters.getUser.name == null? false : true;
+      },
+      user(){
+        return this.$store.getters.getUser;
+      }
+    }
   }
+/* eslint-enable */
 </script>

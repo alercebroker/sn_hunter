@@ -19,6 +19,9 @@ export default {
     Navbar,
     // Footer
   },
+  mounted: function(){
+    this.$store.dispatch("getAlerceTNS");
+  },
   data () {
     return {
       //
