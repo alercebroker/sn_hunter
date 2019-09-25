@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import LightCurve from "@/components/LightCurve"
 
 var ztf_url = process.env.VUE_APP_PSQL_API

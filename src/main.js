@@ -1,10 +1,9 @@
 import Vue from 'vue'
-import './plugins/axios'
+// import './plugins/axios'
 import './plugins/vuetify'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import GAuth from 'vue-google-oauth2'
 import VueTour from 'vue-tour'
 
 Vue.config.productionTip = false
@@ -20,15 +19,39 @@ import 'echarts/lib/component/toolbox'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/dataZoom'
+import VueAuthenticate from 'vue-authenticate'
+
+
+import VueAxios from 'vue-axios'
+import axios from 'axios';
+Vue.use(VueAxios, axios)
+
+
 Vue.component('v-chart', ECharts)
 
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)
-Vue.use(GAuth, {
-  clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
-  scope: 'profile email',
-  prompt: 'select_account',
-})
+
+import VueResource from 'vue-resource'
+
+
+// import GAuth from 'vue-google-oauth2'
+// Vue.use(GAuth, {
+//   clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
+//   scope: 'profile email',
+//   prompt: 'select_account',
+// })
+
+Vue.use(VueAuthenticate, {
+  providers: {
+    google: {
+      clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
+      redirectUri: 'http://localhost:8080/',
+      url: 'http://localhost:8000/api/login/social/token_user/google/',
+    }
+  }
+});
+
 
 new Vue({
   store,

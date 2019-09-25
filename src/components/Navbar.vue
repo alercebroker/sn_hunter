@@ -53,7 +53,7 @@
         FAQ
       </v-btn>
     </v-toolbar-items>
-    <v-btn v-if="!logged" class="ma-2" tile outline @click="onLogin()">
+    <v-btn v-if="!logged" class="ma-2" tile outline @click="authenticate()">
       <v-icon left>account_circle</v-icon> Sign in
     </v-btn>
     <v-menu v-else offset-y>
@@ -90,21 +90,28 @@ export default {
     ],
   }),
   methods: {
-    onLogin() {
-        this.$gAuth.signIn().then(GoogleUser =>
-        {
-            this.$store.dispatch("loginUser", GoogleUser);
-        })
-        .catch(reason => {
-            // TODO: commit error
-            console.log(reason)
-        })
-    },
-    onLogout() {
-      this.$gAuth.signOut().then( () =>
-        this.$store.dispatch("logoutUser")
-      )
+    authenticate: function() {
+        this.$auth.authenticate('google', {provider: "google-oauth2"}).then(function (response) {
+            console.log(response.email)
+        }).catch(function(error) {
+            console.log(error);
+        });
     }
+    // onLogin() {
+    //     this.$gAuth.signIn().then(GoogleUser =>
+    //     {
+    //         this.$store.dispatch("loginUser", GoogleUser);
+    //     })
+    //     .catch(reason => {
+    //         // TODO: commit error
+    //         console.log(reason)
+    //     })
+    // },
+    // onLogout() {
+    //   this.$gAuth.signOut().then( () =>
+    //     this.$store.dispatch("logoutUser")
+    //   )
+    // }
   },
   computed: {
     user(){

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios';
 import reportApi from "./services/reportApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
@@ -263,20 +264,20 @@ export default new Vuex.Store({
     },
     loginUser(context, data){
       let user = {email: data.w3.U3, avatar: data.w3.Paa,}
-      reportApi.existUser(user).then(response => {
-        if(response.data.exist) {
-          context.dispatch("getReports", data.w3.U3)
-          context.commit("SET_USER", {
-            name: data.w3.ig,
-            email: data.w3.U3,
-            avatar: data.w3.Paa,
-            id: response.data.user_id
-          })
-        }
-        else {
-          this.$gAuth.signOut()
-        }
-      })
+      // reportApi.existUser(user).then(response => {
+      //   if(response.data.exist) {
+      //     context.dispatch("getReports", data.w3.U3)
+      //     context.commit("SET_USER", {
+      //       name: data.w3.ig,
+      //       email: data.w3.U3,
+      //       avatar: data.w3.Paa,
+      //       id: response.data.user_id
+      //     })
+        // }
+        // else {
+        //   this.$gAuth.signOut()
+        // }
+      // })
     },
     logoutUser(context) {
       context.commit("SET_NULL_USER")
