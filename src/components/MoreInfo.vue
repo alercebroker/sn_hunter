@@ -190,7 +190,7 @@
                     <span>Difference is the change between science and template images.</span>
                   </v-tooltip>
                 </v-flex> <!-- table -->
-                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
+                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
                    <div class="text-center">
                     <v-btn block color="warning" @click="clickBogus">
                       <v-icon left> report_problem </v-icon>
@@ -335,7 +335,7 @@
           return this.$store.getters.getReports.map( x => x.object)
         },
         set(value){
-          this.$store.dispatch("getReports", {email: value})
+          this.$store.dispatch("getReports")
         }
       },
       user(){
@@ -372,7 +372,7 @@
             source: "SN Hunter"
           }
           this.$store.dispatch("doReport", report)
-          
+
         }
       }
     }

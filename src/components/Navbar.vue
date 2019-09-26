@@ -59,14 +59,16 @@
     <v-menu v-else offset-y>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">
-          <v-avatar v-if="user.avatar" size="36px"> <img :src="user.avatar"></v-avatar>
+          <v-avatar v-if="user.avatar" size="36px"  > <v-img :src="user.avatar" style="padding:1px 1px 1px 1px;background-color:white;"></v-img></v-avatar>
         </v-btn>
       </template>
       <!-- Logged -->
         <v-list subheader dense>
-          <v-subheader>{{ user.name }}</v-subheader>
+          <v-subheader>{{ user.name.charAt(0).toUpperCase() +
+           user.name.slice(1)}} {{ user.last_name.charAt(0).toUpperCase() +
+            user.last_name.slice(1)}}</v-subheader>
           <!--Register-->
-          <v-list-tile @click="onLogout()" avatar>
+          <v-list-tile @click="logout()" avatar>
             <v-list-tile-avatar>
               <v-icon>power_settings_new</v-icon>
             </v-list-tile-avatar>
@@ -79,9 +81,12 @@
   </v-toolbar>
 </template>
 <script>
+import {authMixin} from '@/mixins/authMixin';
+
 export default {
   /* eslint-disable */
   name: "navbar",
+  mixins: [authMixin],
   data: () => ({
   priority: 30,
   items: [
@@ -89,29 +94,11 @@ export default {
     { title: 'About', link:"http://alerce.science" },
     ],
   }),
-  methods: {
-    authenticate: function() {
-        this.$auth.authenticate('google', {provider: "google-oauth2"}).then(function (response) {
-            console.log(response.email)
-        }).catch(function(error) {
-            console.log(error);
-        });
+  mounted(){
+    if(localStorage.getItem('vue-authenticate.vueauth_token')){
+      this.$store.dispatch('getUserInfo')
     }
-    // onLogin() {
-    //     this.$gAuth.signIn().then(GoogleUser =>
-    //     {
-    //         this.$store.dispatch("loginUser", GoogleUser);
-    //     })
-    //     .catch(reason => {
-    //         // TODO: commit error
-    //         console.log(reason)
-    //     })
-    // },
-    // onLogout() {
-    //   this.$gAuth.signOut().then( () =>
-    //     this.$store.dispatch("logoutUser")
-    //   )
-    // }
+
   },
   computed: {
     user(){

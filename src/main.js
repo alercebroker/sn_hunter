@@ -34,20 +34,13 @@ Vue.use(VueTour)
 
 import VueResource from 'vue-resource'
 
-
-// import GAuth from 'vue-google-oauth2'
-// Vue.use(GAuth, {
-//   clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
-//   scope: 'profile email',
-//   prompt: 'select_account',
-// })
-
 Vue.use(VueAuthenticate, {
+  tokenPath: 'token',
   providers: {
     google: {
       clientId: '913514262168-3lkcmu32uob1nfsql0dqgma76hpr9pbe.apps.googleusercontent.com',
-      redirectUri: 'http://localhost:8080/',
-      url: 'http://localhost:8000/api/login/social/token_user/google/',
+      redirectUri: process.env.VUE_APP_REDIRECT,
+      url: process.env.VUE_APP_USER_API+'/api/login/social/token_user/google/',
     }
   }
 });
