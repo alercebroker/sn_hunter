@@ -38,6 +38,7 @@ export default new Vuex.Store({
     aladin: null,
     report: false,
     reports: null,
+    targets:null,
     response: null,
     //Checking if user is stored on local storage
     token: localStorage.getItem("vue-authenticate.vueauth_token")? localStorage.getItem("vue-authenticate.vueauth_token"): null,
@@ -50,7 +51,7 @@ export default new Vuex.Store({
     },
     alerceClassified : [],
     alerceCandidates : [],
-    loadingTNS : true
+    loadingTNS : true,
   },
   mutations: {
     SET_TNS(state,payload){
@@ -117,6 +118,9 @@ export default new Vuex.Store({
     },
     SET_REPORTS(state, value){
       state.reports = value.data
+    },
+    SET_TARGETS(state,value){
+      state.targets = value.data
     },
     SET_USER(state, data){
       state.user = data
@@ -249,6 +253,22 @@ export default new Vuex.Store({
         context.commit("SET_RESPONSE_REPORT", reason)
       })
     },
+    doTarget(context, data){
+      reportApi.createTarget(data).then(response => {
+        context.commit("SET_RESPONSE_REPORT", response)
+        context.dispatch("getTargets")
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
+    getTargets(context){
+      reportApi.getTargets().then(response => {
+        context.commit("SET_TARGETS",response)
+      }).catch(reason =>{
+        context.commit("SET_RESPONSE_REPORT",reason)
+      })
+    },
     getReports(context, data){
       reportApi.getReports(data).then(response => {
         context.commit("SET_REPORTS", response)
@@ -276,6 +296,8 @@ export default new Vuex.Store({
           id: data.id
         })
         dispatch('getReports')
+        dispatch('getTargets')
+
     },
     getUserInfo({commit,state,dispatch}){
       if(state.token){
@@ -288,9 +310,12 @@ export default new Vuex.Store({
             id: response.data.id
           })
         }).catch(reason => {
-          console.log(reason)
+          localStorage.removeItem('vue-authenticate.vueauth_token')
+          // console.log(reason)
         })
         dispatch('getReports')
+        dispatch('getTargets')
+
       }
     },
     logoutUser(context) {
@@ -325,6 +350,9 @@ export default new Vuex.Store({
     },
     getReports(state){
       return state.reports  == null? [] : state.reports;
+    },
+    getTargets(state){
+      return state.targets  == null? [] : state.targets;
     },
     getUser(state){
       return state.user;

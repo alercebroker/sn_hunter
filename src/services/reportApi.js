@@ -36,12 +36,18 @@ export default {
         return apiClient.post("/reporter/reports/", data);
     },
     getReports() {
-        return apiClient.get("/reporter/reports/by_user/");
+        return apiClient.get("/reporter/reports/by_owner/");
     },
     deleteReport(id) {
         return apiClient.delete("/reporter/reports/{}/".replace("{}",id));
     },
     getInfo(){
       return apiClient.get("user/get_info")
+    },
+    createTarget(data){
+      return apiClient.post("tom_rest/target/", data)
+    },
+    getTargets(){
+      return apiClient.get("tom_rest/target/")
     }
 };

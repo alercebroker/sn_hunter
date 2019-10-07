@@ -15,6 +15,7 @@
                 First Detection Information
               </div>
               <!--div class="text-center">
+
                 <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
                   <v-icon left>report</v-icon> Report
                 </v-btn>
@@ -190,7 +191,14 @@
                     <span>Difference is the change between science and template images.</span>
                   </v-tooltip>
                 </v-flex> <!-- table -->
-                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
+                <v-flex xs4 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
+                    <div class="text-center">
+                     <v-btn block :disabled="this.targets.includes(this.candidate)" color="primary" @click="createTarget">
+                       {{ this.targets.includes(this.candidate)? "Target Created" : "Create Target" }}
+                     </v-btn>
+                    </div>
+                </v-flex>
+                <v-flex xs4 offset-xs4 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
                    <div class="text-center">
                     <v-btn block color="warning" @click="clickBogus">
                       <v-icon left> report_problem </v-icon>
@@ -338,6 +346,14 @@
           this.$store.dispatch("getReports")
         }
       },
+      targets: {
+        get() {
+          return this.$store.getters.getTargets.map( x => x.name)
+        },
+        set(value){
+          this.$store.dispatch("getReports")
+        }
+      },
       user(){
         return this.$store.getters.getUser;
       },
@@ -374,7 +390,19 @@
           this.$store.dispatch("doReport", report)
 
         }
+      },
+      createTarget(){
+        var selected = this.$store.getters.getSelected
+        let target={
+          name: selected.oid,
+          ra: selected.meanra,
+          dec: selected.meandec
+
+        }
+        console.log(target)
+        this.$store.dispatch("doTarget", target)
       }
+
     }
   }
 </script>
