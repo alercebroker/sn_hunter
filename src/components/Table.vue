@@ -11,6 +11,7 @@
                  item-value="value"
                  :items="nCandidatesSelect"
                  @change="reloadTable()"
+                 label="Candidates Shown"
                ></v-select>
               </v-flex>
               <v-flex xs4>
@@ -20,6 +21,7 @@
                   item-value="value"
                   :items="deltaTimes"
                   @change="reloadTable()"
+                  label="Time Window"
                 ></v-select>
               </v-flex>
               <v-flex xs2 >
