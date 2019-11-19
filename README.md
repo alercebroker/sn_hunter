@@ -23,7 +23,7 @@ To install the application dependencies just run inside the root repository
 There a 3 ways to run the application.
 
 Running on:
-- ￼Development   (`.env.developement`):
+- ￼Development   (`.env.development`):
 
 The most used environment when developing, to run it use the command
 ```
