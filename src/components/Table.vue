@@ -1,17 +1,26 @@
 <template>
   <div class="" style="margin-left:2%; margin-right:2%;">
-      <h4 class="text-xs-center">Top 100 SN Early Classified Candidates</h4>
+      <h4 class="text-xs-center">Top {{nCandidates}} SN Early Classified Candidates</h4>
       <h6 class="text-xs-center">Click a candidate for more information</h6>
       <v-form >
         <v-layout>
-             <v-flex xs8 >
+             <v-flex xs4 >
                <v-select
-                 v-model="delta"
+                 v-model="nCandidates"
                  item-text="text"
                  item-value="value"
-                 :items="deltaTimes"
+                 :items="nCandidatesSelect"
                  @change="reloadTable()"
                ></v-select>
+              </v-flex>
+              <v-flex xs4>
+                <v-select
+                  v-model="delta"
+                  item-text="text"
+                  item-value="value"
+                  :items="deltaTimes"
+                  @change="reloadTable()"
+                ></v-select>
               </v-flex>
               <v-flex xs2 >
                 <v-btn @click="reloadTable()" style="margin-top:15px;">
@@ -58,7 +67,7 @@
 
   export default {
     data: () => ({
-      delta: process.env.VUE_APP_DELTA,
+      delta: 2,
       selectedSN: null,
       deltaTimes:[
         {text: "Last 24 Hours", value:1},
@@ -67,9 +76,18 @@
         {text: "Last Week", value:7},
       ],
       table: null,
+      nCandidates: 100,
+      nCandidatesSelect: [
+        {text: 10, value:10},
+        {text: 50, value:50},
+        {text: 100, value:100},
+        {text: 200, value:200},
+        {text: 400, value:400},
+        {text: 1000, value: 1000}
+      ]
     }),
     mounted: function(){
-      this.$store.dispatch("retrieveCandidates",this.delta);
+      this.$store.dispatch("retrieveCandidates",this.params);
       this.$store.dispatch("createTable");
       var app = this;
       var oid = null;
@@ -87,10 +105,16 @@
     methods: {
       reloadTable(){
         this.$store.dispatch("cleanCandidates");
-        this.$store.dispatch("retrieveCandidates",this.delta);
-      },
+        this.$store.dispatch("retrieveCandidates",this.params);
+      }
     },
     computed: {
+      params(){
+        return {
+              delta: this.delta,
+              nCandidates: this.nCandidates
+            };
+      },
       candidate(){
         return this.$store.getters.getSelected.oid;
       },
