@@ -177,14 +177,17 @@ export default new Vuex.Store({
         console.log("Error")
       })
     },
-    retrieveCandidates(context,delta){
+    retrieveCandidates(context,params){
+      let delta = params.delta;
+      let nCandidates = params.nCandidates;
+
       //Calculate stuff
       var date = new Date();
       var now_mjd = dateToJD(date);
       var last_mjd = dateToJD(date.subsDays(delta));
 
       var parameters = {
-            "records_per_pages":100,
+            "records_per_pages":nCandidates,
             "query_parameters":
             {
               "filters":
@@ -195,7 +198,7 @@ export default new Vuex.Store({
                       }
               },
               "sortBy": "pclassearly",
-              "total":100
+              "total":nCandidates
       };
       axios.post(ztf_url+"/query",parameters).then(function(response){
         context.commit("SET_CANDIDATES", response.data.result);
@@ -218,7 +221,6 @@ export default new Vuex.Store({
     createTable(context,id){
       $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm:SS UT' );
       var table = $("#sneCandidates").DataTable({
-        "pageLength": 6,
         "dom":"t,p,r",
         "order": [[ 2, "desc" ],[3,"desc"],[1,"desc"]],
         "responsive": true,
