@@ -98,7 +98,7 @@
                                       // get point coordinates
                                       var pt = Celestial.mapProjection(d.geometry.coordinates);
                                       // object radius in pixel, could be varable depending on e.g. dimension or magnitude
-                                      var r = 7*Math.pow(d.properties.prob,32); // replace 20 with dimmest magnitude in the data
+                                      var r = 10*d.properties.prob; // replace 20 with dimmest magnitude in the data
 
                                       // draw on canvas
                                       //  Set object styles fill color, line color & width etc.
@@ -126,7 +126,7 @@
                                       // get point coordinates
                                       var pt = Celestial.mapProjection(d.geometry.coordinates);
                                       // object radius in pixel, could be varable depending on e.g. dimension or magnitude
-                                      var r = 7*Math.pow(d.properties.prob,32); // replace 20 with dimmest magnitude in the data
+                                      var r = 10*d.properties.prob; // replace 20 with dimmest magnitude in the data
 
                                       // draw on canvas
                                       //  Set object styles fill color, line color & width etc.
