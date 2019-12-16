@@ -27,7 +27,7 @@
         <v-card>
           <v-card-text>
           <p>SN Hunter uses the probability given by the ALeRCE Early Classification model to select the most probable SN candidates.</p>
-          <p>The ALeRCE Early Classification model (paper pending) classifies objects based on their first detection image. The SN Hunter takes the top 100 SN candidates sorted by model probability.</p>
+          <p>The ALeRCE Early Classification model (paper pending) classifies objects based on their first detection image. The SN Hunter takes the top SN candidates sorted by model probability.</p>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -50,12 +50,12 @@
 
     <v-expansion-panel-content>
     <template v-slot:header>
-      <div class="font-weight-bold">Why just the top 100 candidates?</div>
+      <div class="font-weight-bold">Why just the top candidates?</div>
     </template>
     <v-card>
       <v-card-text>
         <p>
-          For this tool we only selected the top 100 candidates for an easier visualization on the celestial map.
+          For this tool we only selected the top candidates for an easier visualization on the celestial map.
         </p>
         <p>
           If you need to analyze more candidates please check the <a href="http://alerce.xyz">ALeRCE ZTF DB access plataform</a>.
@@ -71,7 +71,7 @@
   <v-card>
     <v-card-text>
       <p>
-        All help is appreciated, you can send me an <a href="mailto:camilo.valenzuel@alumnos.usm.cl">email</a> with feedback. A list of possible subjects are:
+        All help is appreciated, you can send an issue to the <a href="https://github.com/alercebroker/sn_hunter/issues">SN Hunter Github Repository</a> with feedback. list of possible subjects are:
        </p>
       <ul>
         <li>Bugs in the tool</li>
