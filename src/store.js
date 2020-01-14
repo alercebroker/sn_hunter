@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios';
 import reportApi from "./services/reportApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
@@ -38,9 +39,12 @@ export default new Vuex.Store({
     report: false,
     reports: null,
     response: null,
+    //Checking if user is stored on local storage
+    token: localStorage.getItem("vue-authenticate.vueauth_token")? localStorage.getItem("vue-authenticate.vueauth_token"): null,
     user: {
       id: null,
       name: null,
+      last_name: null,
       email: null,
       avatar: null
     },
@@ -121,7 +125,11 @@ export default new Vuex.Store({
       state.user.id = null,
       state.user.name = null,
       state.user.email = null,
-      state.user.avatar = null
+      state.user.avatar = null,
+      state.token = null
+    },
+    SET_TOKEN(state,token){
+      state.token = token
     }
   },
   actions: {
@@ -142,10 +150,7 @@ export default new Vuex.Store({
       var url = avro_url + "?oid="+ data["oid"] + "&candid=" + data["candid"]
       var data
       axios.get(url).then(function(response){
-        // if (response.status==200){
-          // data = response["data"]
           context.commit("SET_AVRO",response.data)
-        // }
       });
     },
     retrieveAlert(context,oid){
@@ -240,7 +245,7 @@ export default new Vuex.Store({
     doReport(context, data){
       reportApi.report(data).then(response => {
         context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports", context.state.user.email)
+        context.dispatch("getReports")
       })
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
@@ -257,32 +262,43 @@ export default new Vuex.Store({
     deleteReport(context, data){
       reportApi.deleteReport(data).then(response => {
         context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports", context.state.user.email)
+        context.dispatch("getReports")
       })
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
       })
     },
-    loginUser(context, data){
-      let user = {email: data.w3.U3, avatar: data.w3.Paa,}
-      reportApi.existUser(user).then(response => {
-        if(response.data.exist) {
-          context.dispatch("getReports", data.w3.U3)
-          context.commit("SET_USER", {
-            name: data.w3.ig,
-            email: data.w3.U3,
-            avatar: data.w3.Paa,
-            id: response.data.user_id
+    loginUser({commit,dispatch}, data){
+        commit("SET_TOKEN", data.token)
+        commit("SET_USER", {
+          name: data.first_name,
+          last_name: data.last_name,
+          email: data.email,
+          avatar: "#",
+          id: data.id
+        })
+        dispatch('getReports')
+    },
+    getUserInfo({commit,state,dispatch}){
+      if(state.token){
+        reportApi.getInfo().then(response =>{
+          commit("SET_USER", {
+            name: response.data.first_name,
+            last_name: response.data.last_name,
+            email: response.data.email,
+            avatar: "#",
+            id: response.data.id
           })
-        }
-        else {
-          this.$gAuth.signOut()
-        }
-      })
+        }).catch(reason => {
+          console.log(reason)
+        })
+        dispatch('getReports')
+      }
     },
     logoutUser(context) {
       context.commit("SET_NULL_USER")
-    }
+      localStorage.removeItem('vue-authenticate.vueauth_token')
+    },
   },
   getters:{
     getCandidates(state){
