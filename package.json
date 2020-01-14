@@ -16,7 +16,7 @@
     "julian": "^0.2.0",
     "vue": "^2.6.10",
     "vue-authenticate": "^1.4.1",
-    "vue-axios": "^2.1.4",
+    "vue-axios": "^2.1.5",
     "vue-echarts": "^4.0.3",
     "vue-google-oauth2": "^1.4.0",
     "vue-resource": "^1.5.1",
