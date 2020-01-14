@@ -190,12 +190,19 @@
                     <span>Difference is the change between science and template images.</span>
                   </v-tooltip>
                 </v-flex> <!-- table -->
-                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
+                <v-flex sm8 offset-sm4 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
+
                    <div class="text-center">
-                    <v-btn block color="warning" @click="clickBogus">
-                      <v-icon left> report_problem </v-icon>
-                      {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
-                    </v-btn>
+                     <v-layout row>
+                       <v-btn block color="primary" @click="clickReport('TOM')">
+                         <!-- <v-icon left> telescope </v-icon> -->
+                         {{ this.reports.includes(this.candidate)? "Sended" : "Good Candidate" }}
+                       </v-btn>
+                      <v-btn block color="warning" @click="clickReport('Bogus')">
+                        <v-icon left> report_problem </v-icon>
+                        {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
+                      </v-btn>
+                    </v-layout>
                    </div>
                 </v-flex>
               </v-layout>
@@ -212,7 +219,6 @@
   import Aladin from './Aladin'
 
   var base_url = "https://avro.alerce.online/get_stamp"
-  // ?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
   export default{
     components:{
       Aladin
@@ -357,7 +363,8 @@
       })
     },
     methods: {
-      clickBogus(){
+
+      clickReport(report_type){
         /*If bogus already has been reported */
         if(this.reports.includes(this.candidate)) {
           let report = this.$store.getters.getReports.find( x => x.object == this.candidate);
@@ -366,8 +373,7 @@
         else{
           let report = {
             object: this.candidate,
-            observation: "Bogus",
-            reason: "Bogus",
+            report_type: report_type,
             author: this.user.id,
             source: "SN Hunter"
           }
