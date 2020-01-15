@@ -42,13 +42,6 @@
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
-      <v-btn flat to="/classified" hidden-sm-and-down>
-        Classified SN
-      </v-btn>
-      <v-btn flat to="/candidates" hidden-sm-and-down>
-        Candidates
-      </v-btn>
-
       <v-btn flat to="/faq">
         FAQ
       </v-btn>
