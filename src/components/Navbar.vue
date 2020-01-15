@@ -59,7 +59,9 @@
     <v-menu v-else offset-y>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">
-          <v-avatar v-if="user.avatar" size="36px"  > <v-img :src="user.avatar" style="padding:1px 1px 1px 1px;background-color:white;"></v-img></v-avatar>
+          <v-avatar size="36px" :color="randomColor">
+              <span class="white--text headline">{{userInitials}}</span>
+          </v-avatar>
         </v-btn>
       </template>
       <!-- Logged -->
@@ -106,7 +108,16 @@ export default {
     },
     logged(){
       return this.$store.getters.getUser.name == null? false : true;
-    }
+    },
+    randomColor(){
+      return '#'+(Math.random()*0xFFFFFF<<0).toString(16)
+    },
+    userInitials(){
+      if (!this.user.name){
+          return
+      }
+      return this.user.name[0] + this.user.last_name[0]
+    },
   }
 }
 /* eslint-enable */
