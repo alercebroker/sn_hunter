@@ -42,31 +42,28 @@
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
-      <v-btn flat to="/classified" hidden-sm-and-down>
-        Classified SN
-      </v-btn>
-      <v-btn flat to="/candidates" hidden-sm-and-down>
-        Candidates
-      </v-btn>
-
       <v-btn flat to="/faq">
         FAQ
       </v-btn>
     </v-toolbar-items>
-    <v-btn v-if="!logged" class="ma-2" tile outline @click="onLogin()">
+    <v-btn v-if="!logged" class="ma-2" tile outline @click="authenticate()">
       <v-icon left>account_circle</v-icon> Sign in
     </v-btn>
     <v-menu v-else offset-y>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">
-          <v-avatar v-if="user.avatar" size="36px"> <img :src="user.avatar"></v-avatar>
+          <v-avatar size="36px" :color="randomColor">
+              <span class="white--text headline">{{userInitials}}</span>
+          </v-avatar>
         </v-btn>
       </template>
       <!-- Logged -->
         <v-list subheader dense>
-          <v-subheader>{{ user.name }}</v-subheader>
+          <v-subheader>{{ user.name.charAt(0).toUpperCase() +
+           user.name.slice(1)}} {{ user.last_name.charAt(0).toUpperCase() +
+            user.last_name.slice(1)}}</v-subheader>
           <!--Register-->
-          <v-list-tile @click="onLogout()" avatar>
+          <v-list-tile @click="logout()" avatar>
             <v-list-tile-avatar>
               <v-icon>power_settings_new</v-icon>
             </v-list-tile-avatar>
@@ -79,9 +76,12 @@
   </v-toolbar>
 </template>
 <script>
+import {authMixin} from '@/mixins/authMixin';
+
 export default {
   /* eslint-disable */
   name: "navbar",
+  mixins: [authMixin],
   data: () => ({
   priority: 30,
   items: [
@@ -89,22 +89,11 @@ export default {
     { title: 'About', link:"http://alerce.science" },
     ],
   }),
-  methods: {
-    onLogin() {
-        this.$gAuth.signIn().then(GoogleUser =>
-        {
-            this.$store.dispatch("loginUser", GoogleUser);
-        })
-        .catch(reason => {
-            // TODO: commit error
-            console.log(reason)
-        })
-    },
-    onLogout() {
-      this.$gAuth.signOut().then( () =>
-        this.$store.dispatch("logoutUser")
-      )
+  mounted(){
+    if(localStorage.getItem('vue-authenticate.vueauth_token')){
+      this.$store.dispatch('getUserInfo')
     }
+
   },
   computed: {
     user(){
@@ -112,7 +101,16 @@ export default {
     },
     logged(){
       return this.$store.getters.getUser.name == null? false : true;
-    }
+    },
+    randomColor(){
+      return '#'+(Math.random()*0xFFFFFF<<0).toString(16)
+    },
+    userInitials(){
+      if (!this.user.name){
+          return
+      }
+      return this.user.name[0] + this.user.last_name[0]
+    },
   }
 }
 /* eslint-enable */

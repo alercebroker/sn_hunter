@@ -14,11 +14,6 @@
               <div class="text-xs-center overline">
                 First Detection Information
               </div>
-              <!--div class="text-center">
-                <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
-                  <v-icon left>report</v-icon> Report
-                </v-btn>
-              </div-->
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">
@@ -81,10 +76,6 @@
                   </v-tooltip>
                 </v-flex>
               </v-layout>
-
-
-
-
               <v-layout row pt-0 pb-0 wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
                   <v-btn class="text-capitalize" :href="oidUrl" target="_blank" dark color="primary">ALeRCE</v-btn>
@@ -190,12 +181,19 @@
                     <span>Difference is the change between science and template images.</span>
                   </v-tooltip>
                 </v-flex> <!-- table -->
-                <v-flex xs4 offset-xs8 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.id != null">
+                <v-flex sm8 offset-sm4 v-if="this.$store.getters.getSelected != null && this.$store.getters.getUser.email != null">
+
                    <div class="text-center">
-                    <v-btn block color="warning" @click="clickBogus">
-                      <v-icon left> report_problem </v-icon>
-                      {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
-                    </v-btn>
+                     <v-layout row>
+                       <v-btn block color="primary" @click="clickReport('TOM')" :disabled="isBogus">
+                         <!-- <v-icon left> telescope </v-icon> -->
+                         {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))? "Sended" : "Possible SN" }}
+                       </v-btn>
+                      <v-btn block color="warning" @click="clickReport('Bogus')" :disabled="isSN">
+                        <v-icon left> report_problem </v-icon>
+                        {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "Bogus"))? "Reported" : "Report bogus" }}
+                      </v-btn>
+                    </v-layout>
                    </div>
                 </v-flex>
               </v-layout>
@@ -212,7 +210,6 @@
   import Aladin from './Aladin'
 
   var base_url = "https://avro.alerce.online/get_stamp"
-  // ?oid="+oid+"&candid="+selected["candid_str"]+"&format=png&type="
   export default{
     components:{
       Aladin
@@ -225,6 +222,12 @@
       }
     },
     computed:{
+      isBogus(){
+        return this.reports.find(x => (x.oid == this.candidate && x.report_type == "Bogus"))
+      },
+      isSN(){
+        return this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))
+      },
       table_avro_info(){
         var values = []
         for(var key in this.avro_info.candidate){
@@ -332,10 +335,12 @@
       },
       reports: {
         get() {
-          return this.$store.getters.getReports.map( x => x.object)
+          return this.$store.getters.getReports.map( function(x){
+            return {oid: x.object, report_type: x.report_type};
+          })
         },
         set(value){
-          this.$store.dispatch("getReports", {email: value})
+          this.$store.dispatch("getReports")
         }
       },
       user(){
@@ -357,22 +362,22 @@
       })
     },
     methods: {
-      clickBogus(){
+
+      clickReport(report_type){
         /*If bogus already has been reported */
-        if(this.reports.includes(this.candidate)) {
-          let report = this.$store.getters.getReports.find( x => x.object == this.candidate);
+        if(this.reports.find(x => (x.oid == this.candidate && x.report_type == report_type))) {
+          let report = this.$store.getters.getReports.find(x => (x.object == this.candidate && x.report_type == report_type));
           this.$store.dispatch("deleteReport", report.id)
         }
         else{
           let report = {
             object: this.candidate,
-            observation: "Bogus",
-            reason: "Bogus",
+            report_type: report_type,
             author: this.user.id,
             source: "SN Hunter"
           }
           this.$store.dispatch("doReport", report)
-          
+
         }
       }
     }
