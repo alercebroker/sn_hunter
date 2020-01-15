@@ -161,7 +161,7 @@ export default new Vuex.Store({
           var firstmjd = 1/0;
           var first_alert;
           $.each(alerts, function(id,value){
-            if(firstmjd > value["mjd"]){
+            if(firstmjd > value["mjd"] && value["has_stamps"]){
               firstmjd = value["mjd"];
               first_alert = id;
             }

@@ -14,11 +14,6 @@
               <div class="text-xs-center overline">
                 First Detection Information
               </div>
-              <!--div class="text-center">
-                <v-btn class="ma-2" tile outlined color="yellow" @click="displayReport = true">
-                  <v-icon left>report</v-icon> Report
-                </v-btn>
-              </div-->
               <v-divider></v-divider>
               <v-layout row wrap class="infoTab" id="mainInfo">
                 <v-flex xs4 full-width class="text-xs-center">
@@ -81,10 +76,6 @@
                   </v-tooltip>
                 </v-flex>
               </v-layout>
-
-
-
-
               <v-layout row pt-0 pb-0 wrap class="infoTab" id="buttons">
                 <v-flex class="text-xs-center">
                   <v-btn class="text-capitalize" :href="oidUrl" target="_blank" dark color="primary">ALeRCE</v-btn>
@@ -194,13 +185,13 @@
 
                    <div class="text-center">
                      <v-layout row>
-                       <v-btn block color="primary" @click="clickReport('TOM')">
+                       <v-btn block color="primary" @click="clickReport('TOM')" :disabled="isBogus">
                          <!-- <v-icon left> telescope </v-icon> -->
-                         {{ this.reports.includes(this.candidate)? "Sended" : "Good Candidate" }}
+                         {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))? "Sended" : "Possible SN" }}
                        </v-btn>
-                      <v-btn block color="warning" @click="clickReport('Bogus')">
+                      <v-btn block color="warning" @click="clickReport('Bogus')" :disabled="isSN">
                         <v-icon left> report_problem </v-icon>
-                        {{ this.reports.includes(this.candidate)? "Reported" : "Report bogus" }}
+                        {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "Bogus"))? "Reported" : "Report bogus" }}
                       </v-btn>
                     </v-layout>
                    </div>
@@ -231,6 +222,12 @@
       }
     },
     computed:{
+      isBogus(){
+        return this.reports.find(x => (x.oid == this.candidate && x.report_type == "Bogus"))
+      },
+      isSN(){
+        return this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))
+      },
       table_avro_info(){
         var values = []
         for(var key in this.avro_info.candidate){
@@ -338,7 +335,9 @@
       },
       reports: {
         get() {
-          return this.$store.getters.getReports.map( x => x.object)
+          return this.$store.getters.getReports.map( function(x){
+            return {oid: x.object, report_type: x.report_type};
+          })
         },
         set(value){
           this.$store.dispatch("getReports")
@@ -366,8 +365,8 @@
 
       clickReport(report_type){
         /*If bogus already has been reported */
-        if(this.reports.includes(this.candidate)) {
-          let report = this.$store.getters.getReports.find( x => x.object == this.candidate);
+        if(this.reports.find(x => (x.oid == this.candidate && x.report_type == report_type))) {
+          let report = this.$store.getters.getReports.find(x => (x.object == this.candidate && x.report_type == report_type));
           this.$store.dispatch("deleteReport", report.id)
         }
         else{
