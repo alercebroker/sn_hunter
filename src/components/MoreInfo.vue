@@ -185,11 +185,11 @@
 
                    <div class="text-center">
                      <v-layout row>
-                       <v-btn block color="primary" @click="clickReport('TOM')" :disabled="isBogus">
+                       <v-btn style="margin-left:5px; margin-right:5px;" block color="primary" @click="clickReport('TOM')" :disabled="isBogus">
                          <!-- <v-icon left> telescope </v-icon> -->
                          {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))? "Sent" : "Possible SN" }}
                        </v-btn>
-                      <v-btn block color="warning" @click="clickReport('Bogus')" :disabled="isSN">
+                      <v-btn  style="margin-left:5px; margin-right:5px;"  block color="warning" @click="clickReport('Bogus')" :disabled="isSN">
                         <v-icon left> report_problem </v-icon>
                         {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "Bogus"))? "Reported" : "Report bogus" }}
                       </v-btn>
