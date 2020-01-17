@@ -187,7 +187,7 @@
                      <v-layout row>
                        <v-btn block color="primary" @click="clickReport('TOM')" :disabled="isBogus">
                          <!-- <v-icon left> telescope </v-icon> -->
-                         {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))? "Sended" : "Possible SN" }}
+                         {{ this.reports.find(x => (x.oid == this.candidate && x.report_type == "TOM"))? "Sent" : "Possible SN" }}
                        </v-btn>
                       <v-btn block color="warning" @click="clickReport('Bogus')" :disabled="isSN">
                         <v-icon left> report_problem </v-icon>
