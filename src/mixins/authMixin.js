@@ -1,6 +1,4 @@
-import VueAxios from 'vue-axios'
 import axios from 'axios';
-import Vue from 'vue'
 import store from '../store'
 
 export const authMixin = {
@@ -9,14 +7,13 @@ export const authMixin = {
             axios.post(process.env.VUE_APP_USER_API+"/api/check/", {"token": localStorage.getItem("vue-authenticate.vueauth_token")}).then((response) => {
                     var path = (response.data.status)? true : "/";
                     redirect({ path: path});
-                }).catch((error) => {
+                }).catch(() => {
             });
         },
-        authenticate: function(provider) {
+        authenticate: function() {
             this.$auth.authenticate('google', {provider: "google-oauth2"}).then(function (response) {
                 store.dispatch('loginUser', response.data)
-            }).catch(function(error) {
-                console.log(error);
+            }).catch(function() {
             });
         },
         logout: function(){

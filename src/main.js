@@ -1,24 +1,11 @@
 import Vue from 'vue'
-// import './plugins/axios'
-import './plugins/vuetify'
+import '@/plugins/vuetify'
 import App from './App.vue'
 import store from './store'
 import router from './router'
 import VueTour from 'vue-tour'
 
 Vue.config.productionTip = false
-
-import ECharts from 'vue-echarts'
-// import ECharts modules manually to reduce bundle size
-import 'echarts/lib/chart/scatter'
-import 'echarts/lib/chart/candlestick'
-import 'echarts/lib/chart/custom'
-import 'echarts/lib/chart/radar'
-import 'echarts/lib/component/title'
-import 'echarts/lib/component/toolbox'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/legend'
-import 'echarts/lib/component/dataZoom'
 import VueAuthenticate from 'vue-authenticate'
 
 
@@ -26,14 +13,8 @@ import VueAxios from 'vue-axios'
 import axios from 'axios';
 Vue.use(VueAxios, axios)
 
-
-Vue.component('v-chart', ECharts)
-
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)
-
-import VueResource from 'vue-resource'
-
 Vue.use(VueAuthenticate, {
   tokenPath: 'token',
   providers: {

@@ -18,16 +18,5 @@ export default new Router({
 
       component: () => import('./views/Faq.vue')
     },
-    {
-      path: '/candidates',
-      name: 'candidates',
-
-      component: () => import('./views/Candidates.vue')
-    },
-    {
-      path: '/classified',
-      name: 'classified',
-      component: () => import('./views/Classified.vue')
-    },
   ]
 })
