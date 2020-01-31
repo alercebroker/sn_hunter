@@ -28,6 +28,7 @@ function pad (str, max) {
 
 export default new Vuex.Store({
   state: {
+    nCandidates: 0,
     sneCandidates: [],
     selectedSne: null,
     alertCandidate:null,
@@ -118,6 +119,9 @@ export default new Vuex.Store({
     SET_REPORTS(state, value){
       state.reports = value.data
     },
+    SET_NCANDIDATES(state, value){ 
+      state.nCandidates = value
+    },
     SET_USER(state, data){
       state.user = data
     },
@@ -180,7 +184,7 @@ export default new Vuex.Store({
     retrieveCandidates(context,params){
       let delta = params.delta;
       let nCandidates = params.nCandidates;
-
+      context.commit("SET_NCANDIDATES", nCandidates);
       //Calculate stuff
       var date = new Date();
       var now_mjd = dateToJD(date);
@@ -245,14 +249,14 @@ export default new Vuex.Store({
     doReport(context, data){
       reportApi.report(data).then(response => {
         context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports")
+        context.dispatch("getReports", context.nCandidates);
       })
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
       })
     },
     getReports(context, data){
-      reportApi.getReports(data).then(response => {
+      reportApi.getReports(context.nCandidates).then(response => {
         context.commit("SET_REPORTS", response)
       })
       .catch(reason => {
@@ -326,7 +330,7 @@ export default new Vuex.Store({
       return state.report;
     },
     getReports(state){
-      return state.reports  == null? [] : state.reports;
+      return state.reports  == null? [] : state.reports.results;
     },
     getUser(state){
       return state.user;

@@ -35,8 +35,10 @@ export default {
     report(data) {
         return apiClient.post("/reporter/reports/", data);
     },
-    getReports() {
-        return apiClient.get("/reporter/reports/by_owner/");
+    getReports(data) {
+        var a =  apiClient.get("/reporter/reports/by_owner/", data);
+        console.log(a, data)
+        return a
     },
     deleteReport(id) {
         return apiClient.delete("/reporter/reports/{}/".replace("{}",id));
