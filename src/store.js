@@ -330,7 +330,7 @@ export default new Vuex.Store({
       return state.report;
     },
     getReports(state){
-      return state.reports  == null? [] : state.reports.results;
+      return state.reports  == null? [] : state.reports;
     },
     getUser(state){
       return state.user;

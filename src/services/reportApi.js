@@ -36,9 +36,9 @@ export default {
         return apiClient.post("/reporter/reports/", data);
     },
     getReports(data) {
-        var a =  apiClient.get("/reporter/reports/by_owner/", data);
-        console.log(a, data)
-        return a
+        return apiClient.get("/reporter/reports/by_owner/", {params:{
+		paginated: 'false'
+	}});
     },
     deleteReport(id) {
         return apiClient.delete("/reporter/reports/{}/".replace("{}",id));
