@@ -51,7 +51,8 @@ export default new Vuex.Store({
     },
     alerceClassified : [],
     alerceCandidates : [],
-    loadingTNS : true
+    loadingTNS : true,
+    detections: []
   },
   mutations: {
     SET_TNS(state,payload){
@@ -134,6 +135,9 @@ export default new Vuex.Store({
     },
     SET_TOKEN(state,token){
       state.token = token
+    },
+    SET_DETECTIONS(state, detections){
+      state.detections = detections;
     }
   },
   actions: {
@@ -161,6 +165,7 @@ export default new Vuex.Store({
       var parameters = {"oid":oid}
       axios.post(ztf_url+"/get_detections",parameters).then(function(response){
         var alerts = response.data.result.detections;
+        context.commit("SET_DETECTIONS", alerts);
         if(alerts.length > 1){
           var firstmjd = 1/0;
           var first_alert;
@@ -344,6 +349,9 @@ export default new Vuex.Store({
         candidates: state.alerceCandidates,
         loading: state.loadingTNS,
       }
+    },
+    getDetections(state){
+      return state.detections;
     }
   }
 })
