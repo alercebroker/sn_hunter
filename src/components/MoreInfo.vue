@@ -249,7 +249,7 @@
       stampUrl(){
         var alert = this.$store.getters.getAlert;
         if(alert){
-          var url = base_url + "?oid="+ alert["oid"] + "&candid=" +  alert["candid_str"] + "&format=png&type="
+          var url = base_url + "?oid="+ alert["oid"] + "&candid=" +  alert["candid"] + "&format=png&type="
         }else{
           var url=require('../assets/logos/footerAlerce.png')+"?"
         }

@@ -69,7 +69,7 @@
 
   export default {
     data: () => ({
-      delta: 2,
+      delta: 1,
       selectedSN: null,
       deltaTimes:[
         {text: "Last 24 Hours", value:1},

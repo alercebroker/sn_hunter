@@ -71,7 +71,11 @@ export default new Vuex.Store({
       state.avro = payload;
     },
     SET_CANDIDATES(state,payload){
-      state.sneCandidates = payload;
+      var sneCandidates = {}
+      $.each(payload,function(key,value){
+        sneCandidates[value["oid"]] = value
+      });
+      state.sneCandidates = sneCandidates;
     },
     CLEAN_CANDIDATES(state){
       state.sneCandidates = [];
@@ -98,11 +102,11 @@ export default new Vuex.Store({
         var mjd = value["firstmjd"];
         var date = jdToDate(mjd);
         var dateStr = pad((date.getUTCDate()),2) + '/' + pad((date.getUTCMonth() + 1),2) + '/' +  date.getUTCFullYear() + ' ' + pad(date.getUTCHours(),2) + ":" + pad(date.getUTCMinutes(),2) + ":" + pad(date.getUTCSeconds(),2) + " UT"
-        var prob = value["pclassearly"].toFixed(3);
-        var nobs = value["nobs"]
-        var filter = value["fid"];
+        var prob = value["probability"].toFixed(3);
+        var nobs = value["ndet"]
+        var oid  = value["oid"]
         var obj ={
-          oid: key,
+          oid: oid,
           discovery_date: dateStr,
           prob: prob,
           nobs: nobs
@@ -120,7 +124,7 @@ export default new Vuex.Store({
     SET_REPORTS(state, value){
       state.reports = value.data
     },
-    SET_NCANDIDATES(state, value){ 
+    SET_NCANDIDATES(state, value){
       state.nCandidates = value
     },
     SET_USER(state, data){
@@ -142,45 +146,51 @@ export default new Vuex.Store({
   },
   actions: {
     getAlerceTNS(context){
-      axios.get(ztf_url+"/get_alerce_tns").then(function(response){
-        var candidates = response.data.results.candidates;
-        var classified = response.data.results.classified;
-
-        context.commit("SET_TNS",{"candidates":candidates,"classified":classified,"loadingTNS":false})
-      }).catch(function(){
-        context.commit("SET_TNS",{"candidates":[],"classified":[],"loadingTNS":false})
-      });
+      // axios.get(ztf_url+"/get_alerce_tns").then(function(response){
+      //   var candidates = response.data.results.candidates;
+      //   var classified = response.data.results.classified;
+      //
+      //   context.commit("SET_TNS",{"candidates":candidates,"classified":classified,"loadingTNS":false})
+      // }).catch(function(){
+      //   context.commit("SET_TNS",{"candidates":[],"classified":[],"loadingTNS":false})
+      // });
     },
     setAladin(context){
       context.commit("SET_ALADIN");
     },
     retrieveAVRO(context,data){
-      var url = avro_url + "?oid="+ data["oid"] + "&candid=" + data["candid"]
+      var url = avro_url
       var data
-      axios.get(url).then(function(response){
+      axios.get(url, {params: {
+        oid: data["oid"],
+        candid: data["candid"]
+      }}).then(function(response){
           context.commit("SET_AVRO",response.data)
       });
     },
     retrieveAlert(context,oid){
-      var parameters = {"oid":oid}
-      axios.post(ztf_url+"/get_detections",parameters).then(function(response){
-        var alerts = response.data.result.detections;
+      axios.get(ztf_url+"/objects/"+oid+"/detections").then(function(response){
+        var alerts = response.data;
         context.commit("SET_DETECTIONS", alerts);
         if(alerts.length > 1){
           var firstmjd = 1/0;
-          var first_alert;
+          var first_alert = 0;
           $.each(alerts, function(id,value){
-            if(firstmjd > value["mjd"] && value["has_stamps"]){
+            console.log(value["mjd"]);
+            console.log(value["has_stamp"]);
+            if(firstmjd > value["mjd"] && value["has_stamp"]){
               firstmjd = value["mjd"];
               first_alert = id;
             }
-          });
+          },function(error){console.log(error)});
+          console.log(first_alert)
           var selected = alerts[first_alert];
         }else{
           var selected = alerts[0];
         }
+        selected.oid = oid
         context.commit("CLEAN_AVRO");
-        context.dispatch("retrieveAVRO",{"oid":oid,"candid":selected["candid_str"]});
+        context.dispatch("retrieveAVRO",{"oid":oid,"candid":selected["candid"]});
         context.commit("SET_CANDIDATE_ALERT",selected);
       },function(){
         console.log("Error")
@@ -196,25 +206,25 @@ export default new Vuex.Store({
       var last_mjd = dateToJD(date.subsDays(delta));
 
       var parameters = {
-            "records_per_pages":nCandidates,
-            "query_parameters":
-            {
-              "filters":
-                      {"classearly": 19},
-              "dates":
-                      {"firstmjd":
-                        {"min":last_mjd}
-                      }
-              },
-              "sortBy": "pclassearly",
-              "total":nCandidates
+        "classifier": "stamp_classifier",
+        "class": "SN",
+        "ranking": 1,
+        "firstmjd": [last_mjd, now_mjd],
+        "page": 1,
+        "page_size": nCandidates,
+        "count": false,
+        "order_by": "probability",
+        "order_mode": "DESC"
       };
-      axios.post(ztf_url+"/query",parameters).then(function(response){
-        context.commit("SET_CANDIDATES", response.data.result);
+      console.log()
+      axios.get(ztf_url+"/objects",{
+        params: parameters
+      }).then(function(response){
+        context.commit("SET_CANDIDATES", response.data.items);
         context.commit("CHANGE_DELTA",delta);
         context.commit("SET_ZOOM",false);
-        context.commit("UPDATE_TABLE", response.data.result);
-      }, function(){
+        context.commit("UPDATE_TABLE", response.data.items);
+      }).catch(function(){
         console.log("error");
       });
     },
