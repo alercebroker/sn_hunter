@@ -5,6 +5,8 @@ import reportApi from "./services/reportApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
 
+const qs = require('qs')
+
 var avro_url = process.env.VUE_APP_STAMPS_API+"/get_avro_info"
 var ztf_url = process.env.VUE_APP_PSQL_API
 
@@ -218,7 +220,10 @@ export default new Vuex.Store({
       };
       console.log()
       axios.get(ztf_url+"/objects",{
-        params: parameters
+        params: parameters,
+        paramsSerializer: function(params) {
+            return qs.stringify(params, {arrayFormat: 'repeat'})
+          }
       }).then(function(response){
         context.commit("SET_CANDIDATES", response.data.items);
         context.commit("CHANGE_DELTA",delta);
