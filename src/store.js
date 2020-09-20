@@ -243,6 +243,10 @@ export default new Vuex.Store({
       };
       axios.post(ztf_url + "/query", parameters).then(
         function(response) {
+          if (typeof(response.data) == "string"){
+            response.data = response.data.replace(/-*Infinity/g, "null");
+            response.data = JSON.parse(response.data);
+          }
           context.commit("SET_CANDIDATES", response.data.result);
           context.commit("CHANGE_DELTA", delta);
           context.commit("SET_ZOOM", false);
