@@ -230,7 +230,7 @@ export default new Vuex.Store({
       //Calculate stuff
       var date = new Date();
       var now_mjd = dateToJD(date);
-      var last_mjd = dateToJD(date.subsDays(delta));
+      var last_mjd = now_mjd - delta;
 
       var parameters = {
         records_per_pages: nCandidates,

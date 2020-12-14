@@ -76,6 +76,7 @@ export default {
     delta: 2,
     selectedSN: null,
     deltaTimes: [
+      { text: "Last 12 Hours", value: 0.5 },
       { text: "Last 24 Hours", value: 1 },
       { text: "Last 48 Hours", value: 2 },
       { text: "Last 72 Hours", value: 3 },
