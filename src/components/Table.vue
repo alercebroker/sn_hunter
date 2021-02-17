@@ -93,6 +93,25 @@ export default {
       {text: 1000, value: 1000}
     ]
   }),
+   mounted: function() {
+    this.$store.dispatch("retrieveCandidates", this.params);
+    this.$store.dispatch("createTable");
+    var app = this;
+    var oid = null;
+    $("table tbody").on(
+      {
+        click: function() {
+          $(".table-active").removeClass("table-active");
+          $(this).attr("class", "table-active");
+          var data = app.$store.getters.getTable.row(this).data();
+          var oid = data.oid;
+          app.$store.dispatch("setSelectedCandidate", oid);
+          app.$store.dispatch("retrieveAlert", oid);
+        }
+      },
+      "tr"
+    );
+  },
   methods: {
     reloadTable() {
       this.$store.dispatch("cleanCandidates");

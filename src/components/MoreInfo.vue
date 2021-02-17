@@ -248,10 +248,11 @@
       },
       stampUrl(){
         var alert = this.$store.getters.getAlert;
+        var url = null;
         if(alert){
-          var url = base_url + "?oid="+ alert["oid"] + "&candid=" +  alert["candid"] + "&format=png&type="
+          url = base_url + "?oid="+ alert["oid"] + "&candid=" +  alert["candid"] + "&format=png&type="
         }else{
-          var url=require('../assets/logos/footerAlerce.png')+"?"
+          url=require('../assets/logos/footerAlerce.png')+"?"
         }
         return url
       },
@@ -280,10 +281,11 @@
         var alert = this.$store.getters.getAlert;
         if(alert){
           var filter = alert.fid;
+          var band = -1;
           if(filter == 2){
-            var band ='r'
+            band ='r'
           }else{
-            var band ='g'
+            band ='g'
           }
           return band
         }else{
@@ -294,10 +296,11 @@
         var alert = this.$store.getters.getAlert;
         if(alert){
           var filter = alert.fid;
+          var band = -1;
           if(filter == 2){
-            var band ='red'
+            band ='red'
           }else{
-            var band ='green'
+            band ='green'
           }
           return band
         }else{
@@ -339,7 +342,7 @@
             return {oid: x.object, report_type: x.report_type};
           })
         },
-        set(value){
+        set(){
           this.$store.dispatch("getReports")
         }
       },
@@ -352,7 +355,7 @@
 
     },
     mounted: function(){
-      this.$store.subscribe((mutations,state) => {
+      this.$store.subscribe((mutations) => {
         switch (mutations.type) {
           case "SELECT_CANDIDATE":
             this.panel = 0;

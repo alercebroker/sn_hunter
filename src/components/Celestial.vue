@@ -10,7 +10,7 @@
 
 </template>
 
-
+<script type="text/javascript" src="<%= BASE_URL %>vendor/d3-celestial/celestial.js"></script>
 <script>
   export default {
     name: "celestial",

@@ -35,7 +35,7 @@ export default {
     report(data) {
         return apiClient.post("/reporter/reports/", data);
     },
-    getReports(data) {
+    getReports() {
         return apiClient.get("/reporter/reports/by_owner/", {params:{
 		paginated: 'false'
 	}});

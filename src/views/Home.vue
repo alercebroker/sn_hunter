@@ -34,6 +34,7 @@ import Table from '../components/Table'
 import Celestial from '../components/Celestial'
 import MoreInfo from '../components/MoreInfo'
 import ReportModal from '../components/ReportModal'
+import $ from 'jquery'
 
 export default {
   name: 'Home',
@@ -96,7 +97,7 @@ export default {
           this.clickRow()
         }
       }
-
+      return null;
     }
   },
   methods:{
