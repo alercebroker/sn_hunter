@@ -43,11 +43,9 @@
         FAQ
       </v-btn>
     </v-toolbar-items>
-    <!-- <v-btn v-if="!logged" class="ma-2" tile outline @click="authenticate()">
-      <v-icon left>account_circle</v-icon> Login
-    </v-btn> -->
     <div v-if="!logged">
 
+      <!-- Loggin Modal -->
       <div class="text-center">
         <v-dialog v-model="loginModal" width="600">
           <template v-slot:activator="{ on, attrs }">
@@ -91,6 +89,7 @@
   </v-toolbar>
 </template>
 <script>
+
 import { authMixin } from '@/mixins/authMixin';
 import Login from './users/Login';
 

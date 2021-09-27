@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
 import reportApi from "./services/reportApi.js"
+import userApi from "./services/userApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
 
@@ -267,6 +268,14 @@ export default new Vuex.Store({
       reportApi.deleteReport(data).then(response => {
         context.commit("SET_RESPONSE_REPORT", response)
         context.dispatch("getReports")
+      })
+      .catch(reason => {
+        context.commit("SET_RESPONSE_REPORT", reason)
+      })
+    },
+    registerUser(context, data){
+      userApi.register(data).then(response => {
+        context.commit("SET_RESPONSE_REPORT", response)
       })
       .catch(reason => {
         context.commit("SET_RESPONSE_REPORT", reason)
