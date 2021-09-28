@@ -43,6 +43,7 @@
                   id="login"
                   color="primary"
                   block
+                  @click="onLoginClick"
                   >Login</v-btn
                 >
               </v-col>
@@ -119,6 +120,19 @@ export default Vue.extend({
       this.registeredUserMail = payload;
       this.afterRegister = true;
     },
+    async onLoginClick() {
+      if (this.$refs.form.validate()){
+        const userInput = {
+          username: this.username,
+          password: this.password,
+        };
+        await this.login(userInput);
+        this.$emit("loginClick");
+      }
+    },
+    login(data){
+      this.$store.dispatch("loginNormalUser", data);
+    }
   },
 });
 </script>
