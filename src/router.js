@@ -18,5 +18,14 @@ export default new Router({
 
       component: () => import('./views/Faq.vue')
     },
+    {
+      path: "/oauth",
+      name: "oauth",
+      component: () => import('./views/GoogleOAuth2.vue'),
+      exact: true,
+      meta: {
+        title: "OAuth",
+      },
+    }
   ]
 })

@@ -39,11 +39,7 @@
 
             <v-row>
               <v-col cols="6">
-                <v-btn
-                  id="login"
-                  color="primary"
-                  block
-                  @click="onLoginClick"
+                <v-btn id="login" color="primary" block @click="onLoginClick"
                   >Login</v-btn
                 >
               </v-col>
@@ -68,6 +64,7 @@
                   color="primary"
                   class="white--text"
                   block
+                  @click="onGoogleClick"
                 >
                   <v-icon left> mdi-google </v-icon>
                   Log in with Google
@@ -121,17 +118,25 @@ export default Vue.extend({
       this.afterRegister = true;
     },
     async onLoginClick() {
-      if (this.$refs.form.validate()){
+      if (this.$refs.form.validate()) {
         const userInput = {
           username: this.username,
           password: this.password,
         };
         await this.login(userInput);
-        this.$emit("loginClick");
+        this.$emit('loginClick');
       }
     },
-    login(data){
-      this.$store.dispatch("loginNormalUser", data);
+    async onGoogleClick() {
+      const loginWindow = window.open("", "_self");
+      await this.getGoogleAuthUrl(loginWindow);
+      this.$emit("loginClick");
+    },
+    login(data) {
+      this.$store.dispatch('loginNormalUser', data);
+    },
+    getGoogleAuthUrl(loginWindow) {
+      this.$store.dispatch('getGoogleUrl', loginWindow);
     }
   },
 });

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios';
 import reportApi from "./services/reportApi.js"
 import userApi from "./services/userApi.js"
+import googleApi from "./services/googleApi.js"
 /* eslint-disable */
 Vue.use(Vuex)
 
@@ -332,6 +333,17 @@ export default new Vuex.Store({
     logoutUser(context) {
       context.commit("SET_NULL_USER")
       localStorage.removeItem('vue-authenticate.vueauth_token')
+    },
+    loginGoogleUser({ commit, dispatch }, data) {
+      googleApi.googleLogin(data).then(response => {
+        console.log(response);
+      })
+    },
+    getGoogleUrl(context, loginWindow) {
+      googleApi.getGoogleUrl().then(response => {
+        console.log(response);
+        loginWindow.location.href = response.data.authorization_url;
+      })
     },
   },
   getters: {
