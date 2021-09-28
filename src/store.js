@@ -337,6 +337,9 @@ export default new Vuex.Store({
     loginGoogleUser({ commit, dispatch }, data) {
       googleApi.googleLogin(data).then(response => {
         console.log(response);
+        localStorage.setItem("access_token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
+        context.dispatch("getCurrentUser");
       })
     },
     getGoogleUrl(context, loginWindow) {
