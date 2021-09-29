@@ -23,12 +23,12 @@ export default Vue.extend({
     this.code = this.$route.query.code;
     this.state = this.$route.query.state;
     this.loginGoogle();
-    this.loading = false;
   },
   methods: {
     loginGoogle() {
       const data = { code: this.code, state: this.state }
       this.$store.dispatch('loginGoogleUser', data);
+      this.loading = false;
     }
   },
   computed: {

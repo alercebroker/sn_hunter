@@ -296,7 +296,6 @@ export default new Vuex.Store({
     },
     loginNormalUser(context, data) {
       userApi.login(data).then(response => {
-        console.log(response);
         localStorage.setItem("access_token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
         context.dispatch("getCurrentUser");
@@ -304,14 +303,14 @@ export default new Vuex.Store({
     },
     getCurrentUser(context) {
       userApi.current().then(response => {
+        console.log(response);
         context.commit('SET_USER', {
           name: response.data.name,
           last_name: response.data.last_name,
           email: response.data.email,
           avatar: "#",
           id: response.data.id
-        });
-        console.log(response);
+        }); 
       });
     },
     getUserInfo({ commit, state, dispatch }) {
@@ -334,17 +333,15 @@ export default new Vuex.Store({
       context.commit("SET_NULL_USER")
       localStorage.removeItem('vue-authenticate.vueauth_token')
     },
-    loginGoogleUser({ commit, dispatch }, data) {
+    loginGoogleUser({ dispatch }, data) {
       googleApi.googleLogin(data).then(response => {
-        console.log(response);
         localStorage.setItem("access_token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
-        context.dispatch("getCurrentUser");
+        dispatch("getCurrentUser");
       })
     },
     getGoogleUrl(context, loginWindow) {
       googleApi.getGoogleUrl().then(response => {
-        console.log(response);
         loginWindow.location.href = response.data.authorization_url;
       })
     },

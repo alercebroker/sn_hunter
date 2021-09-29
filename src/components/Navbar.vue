@@ -4,12 +4,8 @@
       <v-img :src="require('../assets/logos/footerAlerceWhite.png')"></v-img>
     </v-toolbar-side-icon>
     <v-toolbar-title :to="{ path: '/' }" class="white--text">
-      <span class="hidden-sm-and-down">
-        ALeRCE
-      </span>
-      <span>
-        SN Hunter
-      </span>
+      <span class="hidden-sm-and-down"> ALeRCE </span>
+      <span> SN Hunter </span>
     </v-toolbar-title>
 
     <!-- <v-spacer></v-spacer> -->
@@ -39,12 +35,9 @@
     <v-spacer></v-spacer>
     <!-- Buttons -->
     <v-toolbar-items>
-      <v-btn flat to="/faq">
-        FAQ
-      </v-btn>
+      <v-btn flat to="/faq"> FAQ </v-btn>
     </v-toolbar-items>
     <div v-if="!logged">
-
       <!-- Loggin Modal -->
       <div class="text-center">
         <v-dialog v-model="loginModal" width="600">
@@ -53,9 +46,7 @@
               <v-icon left>account_circle</v-icon> Login
             </v-btn>
           </template>
-          <login
-            @registerClick="showLoginModal"
-          ></login>
+          <login @registerClick="showLoginModal"></login>
         </v-dialog>
       </div>
     </div>
@@ -89,13 +80,12 @@
   </v-toolbar>
 </template>
 <script>
-
-import { authMixin } from '@/mixins/authMixin';
-import Login from './users/Login';
+import { authMixin } from "@/mixins/authMixin";
+import Login from "./users/Login";
 
 export default {
   /* eslint-disable */
-  name: 'navbar',
+  name: "navbar",
   mixins: [authMixin],
   components: {
     Login,
@@ -103,14 +93,14 @@ export default {
   data: () => ({
     priority: 30,
     items: [
-      { title: 'ZTF Explorer', link: 'http://alerce.online' },
-      { title: 'About', link: 'http://alerce.science' },
+      { title: "ZTF Explorer", link: "http://alerce.online" },
+      { title: "About", link: "http://alerce.science" },
     ],
     loginModal: false,
   }),
   mounted() {
-    if (localStorage.getItem('vue-authenticate.vueauth_token')) {
-      this.$store.dispatch('getUserInfo');
+    if (localStorage.getItem("vue-authenticate.vueauth_token")) {
+      this.$store.dispatch("getUserInfo");
     }
   },
   methods: {
@@ -126,7 +116,7 @@ export default {
       return this.$store.getters.getUser.name == null ? false : true;
     },
     randomColor() {
-      return '#' + ((Math.random() * 0xffffff) << 0).toString(16);
+      return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
     },
     userInitials() {
       if (!this.user.name) {
