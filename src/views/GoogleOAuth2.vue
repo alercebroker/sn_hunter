@@ -19,29 +19,14 @@ export default Vue.extend({
       state: '',
     };
   },
-  mounted() {
+  async mounted() {
     this.code = this.$route.query.code;
     this.state = this.$route.query.state;
-    this.loginGoogle();
-  },
-  methods: {
-    loginGoogle() {
-      const data = { code: this.code, state: this.state }
-      this.$store.dispatch('loginGoogleUser', data);
-      this.loading = false;
-    }
-  },
-  computed: {
-    logged() {
-      return localStorage.getItem('access_token') != null;
-    },
-  },
-  watch: {
-    logged(newVal) {
-      if (newVal) {
-        this.$router.push('/');
-      }
-    },
+    await this.$store.dispatch('loginGoogleUser', {
+      code: this.code,
+      state: this.state,
+    });
+    this.$router.push('/');
   },
 });
 </script>

@@ -47,6 +47,7 @@ export default new Vuex.Store({
     user: {
       id: null,
       name: null,
+      username: null,
       last_name: null,
       email: null,
       avatar: null
@@ -130,6 +131,7 @@ export default new Vuex.Store({
     SET_NULL_USER(state) {
       state.user.id = null,
         state.user.name = null,
+        state.user.username = null,
         state.user.email = null,
         state.user.avatar = null,
         state.token = null
@@ -287,6 +289,7 @@ export default new Vuex.Store({
       commit("SET_TOKEN", data.token)
       commit("SET_USER", {
         name: data.first_name,
+        username: data.username,
         last_name: data.last_name,
         email: data.email,
         avatar: "#",
@@ -306,6 +309,7 @@ export default new Vuex.Store({
         console.log(response);
         context.commit('SET_USER', {
           name: response.data.name,
+          username: response.data.username,
           last_name: response.data.last_name,
           email: response.data.email,
           avatar: "#",
@@ -331,7 +335,8 @@ export default new Vuex.Store({
     },
     logoutUser(context) {
       context.commit("SET_NULL_USER")
-      localStorage.removeItem('vue-authenticate.vueauth_token')
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
     },
     loginGoogleUser({ dispatch }, data) {
       googleApi.googleLogin(data).then(response => {

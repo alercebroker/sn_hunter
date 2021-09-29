@@ -60,12 +60,15 @@
       </template>
       <!-- Logged -->
       <v-list subheader dense>
-        <v-subheader
+        <v-subheader v-if="user.name"
           >{{ user.name.charAt(0).toUpperCase() + user.name.slice(1) }}
           {{
             user.last_name.charAt(0).toUpperCase() + user.last_name.slice(1)
           }}</v-subheader
         >
+        <v-subheader v-else
+          >{{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
+        </v-subheader>
         <!--Register-->
         <v-list-tile @click="logout()" avatar>
           <v-list-tile-avatar>
@@ -80,12 +83,12 @@
   </v-toolbar>
 </template>
 <script>
-import { authMixin } from "@/mixins/authMixin";
-import Login from "./users/Login";
+import { authMixin } from '@/mixins/authMixin';
+import Login from './users/Login';
 
 export default {
   /* eslint-disable */
-  name: "navbar",
+  name: 'navbar',
   mixins: [authMixin],
   components: {
     Login,
@@ -93,14 +96,14 @@ export default {
   data: () => ({
     priority: 30,
     items: [
-      { title: "ZTF Explorer", link: "http://alerce.online" },
-      { title: "About", link: "http://alerce.science" },
+      { title: 'ZTF Explorer', link: 'http://alerce.online' },
+      { title: 'About', link: 'http://alerce.science' },
     ],
     loginModal: false,
   }),
   mounted() {
-    if (localStorage.getItem("vue-authenticate.vueauth_token")) {
-      this.$store.dispatch("getUserInfo");
+    if (localStorage.getItem('vue-authenticate.vueauth_token')) {
+      this.$store.dispatch('getUserInfo');
     }
   },
   methods: {
@@ -113,14 +116,16 @@ export default {
       return this.$store.getters.getUser;
     },
     logged() {
-      return this.$store.getters.getUser.name == null ? false : true;
+      return this.$store.getters.getUser.username == null ? false : true;
     },
     randomColor() {
-      return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+      return '#' + ((Math.random() * 0xffffff) << 0).toString(16);
     },
     userInitials() {
-      if (!this.user.name) {
+      if (!this.user.name && !this.user.username) {
         return;
+      } else if (this.user.username) {
+        return this.user.username[0] + this.user.username[1];
       }
       return this.user.name[0] + this.user.last_name[0];
     },
