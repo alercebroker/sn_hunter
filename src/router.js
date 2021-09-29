@@ -35,6 +35,8 @@ export default new Router({
 function requireAuth(to, from, next) {
   console.log("AYUDA");
   if (localStorage.getItem("access_token")) {
+    console.log("access");
+    next()
     store.dispatch("getCurrentUser").then(() => {
       console.log("IM in");
       console.log(store);
