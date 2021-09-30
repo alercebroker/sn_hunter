@@ -16,6 +16,38 @@ var params = {
 
 const apiClient = axios.create(params);
 
+function refreshToken() {
+  apiClient
+    .post("/users/refresh/", {
+      refresh: localStorage.getItem("refresh_token")
+    })
+    .then(response => {
+      localStorage.setItem("access_token", response.data.access)
+    })
+}
+
+function retryOrReturnError(error) {
+  if (error.response.status === 401) {
+    const verb = error.config.method;
+    if (verb === "get")
+      return apiClient.get(
+        error.config.url ? error.config.url : "",
+        error.config
+      );
+    if (verb === "post") {
+      if (error.config.url === "/users/login/") {
+        return Promise.reject(error)
+      }
+      return apiClient.post(
+        error.config.url ? error.config.url : "",
+        error.config.data, error.config
+      );
+    }
+    if (verb === "delete") {
+      return apiClient.delete(error.config.url)
+    }
+  }
+}
 
 apiClient.interceptors.request.use(
   (config) => {
@@ -33,6 +65,21 @@ apiClient.interceptors.request.use(
   }
 )
 
+apiClient.interceptors.response.use(response => { return response }, error => {
+  if (error.response) {
+    if (error.response.status === 401) {
+      if (error.response.config.url === "/users/refresh/" ||
+        error.response.config.url === "/users/login") {
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("access_token");
+        return Promise.reject(error)
+      }
+      refreshToken()
+      return retryOrReturnError(error)
+    }
+  }
+  return Promise.reject(error)
+})
 
 
 export default {
