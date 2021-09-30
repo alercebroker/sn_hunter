@@ -1,7 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import reportApi from "./services/reportApi.js";
+import userApi from "./services/userApi"
+import router from "./router"
 /* eslint-disable */
 Vue.use(Vuex);
 
@@ -10,7 +11,7 @@ const qs = require("qs");
 var avro_url = process.env.VUE_APP_STAMPS_API + "/get_avro_info";
 var ztf_url = process.env.VUE_APP_PSQL_API;
 
-Date.prototype.subsDays = function (days) {
+Date.prototype.subsDays = function(days) {
   var date = new Date();
   date.setDate(date.getDate() - days);
   return date;
@@ -25,7 +26,7 @@ function jdToDate(jd) {
 }
 function pad(str, max) {
   str = str.toString();
-  return str.length < max ? pad("0" + str, max) : str;
+  return str.length < max ? pad('0' + str, max) : str;
 }
 
 export default new Vuex.Store({
@@ -43,12 +44,13 @@ export default new Vuex.Store({
     reports: null,
     response: null,
     //Checking if user is stored on local storage
-    token: localStorage.getItem("vue-authenticate.vueauth_token")
-      ? localStorage.getItem("vue-authenticate.vueauth_token")
+    access_token: localStorage.getItem("access_token")
+      ? localStorage.getItem("access_token")
       : null,
     user: {
       id: null,
       name: null,
+      username: null,
       last_name: null,
       email: null,
       avatar: null,
@@ -71,10 +73,10 @@ export default new Vuex.Store({
       var aladin = state.aladin
         ? state.aladin
         : A.aladin("#aladin-lite-div", {
-            survey: "P/PanSTARRS/DR1/color-z-zg-g",
-            fov: 0.02,
-            cooFrame: "J2000d",
-          });
+          survey: "P/PanSTARRS/DR1/color-z-zg-g",
+          fov: 0.02,
+          cooFrame: "J2000d",
+        });
       state.aladin = aladin;
     },
     SET_AVRO(state, payload) {
@@ -82,7 +84,7 @@ export default new Vuex.Store({
     },
     SET_CANDIDATES(state, payload) {
       var sneCandidates = {};
-      $.each(payload, function (key, value) {
+      $.each(payload, function(key, value) {
         sneCandidates[value["oid"]] = value;
       });
       state.sneCandidates = sneCandidates;
@@ -108,7 +110,7 @@ export default new Vuex.Store({
     UPDATE_TABLE(state, payload) {
       state.table.clear();
       var candidates = [];
-      $.each(payload, function (key, value) {
+      $.each(payload, function(key, value) {
         var mjd = value["firstmjd"];
         var date = jdToDate(mjd);
         var dateStr =
@@ -144,7 +146,7 @@ export default new Vuex.Store({
       state.response = value.data;
     },
     SET_REPORTS(state, value) {
-      state.reports = value.data;
+      state.reports = value;
     },
     SET_NCANDIDATES(state, value) {
       state.nCandidates = value;
@@ -155,12 +157,13 @@ export default new Vuex.Store({
     SET_NULL_USER(state) {
       (state.user.id = null),
         (state.user.name = null),
+        (state.user.username = null),
         (state.user.email = null),
         (state.user.avatar = null),
-        (state.token = null);
+        (state.access_token = null);
     },
-    SET_TOKEN(state, token) {
-      state.token = token;
+    SET_ACCESS_TOKEN(state, token) {
+      state.access_token = token;
     },
     SET_DETECTIONS(state, detections) {
       state.detections = detections;
@@ -190,13 +193,13 @@ export default new Vuex.Store({
             candid: data["candid"],
           },
         })
-        .then(function (response) {
+        .then(function(response) {
           context.commit("SET_AVRO", response.data);
         });
     },
     retrieveAlert(context, oid) {
       axios.get(ztf_url + "/objects/" + oid + "/detections").then(
-        function (response) {
+        function(response) {
           var alerts = response.data;
           context.commit("SET_DETECTIONS", alerts);
           if (alerts.length > 1) {
@@ -204,7 +207,7 @@ export default new Vuex.Store({
             var first_alert = 0;
             $.each(
               alerts,
-              function (id, value) {
+              function(id, value) {
                 console.log(value["mjd"]);
                 console.log(value["has_stamp"]);
                 if (firstmjd > value["mjd"] && value["has_stamp"]) {
@@ -212,7 +215,7 @@ export default new Vuex.Store({
                   first_alert = id;
                 }
               },
-              function (error) {
+              function(error) {
                 console.log(error);
               }
             );
@@ -229,7 +232,7 @@ export default new Vuex.Store({
           });
           context.commit("SET_CANDIDATE_ALERT", selected);
         },
-        function () {
+        function() {
           console.log("Error");
         }
       );
@@ -237,7 +240,7 @@ export default new Vuex.Store({
     retrieveCandidates(context, params) {
       let delta = params.delta;
       let nCandidates = params.nCandidates;
-      context.commit("SET_NCANDIDATES", nCandidates);
+      context.commit('SET_NCANDIDATES', nCandidates);
       //Calculate stuff
       var date = new Date();
       var now_mjd = dateToJD(date);
@@ -258,17 +261,17 @@ export default new Vuex.Store({
       axios
         .get(ztf_url + "/objects", {
           params: parameters,
-          paramsSerializer: function (params) {
+          paramsSerializer: function(params) {
             return qs.stringify(params, { arrayFormat: "repeat" });
           },
         })
-        .then(function (response) {
+        .then(function(response) {
           context.commit("SET_CANDIDATES", response.data.items);
           context.commit("CHANGE_DELTA", delta);
           context.commit("SET_ZOOM", false);
           context.commit("UPDATE_TABLE", response.data.items);
         })
-        .catch(function () {
+        .catch(function() {
           console.log("error");
         });
     },
@@ -311,28 +314,28 @@ export default new Vuex.Store({
       context.commit("SET_SHOW_REPORT", show);
     },
     doReport(context, data) {
-      reportApi
+      userApi
         .report(data)
         .then((response) => {
           context.commit("SET_RESPONSE_REPORT", response);
-          context.dispatch("getReports", context.nCandidates);
+          context.dispatch("getReports");
         })
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
         });
     },
     getReports(context, data) {
-      reportApi
-        .getReports(context.nCandidates)
+      userApi
+        .getReports()
         .then((response) => {
-          context.commit("SET_REPORTS", response);
+          context.commit("SET_REPORTS", response.data.results);
         })
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
         });
     },
     deleteReport(context, data) {
-      reportApi
+      userApi
         .deleteReport(data)
         .then((response) => {
           context.commit("SET_RESPONSE_REPORT", response);
@@ -342,39 +345,50 @@ export default new Vuex.Store({
           context.commit("SET_RESPONSE_REPORT", reason);
         });
     },
-    loginUser({ commit, dispatch }, data) {
-      commit("SET_TOKEN", data.token);
-      commit("SET_USER", {
-        name: data.first_name,
-        last_name: data.last_name,
-        email: data.email,
-        avatar: "#",
-        id: data.id,
+    loginNormalUser(context, data) {
+      userApi.login(data).then((response) => {
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        context.dispatch('getCurrentUser');
       });
-      dispatch("getReports");
     },
-    getUserInfo({ commit, state, dispatch }) {
-      if (state.token) {
-        reportApi
-          .getInfo()
+    getCurrentUser({ commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        userApi
+          .current()
           .then((response) => {
-            commit("SET_USER", {
-              name: response.data.first_name,
+            commit('SET_USER', {
+              name: response.data.name,
+              username: response.data.username,
               last_name: response.data.last_name,
               email: response.data.email,
-              avatar: "#",
+              avatar: '#',
               id: response.data.id,
             });
+            dispatch("getReports");
+            resolve(response.data.id);
           })
           .catch((reason) => {
-            console.log(reason);
+            reject(reason);
           });
-        dispatch("getReports");
-      }
+      });
     },
     logoutUser(context) {
-      context.commit("SET_NULL_USER");
-      localStorage.removeItem("vue-authenticate.vueauth_token");
+      context.commit('SET_NULL_USER');
+      localStorage.clear();
+      router.go()
+    },
+    loginGoogleUser({ dispatch }, data) {
+      userApi.googleLogin(data).then((response) => {
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        dispatch('getCurrentUser');
+      });
+    },
+    getGoogleUrl(context, loginWindow) {
+      userApi.getGoogleUrl().then((response) => {
+        loginWindow.location.href = response.data.authorization_url;
+      });
     },
   },
   getters: {
