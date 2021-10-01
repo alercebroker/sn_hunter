@@ -113,14 +113,18 @@ export default {
   report(data) {
     return apiClient.post("/reports/", data);
   },
-  getReports() {
-    return apiClient.get("/reports/", {
-      params: {
-        owned: true,
-        page: 1,
-        page_size: 1000,
-      }
-    });
+  getReports(object, date = null) {
+    let params = {
+      owned: true,
+      page: 1,
+      page_size: 1000,
+      object: object
+    }
+    if (date) {
+      const strDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+      params.date_after = strDate
+    }
+    return apiClient.get("/reports/", { params });
   },
   deleteReport(id) {
     return apiClient.delete("/reports/{}/".replace("{}", id));

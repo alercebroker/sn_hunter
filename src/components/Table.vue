@@ -1,5 +1,5 @@
 <template>
-  <div class="" style="margin-left:2%; margin-right:2%;">
+  <div class="" style="margin-left: 2%; margin-right: 2%">
     <h4 class="text-xs-center">
       Top {{ nCandidates }} SN Early Classified Candidates
     </h4>
@@ -27,10 +27,8 @@
           ></v-select>
         </v-flex>
         <v-flex xs2>
-          <v-btn @click="reloadTable()" style="margin-top:15px;">
-            <v-icon>
-              cached
-            </v-icon>
+          <v-btn @click="reloadTable()" style="margin-top: 15px">
+            <v-icon> cached </v-icon>
             Refresh
           </v-btn>
         </v-flex>
@@ -42,7 +40,7 @@
         <table
           id="sneCandidates"
           class="table table-hover table-bordered"
-          style="margin-top: 10px;"
+          style="margin-top: 10px"
         >
           <thead>
             <tr>
@@ -75,25 +73,25 @@ export default {
   data: () => ({
     delta: 1,
     selectedSN: null,
-    deltaTimes:[
+    deltaTimes: [
       { text: "Last 12 Hours", value: 0.5 },
-      {text: "Last 24 Hours", value:1},
-      {text: "Last 48 Hours", value:2},
-      {text: "Last 72 Hours", value:3},
-      {text: "Last Week", value:7},
+      { text: "Last 24 Hours", value: 1 },
+      { text: "Last 48 Hours", value: 2 },
+      { text: "Last 72 Hours", value: 3 },
+      { text: "Last Week", value: 7 }
     ],
     table: null,
     nCandidates: 100,
     nCandidatesSelect: [
-      {text: 10, value:10},
-      {text: 50, value:50},
-      {text: 100, value:100},
-      {text: 200, value:200},
-      {text: 400, value:400},
-      {text: 1000, value: 1000}
+      { text: 10, value: 10 },
+      { text: 50, value: 50 },
+      { text: 100, value: 100 },
+      { text: 200, value: 200 },
+      { text: 400, value: 400 },
+      { text: 1000, value: 1000 }
     ]
   }),
-   mounted: function() {
+  mounted: function() {
     this.$store.dispatch("retrieveCandidates", this.params);
     this.$store.dispatch("createTable");
     var app = this;
@@ -107,6 +105,7 @@ export default {
           var oid = data.oid;
           app.$store.dispatch("setSelectedCandidate", oid);
           app.$store.dispatch("retrieveAlert", oid);
+          app.$store.dispatch("getReports", oid);
         }
       },
       "tr"

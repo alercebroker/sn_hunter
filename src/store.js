@@ -208,18 +208,15 @@ export default new Vuex.Store({
             $.each(
               alerts,
               function(id, value) {
-                console.log(value["mjd"]);
-                console.log(value["has_stamp"]);
                 if (firstmjd > value["mjd"] && value["has_stamp"]) {
                   firstmjd = value["mjd"];
                   first_alert = id;
                 }
               },
               function(error) {
-                console.log(error);
+                console.error(error);
               }
             );
-            console.log(first_alert);
             var selected = alerts[first_alert];
           } else {
             var selected = alerts[0];
@@ -231,9 +228,6 @@ export default new Vuex.Store({
             candid: selected["candid"],
           });
           context.commit("SET_CANDIDATE_ALERT", selected);
-        },
-        function() {
-          console.log("Error");
         }
       );
     },
@@ -257,7 +251,6 @@ export default new Vuex.Store({
         order_by: "probability",
         order_mode: "DESC",
       };
-      console.log();
       axios
         .get(ztf_url + "/objects", {
           params: parameters,
@@ -271,8 +264,8 @@ export default new Vuex.Store({
           context.commit("SET_ZOOM", false);
           context.commit("UPDATE_TABLE", response.data.items);
         })
-        .catch(function() {
-          console.log("error");
+        .catch(function(error) {
+          console.error(error);
         });
     },
     cleanCandidates(context) {
@@ -318,15 +311,15 @@ export default new Vuex.Store({
         .report(data)
         .then((response) => {
           context.commit("SET_RESPONSE_REPORT", response);
-          context.dispatch("getReports");
+          context.dispatch("getReports", context.getters["getSelected"].oid);
         })
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
         });
     },
-    getReports(context, data) {
+    getReports(context, oid) {
       userApi
-        .getReports()
+        .getReports(oid)
         .then((response) => {
           context.commit("SET_REPORTS", response.data.results);
         })
@@ -339,7 +332,7 @@ export default new Vuex.Store({
         .deleteReport(data)
         .then((response) => {
           context.commit("SET_RESPONSE_REPORT", response);
-          context.dispatch("getReports");
+          context.dispatch("getReports", context.getters["getSelected"].oid);
         })
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
@@ -365,7 +358,6 @@ export default new Vuex.Store({
               avatar: '#',
               id: response.data.id,
             });
-            dispatch("getReports");
             resolve(response.data.id);
           })
           .catch((reason) => {
