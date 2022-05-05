@@ -90,16 +90,25 @@ export default new Vuex.Store({
       state.sneCandidates = sneCandidates;
     },
     INCLUDE_REPORTS_IN_CANDIDATES(state, payload) {
-      console.log(payload);
-      console.log(state.sneCandidates);
+      // console.log(payload);
+      // console.log(state.sneCandidates);
       $.each(state.sneCandidates, function(key, value) {
         // console.log(value);
         var report = payload.find(function(report, index) {
           if(report.object == key)
             return true;
         });
-        console.log(report)
+        if(typeof report !== "undefined")
+        {
+          // console.log(report["report_type"]);
+          state.sneCandidates[key]["report_status"] = report["report_type"]
+        } 
+        else 
+        {
+          state.sneCandidates[key]["report_status"] = null
+        }
       });
+      // console.log(state.sneCandidates);
     },
     CLEAN_CANDIDATES(state) {
       state.sneCandidates = [];
@@ -120,6 +129,7 @@ export default new Vuex.Store({
       state.table = payload;
     },
     UPDATE_TABLE(state, payload) {
+      console.log(payload)
       state.table.clear();
       var candidates = [];
       $.each(payload, function(key, value) {
@@ -141,11 +151,13 @@ export default new Vuex.Store({
         var prob = value["probability"].toFixed(3);
         var nobs = value["ndet"];
         var oid = value["oid"];
+        var report_status = value["report_status"];
         var obj = {
           oid: oid,
           discovery_date: dateStr,
           prob: prob,
           nobs: nobs,
+          report_status: report_status,
         };
         candidates.push(obj);
       });
@@ -272,9 +284,6 @@ export default new Vuex.Store({
         })
         .then(function(response) {
           context.commit("SET_CANDIDATES", response.data.items);
-          context.commit("CHANGE_DELTA", delta);
-          context.commit("SET_ZOOM", false);
-          context.commit("UPDATE_TABLE", response.data.items);
         })
         .catch(function(error) {
           console.error(error);
@@ -288,6 +297,10 @@ export default new Vuex.Store({
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
         });
+
+      context.commit("CHANGE_DELTA", delta);
+      context.commit("SET_ZOOM", false);
+      context.commit("UPDATE_TABLE", context.state.sneCandidates);
     },
     async retrieveReports(context, params) {
       //context.commit("INCLUDE_REPORTS_IN_CANDIDATES");
