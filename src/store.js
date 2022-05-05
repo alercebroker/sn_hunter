@@ -90,11 +90,15 @@ export default new Vuex.Store({
       state.sneCandidates = sneCandidates;
     },
     INCLUDE_REPORTS_IN_CANDIDATES(state, payload) {
-      console.log(payload)
-      console.log(state.sneCandidates)
+      console.log(payload);
+      console.log(state.sneCandidates);
       $.each(state.sneCandidates, function(key, value) {
-        console.log(key);
-        console.log(value);
+        // console.log(value);
+        var report = payload.find(function(report, index) {
+          if(report.object == key)
+            return true;
+        });
+        console.log(report)
       });
     },
     CLEAN_CANDIDATES(state) {
