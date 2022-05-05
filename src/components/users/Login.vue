@@ -31,7 +31,7 @@
               </v-flex>
 
               <v-flex v-if="afterRegister" xs12>
-                123Registered user successfully. Check the email we sent to
+                Registered user successfully. Check the email we sent to
                 <strong>{{ registeredUserMail }}</strong> to activate the
                 account. <br />Enjoy ALeRCE Watchlist.
               </v-flex>

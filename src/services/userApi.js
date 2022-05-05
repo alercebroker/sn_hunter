@@ -126,6 +126,16 @@ export default {
     }
     return apiClient.get("/reports/", { params });
   },
+  getRecentReports(date) {
+    let params = {
+      owned: true,
+      page: 1,
+      page_size: 1000,
+    }
+    const strDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+    params.date_after = strDate
+    return apiClient.get("/reports/", { params });
+  },
   deleteReport(id) {
     return apiClient.delete("/reports/{}/".replace("{}", id));
   },

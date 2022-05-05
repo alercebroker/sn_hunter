@@ -48,6 +48,7 @@
               <th class="text-xs-center">Discovery Date</th>
               <th>Score</th>
               <th>#Obs</th>
+              <th>Reported</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -91,8 +92,10 @@ export default {
       { text: 1000, value: 1000 }
     ]
   }),
-  mounted: function() {
-    this.$store.dispatch("retrieveCandidates", this.params);
+  mounted: async function() {
+    // await this.$store.dispatch("retrieveCandidates", this.params);
+    // await this.$store.dispatch("retrieveReports", this.params);
+    await this.reloadTable()
     this.$store.dispatch("createTable");
     var app = this;
     var oid = null;
@@ -112,9 +115,14 @@ export default {
     );
   },
   methods: {
-    reloadTable() {
+    async reloadTable() {
+      let state_cand=null;
+      let state_rep=null;
       this.$store.dispatch("cleanCandidates");
-      this.$store.dispatch("retrieveCandidates", this.params);
+      await this.$store.dispatch("retrieveCandidates", this.params);
+      // console.log(this.$store.state)
+      await this.$store.dispatch("retrieveReports", this.params);
+      console.log("getter: ", this.$store.getters.getSelectedReports)
     }
   },
   computed: {
