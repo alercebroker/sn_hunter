@@ -93,6 +93,10 @@ export default {
     ]
   }),
   mounted: function() {
+    this.$root.$on('table', () => {
+        // your code goes here
+        this.reloadTable();
+    });
     this.$store.dispatch("retrieveCandidates", this.params);
     // this.$store.dispatch("retrieveReports", this.params);
     this.$store.dispatch("createTable");
