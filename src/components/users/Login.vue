@@ -31,9 +31,11 @@
               </v-flex>
 
               <v-flex v-if="afterRegister" xs12>
-                123Registered user successfully. Check the email we sent to
+                Registration is not yet available on this site.
+                Go to ALeRCE Watchlist to register and then come back to login.
+                <!-- Registered user successfully. Check the email we sent to
                 <strong>{{ registeredUserMail }}</strong> to activate the
-                account. <br />Enjoy ALeRCE Watchlist.
+                account. <br />Enjoy ALeRCE Watchlist. -->
               </v-flex>
             </v-layout>
 
