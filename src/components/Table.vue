@@ -93,6 +93,9 @@ export default {
     ]
   }),
   mounted: function() {
+    this.$root.$on("reloadTable", () => {
+        this.reloadTable();
+    });
     this.$store.dispatch("retrieveCandidates", this.params);
     this.$store.dispatch("createTable");
     var app = this;
