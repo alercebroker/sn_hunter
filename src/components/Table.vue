@@ -48,6 +48,7 @@
               <th class="text-xs-center">Discovery Date</th>
               <th>Score</th>
               <th>#Obs</th>
+              <th>Reported</th>
             </tr>
           </thead>
           <tbody></tbody>
