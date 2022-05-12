@@ -557,7 +557,7 @@ export default {
         };
         this.$store.dispatch("doReport", report);
       }
-      // this.$root.$emit("reloadTable")
+      this.$root.$emit("reloadTable")
     }
   }
 };

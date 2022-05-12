@@ -11,7 +11,7 @@
             v-model="nCandidates"
             item-text="text"
             item-value="value"
-            @change="reloadTable()"
+            @change="cleanAndReloadTable()"
             label="Candidates Shown"
             :items="nCandidatesSelect"
           ></v-select>
@@ -22,12 +22,12 @@
             item-text="text"
             item-value="value"
             :items="deltaTimes"
-            @change="reloadTable()"
+            @change="cleanAndReloadTable()"
             label="Time Window"
           ></v-select>
         </v-flex>
         <v-flex xs2>
-          <v-btn @click="reloadTable()" style="margin-top: 15px">
+          <v-btn @click="cleanAndReloadTable()" style="margin-top: 15px">
             <v-icon> cached </v-icon>
             Refresh
           </v-btn>
@@ -94,7 +94,7 @@ export default {
   }),
   mounted: function() {
     this.$root.$on("reloadTable", () => {
-        this.reloadTable2();
+        this.reloadTable();
     });
     this.$store.dispatch("retrieveCandidates", this.params);
     this.$store.dispatch("createTable");
@@ -116,11 +116,11 @@ export default {
     );
   },
   methods: {
-    reloadTable() {
+    cleanAndReloadTable() {
       this.$store.dispatch("cleanCandidates");
       this.$store.dispatch("retrieveCandidates", this.params);
     },
-    reloadTable2() {
+    reloadTable() {
       this.$store.dispatch("retrieveCandidates", this.params);
     }
   },
