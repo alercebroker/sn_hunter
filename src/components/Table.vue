@@ -94,7 +94,7 @@ export default {
   }),
   mounted: function() {
     this.$root.$on("reloadTable", () => {
-        this.reloadTable();
+        this.reloadTable2();
     });
     this.$store.dispatch("retrieveCandidates", this.params);
     this.$store.dispatch("createTable");
@@ -118,6 +118,9 @@ export default {
   methods: {
     reloadTable() {
       this.$store.dispatch("cleanCandidates");
+      this.$store.dispatch("retrieveCandidates", this.params);
+    },
+    reloadTable2() {
       this.$store.dispatch("retrieveCandidates", this.params);
     }
   },
