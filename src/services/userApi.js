@@ -117,8 +117,10 @@ export default {
     let params = {
       owned: true,
       page: 1,
-      page_size: 1000,
-      object: object
+      page_size: 1000
+    }
+    if (object) {
+      params.object = object
     }
     if (date) {
       const strDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()

@@ -360,8 +360,10 @@ export default {
       );
     },
     isSN() {
-      return this.reports.find(
+      return (
+        this.reports.find(
         x => x.oid == this.candidate && x.report_type == "TOM"
+        ) != null
       );
     },
     table_avro_info() {
@@ -557,6 +559,7 @@ export default {
         };
         this.$store.dispatch("doReport", report);
       }
+      this.$root.$emit("reloadTable")
     }
   }
 };

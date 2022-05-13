@@ -89,6 +89,20 @@ export default new Vuex.Store({
       });
       state.sneCandidates = sneCandidates;
     },
+    INCLUDE_REPORTS_IN_CANDIDATES(state, payload) {
+      var selected_reports = payload
+      $.each(state.sneCandidates, function(key, value) {
+        var report = selected_reports.find(function(report, index) {
+          if(report.object == key)
+            return true;
+        });
+        if(typeof report !== "undefined") {
+          state.sneCandidates[key]["report_status"] = report["report_type"]
+        } else {
+          state.sneCandidates[key]["report_status"] = null
+        }
+      });
+    },
     CLEAN_CANDIDATES(state) {
       state.sneCandidates = [];
     },
@@ -129,11 +143,13 @@ export default new Vuex.Store({
         var prob = value["probability"].toFixed(3);
         var nobs = value["ndet"];
         var oid = value["oid"];
+        var report_status = value["report_status"];
         var obj = {
           oid: oid,
           discovery_date: dateStr,
           prob: prob,
           nobs: nobs,
+          report_status: report_status,
         };
         candidates.push(obj);
       });
@@ -231,7 +247,7 @@ export default new Vuex.Store({
         }
       );
     },
-    retrieveCandidates(context, params) {
+    async retrieveCandidates(context, params) {
       let delta = params.delta;
       let nCandidates = params.nCandidates;
       context.commit('SET_NCANDIDATES', nCandidates);
@@ -251,7 +267,7 @@ export default new Vuex.Store({
         order_by: "probability",
         order_mode: "DESC",
       };
-      axios
+      await axios
         .get(ztf_url + "/objects", {
           params: parameters,
           paramsSerializer: function(params) {
@@ -260,13 +276,23 @@ export default new Vuex.Store({
         })
         .then(function(response) {
           context.commit("SET_CANDIDATES", response.data.items);
-          context.commit("CHANGE_DELTA", delta);
-          context.commit("SET_ZOOM", false);
-          context.commit("UPDATE_TABLE", response.data.items);
         })
         .catch(function(error) {
           console.error(error);
         });
+      var last_date = new Date();
+      last_date.setDate(date.getDate() - delta);
+      await userApi
+        .getReports(null, last_date)
+        .then((response) => {
+          context.commit("INCLUDE_REPORTS_IN_CANDIDATES", response.data.results);
+        })
+        .catch((reason) => {
+          context.commit("SET_RESPONSE_REPORT", reason);
+        });
+      context.commit("CHANGE_DELTA", delta);
+      context.commit("SET_ZOOM", false);
+      context.commit("UPDATE_TABLE", context.state.sneCandidates);      
     },
     cleanCandidates(context) {
       context.commit("CLEAN_CANDIDATES");
@@ -299,6 +325,7 @@ export default new Vuex.Store({
           { data: "discovery_date" },
           { data: "prob" },
           { data: "nobs" },
+          { data: "report_status" },
         ],
       });
       context.commit("SET_TABLE", table);
