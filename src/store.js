@@ -86,6 +86,7 @@ export default new Vuex.Store({
       var sneCandidates = {};
       $.each(payload, function(key, value) {
         sneCandidates[value["oid"]] = value;
+        sneCandidates[value["oid"]]["report_status"] = null;
       });
       state.sneCandidates = sneCandidates;
     },
@@ -96,11 +97,7 @@ export default new Vuex.Store({
           if(report.object == key)
             return true;
         });
-        if(typeof report !== "undefined") {
-          state.sneCandidates[key]["report_status"] = report["report_type"]
-        } else {
-          state.sneCandidates[key]["report_status"] = null
-        }
+        if(report) state.sneCandidates[key]["report_status"] = report["report_type"];
       });
     },
     CLEAN_CANDIDATES(state) {
@@ -282,7 +279,8 @@ export default new Vuex.Store({
         });
       var last_date = new Date();
       last_date.setDate(date.getDate() - delta);
-      await userApi
+      if (context.getters["getUser"].email != null) {
+        await userApi
         .getReports(null, last_date)
         .then((response) => {
           context.commit("INCLUDE_REPORTS_IN_CANDIDATES", response.data.results);
@@ -290,6 +288,7 @@ export default new Vuex.Store({
         .catch((reason) => {
           context.commit("SET_RESPONSE_REPORT", reason);
         });
+      }
       context.commit("CHANGE_DELTA", delta);
       context.commit("SET_ZOOM", false);
       context.commit("UPDATE_TABLE", context.state.sneCandidates);      
