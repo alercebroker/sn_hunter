@@ -109,7 +109,9 @@ export default {
           var oid = data.oid;
           app.$store.dispatch("setSelectedCandidate", oid);
           app.$store.dispatch("retrieveAlert", oid);
-          app.$store.dispatch("getReports", oid);
+          if (app.$store.getters.getUser.email != null) {
+            app.$store.dispatch("getReports", oid);
+          }
         }
       },
       "tr"
@@ -139,6 +141,11 @@ export default {
     },
     user() {
       return this.$store.getters.getUser;
+    }
+  },
+  watch: {
+    '$store.state.user': function() {
+      this.reloadTable();
     }
   }
 };
