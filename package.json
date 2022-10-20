@@ -9,13 +9,13 @@
     "deploy": "vue-cli-service s3-deploy"
   },
   "dependencies": {
-    "axios": "^0.18.1",
-    "compression-webpack-plugin": "^3.0.0",
+    "axios": "^0.21.1",
+    "compression-webpack-plugin": "6.1.1",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "julian": "^0.2.0",
-    "vue": "^2.6.10",
+    "vue": "^2.6.12",
     "vue-authenticate": "^1.4.1",
     "vue-axios": "^2.1.5",
     "vue-cli-plugin-s3-deploy": "^3.0.0",
@@ -28,10 +28,11 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@mdi/font": "^6.1.95",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
-    "axios": "^0.18.0",
+    "@vue/cli-service": "^4.5.11",
+    "axios": "^0.21.1",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",

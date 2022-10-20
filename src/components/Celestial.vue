@@ -10,7 +10,7 @@
 
 </template>
 
-
+<script type="text/javascript" src="<%= BASE_URL %>vendor/d3-celestial/celestial.js"></script>
 <script>
   export default {
     name: "celestial",
@@ -186,7 +186,7 @@
         var points = []
 
         $.each(rawCandidates,function(key,value){
-          var oid = key, prob=value["pclassearly"], ra=value["meanra"], dec=value["meandec"];
+          var oid = value["oid"], prob=value["probability"], ra=value["meanra"], dec=value["meandec"];
 
           points.push({
              "type":"Feature",

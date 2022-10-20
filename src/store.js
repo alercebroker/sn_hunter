@@ -1,29 +1,32 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios';
-import reportApi from "./services/reportApi.js"
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
+import userApi from "./services/userApi"
+import router from "./router"
 /* eslint-disable */
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-var avro_url = process.env.VUE_APP_STAMPS_API+"/get_avro_info"
-var ztf_url = process.env.VUE_APP_PSQL_API
+const qs = require("qs");
+
+var avro_url = process.env.VUE_APP_STAMPS_API + "/get_avro_info";
+var ztf_url = process.env.VUE_APP_PSQL_API;
 
 Date.prototype.subsDays = function(days) {
   var date = new Date();
   date.setDate(date.getDate() - days);
   return date;
-}
+};
 function dateToJD(date) {
-    var mjulianDate = date / 86400000 + 40587;
-    return mjulianDate;
+  var mjulianDate = date / 86400000 + 40587;
+  return mjulianDate;
 }
-function jdToDate(jd){
+function jdToDate(jd) {
   var date = (jd - 40587) * 86400000;
-  return new Date(date)
+  return new Date(date);
 }
-function pad (str, max) {
+function pad(str, max) {
   str = str.toString();
-  return str.length < max ? pad("0" + str, max) : str;
+  return str.length < max ? pad('0' + str, max) : str;
 }
 
 export default new Vuex.Store({
@@ -31,7 +34,7 @@ export default new Vuex.Store({
     nCandidates: 0,
     sneCandidates: [],
     selectedSne: null,
-    alertCandidate:null,
+    alertCandidate: null,
     deltaDays: null,
     zoomed: false,
     table: null,
@@ -41,310 +44,415 @@ export default new Vuex.Store({
     reports: null,
     response: null,
     //Checking if user is stored on local storage
-    token: localStorage.getItem("vue-authenticate.vueauth_token")? localStorage.getItem("vue-authenticate.vueauth_token"): null,
+    access_token: localStorage.getItem("access_token")
+      ? localStorage.getItem("access_token")
+      : null,
     user: {
       id: null,
       name: null,
+      username: null,
       last_name: null,
       email: null,
-      avatar: null
+      avatar: null,
     },
-    alerceClassified : [],
-    alerceCandidates : [],
-    loadingTNS : true
+    alerceClassified: [],
+    alerceCandidates: [],
+    loadingTNS: true,
+    detections: [],
   },
   mutations: {
-    SET_TNS(state,payload){
+    SET_TNS(state, payload) {
       state.alerceClassified = payload.classified;
       state.alerceCandidates = payload.candidates;
       state.loadingTNS = payload.loadingTNS;
     },
-    CLEAN_AVRO(state){
+    CLEAN_AVRO(state) {
       state.avro = null;
     },
-    SET_ALADIN(state){
-      var aladin = state.aladin ? state.aladin : A.aladin('#aladin-lite-div', {survey: "P/PanSTARRS/DR1/color-z-zg-g", fov:0.02, cooFrame: "J2000d"});
+    SET_ALADIN(state) {
+      var aladin = state.aladin
+        ? state.aladin
+        : A.aladin("#aladin-lite-div", {
+          survey: "P/PanSTARRS/DR1/color-z-zg-g",
+          fov: 0.02,
+          cooFrame: "J2000d",
+        });
       state.aladin = aladin;
     },
-    SET_AVRO(state,payload){
+    SET_AVRO(state, payload) {
       state.avro = payload;
     },
-    SET_CANDIDATES(state,payload){
-      state.sneCandidates = payload;
+    SET_CANDIDATES(state, payload) {
+      var sneCandidates = {};
+      $.each(payload, function(key, value) {
+        sneCandidates[value["oid"]] = value;
+        sneCandidates[value["oid"]]["report_status"] = null;
+      });
+      state.sneCandidates = sneCandidates;
     },
-    CLEAN_CANDIDATES(state){
+    INCLUDE_REPORTS_IN_CANDIDATES(state, payload) {
+      var selected_reports = payload
+      $.each(state.sneCandidates, function(key, value) {
+        var report = selected_reports.find(function(report, index) {
+          if(report.object == key)
+            return true;
+        });
+        if(report) state.sneCandidates[key]["report_status"] = report["report_type"];
+      });
+    },
+    CLEAN_CANDIDATES(state) {
       state.sneCandidates = [];
     },
-    SELECT_CANDIDATE(state,payload){
+    SELECT_CANDIDATE(state, payload) {
       state.selectedSne = payload;
     },
-    CHANGE_DELTA(state,payload){
+    CHANGE_DELTA(state, payload) {
       state.deltaDays = payload;
     },
-    SET_ZOOM(state,payload){
+    SET_ZOOM(state, payload) {
       state.zoomed = payload;
     },
-    SET_CANDIDATE_ALERT(state,payload){
+    SET_CANDIDATE_ALERT(state, payload) {
       state.alertCandidate = payload;
     },
-    SET_TABLE(state,payload){
+    SET_TABLE(state, payload) {
       state.table = payload;
     },
-    UPDATE_TABLE(state,payload){
+    UPDATE_TABLE(state, payload) {
       state.table.clear();
-      var candidates = []
-      $.each(payload,function(key,value){
+      var candidates = [];
+      $.each(payload, function(key, value) {
         var mjd = value["firstmjd"];
         var date = jdToDate(mjd);
-        var dateStr = pad((date.getUTCDate()),2) + '/' + pad((date.getUTCMonth() + 1),2) + '/' +  date.getUTCFullYear() + ' ' + pad(date.getUTCHours(),2) + ":" + pad(date.getUTCMinutes(),2) + ":" + pad(date.getUTCSeconds(),2) + " UT"
-        var prob = value["pclassearly"].toFixed(3);
-        var nobs = value["nobs"]
-        var filter = value["fid"];
-        var obj ={
-          oid: key,
+        var dateStr =
+          pad(date.getUTCDate(), 2) +
+          "/" +
+          pad(date.getUTCMonth() + 1, 2) +
+          "/" +
+          date.getUTCFullYear() +
+          " " +
+          pad(date.getUTCHours(), 2) +
+          ":" +
+          pad(date.getUTCMinutes(), 2) +
+          ":" +
+          pad(date.getUTCSeconds(), 2) +
+          " UT";
+        var prob = value["probability"].toFixed(3);
+        var nobs = value["ndet"];
+        var oid = value["oid"];
+        var report_status = value["report_status"];
+        var obj = {
+          oid: oid,
           discovery_date: dateStr,
           prob: prob,
-          nobs: nobs
-        }
-        candidates.push(obj)
-      })
+          nobs: nobs,
+          report_status: report_status,
+        };
+        candidates.push(obj);
+      });
       state.table.rows.add(candidates).draw(false);
     },
-    SET_SHOW_REPORT(state, value){
-      state.report = value
+    SET_SHOW_REPORT(state, value) {
+      state.report = value;
     },
-    SET_RESPONSE_REPORT(state, value){
-      state.response = value.data
+    SET_RESPONSE_REPORT(state, value) {
+      state.response = value.data;
     },
-    SET_REPORTS(state, value){
-      state.reports = value.data
+    SET_REPORTS(state, value) {
+      state.reports = value;
     },
-    SET_NCANDIDATES(state, value){ 
-      state.nCandidates = value
+    SET_NCANDIDATES(state, value) {
+      state.nCandidates = value;
     },
-    SET_USER(state, data){
-      state.user = data
+    SET_USER(state, data) {
+      state.user = data;
     },
-    SET_NULL_USER(state){
-      state.user.id = null,
-      state.user.name = null,
-      state.user.email = null,
-      state.user.avatar = null,
-      state.token = null
+    SET_NULL_USER(state) {
+      (state.user.id = null),
+        (state.user.name = null),
+        (state.user.username = null),
+        (state.user.email = null),
+        (state.user.avatar = null),
+        (state.access_token = null);
     },
-    SET_TOKEN(state,token){
-      state.token = token
-    }
+    SET_ACCESS_TOKEN(state, token) {
+      state.access_token = token;
+    },
+    SET_DETECTIONS(state, detections) {
+      state.detections = detections;
+    },
   },
   actions: {
-    getAlerceTNS(context){
-      axios.get(ztf_url+"/get_alerce_tns").then(function(response){
-        var candidates = response.data.results.candidates;
-        var classified = response.data.results.classified;
-
-        context.commit("SET_TNS",{"candidates":candidates,"classified":classified,"loadingTNS":false})
-      }).catch(function(){
-        context.commit("SET_TNS",{"candidates":[],"classified":[],"loadingTNS":false})
-      });
+    getAlerceTNS(context) {
+      // axios.get(ztf_url+"/get_alerce_tns").then(function(response){
+      //   var candidates = response.data.results.candidates;
+      //   var classified = response.data.results.classified;
+      //
+      //   context.commit("SET_TNS",{"candidates":candidates,"classified":classified,"loadingTNS":false})
+      // }).catch(function(){
+      //   context.commit("SET_TNS",{"candidates":[],"classified":[],"loadingTNS":false})
+      // });
     },
-    setAladin(context){
+    setAladin(context) {
       context.commit("SET_ALADIN");
     },
-    retrieveAVRO(context,data){
-      var url = avro_url + "?oid="+ data["oid"] + "&candid=" + data["candid"]
-      var data
-      axios.get(url).then(function(response){
-          context.commit("SET_AVRO",response.data)
-      });
+    retrieveAVRO(context, data) {
+      var url = avro_url;
+      var data;
+      axios
+        .get(url, {
+          params: {
+            oid: data["oid"],
+            candid: data["candid"],
+          },
+        })
+        .then(function(response) {
+          context.commit("SET_AVRO", response.data);
+        });
     },
-    retrieveAlert(context,oid){
-      var parameters = {"oid":oid}
-      axios.post(ztf_url+"/get_detections",parameters).then(function(response){
-        var alerts = response.data.result.detections;
-        if(alerts.length > 1){
-          var firstmjd = 1/0;
-          var first_alert;
-          $.each(alerts, function(id,value){
-            if(firstmjd > value["mjd"] && value["has_stamps"]){
-              firstmjd = value["mjd"];
-              first_alert = id;
-            }
+    retrieveAlert(context, oid) {
+      axios.get(ztf_url + "/objects/" + oid + "/detections").then(
+        function(response) {
+          var alerts = response.data;
+          context.commit("SET_DETECTIONS", alerts);
+          if (alerts.length > 1) {
+            var firstmjd = 1 / 0;
+            var first_alert = 0;
+            $.each(
+              alerts,
+              function(id, value) {
+                if (firstmjd > value["mjd"] && value["has_stamp"]) {
+                  firstmjd = value["mjd"];
+                  first_alert = id;
+                }
+              },
+              function(error) {
+                console.error(error);
+              }
+            );
+            var selected = alerts[first_alert];
+          } else {
+            var selected = alerts[0];
+          }
+          selected.oid = oid;
+          context.commit("CLEAN_AVRO");
+          context.dispatch("retrieveAVRO", {
+            oid: oid,
+            candid: selected["candid"],
           });
-          var selected = alerts[first_alert];
-        }else{
-          var selected = alerts[0];
+          context.commit("SET_CANDIDATE_ALERT", selected);
         }
-        context.commit("CLEAN_AVRO");
-        context.dispatch("retrieveAVRO",{"oid":oid,"candid":selected["candid_str"]});
-        context.commit("SET_CANDIDATE_ALERT",selected);
-      },function(){
-        console.log("Error")
-      })
+      );
     },
-    retrieveCandidates(context,params){
+    async retrieveCandidates(context, params) {
       let delta = params.delta;
       let nCandidates = params.nCandidates;
-      context.commit("SET_NCANDIDATES", nCandidates);
+      context.commit('SET_NCANDIDATES', nCandidates);
       //Calculate stuff
       var date = new Date();
       var now_mjd = dateToJD(date);
-      var last_mjd = dateToJD(date.subsDays(delta));
+      var last_mjd = now_mjd - delta;
 
       var parameters = {
-            "records_per_pages":nCandidates,
-            "query_parameters":
-            {
-              "filters":
-                      {"classearly": 19},
-              "dates":
-                      {"firstmjd":
-                        {"min":last_mjd}
-                      }
-              },
-              "sortBy": "pclassearly",
-              "total":nCandidates
+        classifier: "stamp_classifier",
+        class: "SN",
+        ranking: 1,
+        firstmjd: [last_mjd, now_mjd],
+        page: 1,
+        page_size: nCandidates,
+        count: false,
+        order_by: "probability",
+        order_mode: "DESC",
       };
-      axios.post(ztf_url+"/query",parameters).then(function(response){
-        context.commit("SET_CANDIDATES", response.data.result);
-        context.commit("CHANGE_DELTA",delta);
-        context.commit("SET_ZOOM",false);
-        context.commit("UPDATE_TABLE", response.data.result);
-      }, function(){
-        console.log("error");
-      });
+      await axios
+        .get(ztf_url + "/objects", {
+          params: parameters,
+          paramsSerializer: function(params) {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+          },
+        })
+        .then(function(response) {
+          context.commit("SET_CANDIDATES", response.data.items);
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
+      var last_date = new Date();
+      last_date.setDate(date.getDate() - delta);
+      if (context.getters["getUser"].email != null) {
+        await userApi
+        .getReports(null, last_date)
+        .then((response) => {
+          context.commit("INCLUDE_REPORTS_IN_CANDIDATES", response.data.results);
+        })
+        .catch((reason) => {
+          context.commit("SET_RESPONSE_REPORT", reason);
+        });
+      }
+      context.commit("CHANGE_DELTA", delta);
+      context.commit("SET_ZOOM", false);
+      context.commit("UPDATE_TABLE", context.state.sneCandidates);      
     },
-    cleanCandidates(context){
+    cleanCandidates(context) {
       context.commit("CLEAN_CANDIDATES");
     },
-    setSelectedCandidate(context,selected){
+    setSelectedCandidate(context, selected) {
       context.commit("SELECT_CANDIDATE", selected);
     },
-    setZoomed(context){
-      context.commit("SET_ZOOM",true);
+    setZoomed(context) {
+      context.commit("SET_ZOOM", true);
     },
-    createTable(context,id){
-      $.fn.dataTable.moment( 'DD/MM/YYYY HH:mm:SS UT' );
+    createTable(context, id) {
+      $.fn.dataTable.moment("DD/MM/YYYY HH:mm:SS UT");
       var table = $("#sneCandidates").DataTable({
-        "dom":"t,p,r",
-        "order": [[ 2, "desc" ],[3,"desc"],[1,"desc"]],
-        "responsive": true,
-        "searching": true, "info": false,"lengthChange":false,
-        'processing': true,
-        'language': {
-            'loadingRecords': '&nbsp;',
-            'processing': 'Loading...'
+        order: [
+          [2, "desc"],
+          [3, "desc"],
+          [1, "desc"],
+        ],
+        responsive: true,
+        searching: true,
+        info: false,
+        lengthChange: false,
+        processing: true,
+        language: {
+          loadingRecords: "&nbsp;",
+          processing: "Loading...",
         },
-        "columns": [
+        columns: [
           { data: "oid" },
-          { data: "discovery_date"},
+          { data: "discovery_date" },
           { data: "prob" },
-          { data: "nobs" }
+          { data: "nobs" },
+          { data: "report_status" },
         ],
       });
-      context.commit("SET_TABLE",table)
+      context.commit("SET_TABLE", table);
     },
-    displayReport(context, show){
-      context.commit("SET_SHOW_REPORT", show)
+    displayReport(context, show) {
+      context.commit("SET_SHOW_REPORT", show);
     },
-    doReport(context, data){
-      reportApi.report(data).then(response => {
-        context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports", context.nCandidates);
-      })
-      .catch(reason => {
-        context.commit("SET_RESPONSE_REPORT", reason)
-      })
-    },
-    getReports(context, data){
-      reportApi.getReports(context.nCandidates).then(response => {
-        context.commit("SET_REPORTS", response)
-      })
-      .catch(reason => {
-        context.commit("SET_RESPONSE_REPORT", reason)
-      })
-    },
-    deleteReport(context, data){
-      reportApi.deleteReport(data).then(response => {
-        context.commit("SET_RESPONSE_REPORT", response)
-        context.dispatch("getReports")
-      })
-      .catch(reason => {
-        context.commit("SET_RESPONSE_REPORT", reason)
-      })
-    },
-    loginUser({commit,dispatch}, data){
-        commit("SET_TOKEN", data.token)
-        commit("SET_USER", {
-          name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
-          avatar: "#",
-          id: data.id
+    doReport(context, data) {
+      userApi
+        .report(data)
+        .then((response) => {
+          context.commit("SET_RESPONSE_REPORT", response);
+          context.dispatch("getReports", context.getters["getSelected"].oid);
         })
-        dispatch('getReports')
+        .catch((reason) => {
+          context.commit("SET_RESPONSE_REPORT", reason);
+        });
     },
-    getUserInfo({commit,state,dispatch}){
-      if(state.token){
-        reportApi.getInfo().then(response =>{
-          commit("SET_USER", {
-            name: response.data.first_name,
-            last_name: response.data.last_name,
-            email: response.data.email,
-            avatar: "#",
-            id: response.data.id
+    getReports(context, oid) {
+      userApi
+        .getReports(oid)
+        .then((response) => {
+          context.commit("SET_REPORTS", response.data.results);
+        })
+        .catch((reason) => {
+          context.commit("SET_RESPONSE_REPORT", reason);
+        });
+    },
+    deleteReport(context, data) {
+      userApi
+        .deleteReport(data)
+        .then((response) => {
+          context.commit("SET_RESPONSE_REPORT", response);
+          context.dispatch("getReports", context.getters["getSelected"].oid);
+        })
+        .catch((reason) => {
+          context.commit("SET_RESPONSE_REPORT", reason);
+        });
+    },
+    loginNormalUser(context, data) {
+      userApi.login(data).then((response) => {
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        context.dispatch('getCurrentUser');
+      });
+    },
+    getCurrentUser({ commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        userApi
+          .current()
+          .then((response) => {
+            commit('SET_USER', {
+              name: response.data.name,
+              username: response.data.username,
+              last_name: response.data.last_name,
+              email: response.data.email,
+              avatar: '#',
+              id: response.data.id,
+            });
+            resolve(response.data.id);
           })
-        }).catch(reason => {
-          console.log(reason)
-        })
-        dispatch('getReports')
-      }
+          .catch((reason) => {
+            reject(reason);
+          });
+      });
     },
     logoutUser(context) {
-      context.commit("SET_NULL_USER")
-      localStorage.removeItem('vue-authenticate.vueauth_token')
+      context.commit('SET_NULL_USER');
+      localStorage.clear();
+      router.go()
+    },
+    loginGoogleUser({ dispatch }, data) {
+      userApi.googleLogin(data).then((response) => {
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        dispatch('getCurrentUser');
+      });
+    },
+    getGoogleUrl(context, loginWindow) {
+      userApi.getGoogleUrl().then((response) => {
+        loginWindow.location.href = response.data.authorization_url;
+      });
     },
   },
-  getters:{
-    getCandidates(state){
+  getters: {
+    getCandidates(state) {
       return state.sneCandidates;
     },
-    getSelected(state){
-      return  state.selectedSne ? state.sneCandidates[state.selectedSne] : null;
+    getSelected(state) {
+      return state.selectedSne ? state.sneCandidates[state.selectedSne] : null;
     },
-    getDeltaDays(state){
+    getDeltaDays(state) {
       return state.deltaDays;
     },
-    getZoomed(state){
+    getZoomed(state) {
       return state.zoomed;
     },
-    getAlert(state){
+    getAlert(state) {
       return state.alertCandidate;
     },
-    getTable(state){
+    getTable(state) {
       return state.table;
     },
-    getAladin(state){
+    getAladin(state) {
       return state.aladin;
     },
-    getDisplayReport(state){
+    getDisplayReport(state) {
       return state.report;
     },
-    getReports(state){
-      return state.reports  == null? [] : state.reports;
+    getReports(state) {
+      return state.reports == null ? [] : state.reports;
     },
-    getUser(state){
+    getUser(state) {
       return state.user;
     },
-    getAvro(state){
-      return state.avro
+    getAvro(state) {
+      return state.avro;
     },
-    getTNS(state){
+    getTNS(state) {
       return {
-        classified : state.alerceClassified,
+        classified: state.alerceClassified,
         candidates: state.alerceCandidates,
         loading: state.loadingTNS,
-      }
-    }
-  }
-})
+      };
+    },
+    getDetections(state) {
+      return state.detections;
+    },
+  },
+});
 /* eslint-enable */
