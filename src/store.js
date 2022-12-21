@@ -265,7 +265,7 @@ export default new Vuex.Store({
         order_mode: "DESC",
       };
       await axios
-        .get(ztf_url + "/objects", {
+        .get(ztf_url + "/objects/", {
           params: parameters,
           paramsSerializer: function(params) {
             return qs.stringify(params, { arrayFormat: "repeat" });
