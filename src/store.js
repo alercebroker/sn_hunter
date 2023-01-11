@@ -94,10 +94,10 @@ export default new Vuex.Store({
       var selected_reports = payload
       $.each(state.sneCandidates, function(key, value) {
         var report = selected_reports.find(function(report, index) {
-          if(report.object == key)
+          if (report.object == key)
             return true;
         });
-        if(report) state.sneCandidates[key]["report_status"] = report["report_type"];
+        if (report) state.sneCandidates[key]["report_status"] = report["report_type"];
       });
     },
     CLEAN_CANDIDATES(state) {
@@ -265,7 +265,7 @@ export default new Vuex.Store({
         order_mode: "DESC",
       };
       await axios
-        .get(ztf_url + "/objects", {
+        .get(ztf_url + "/objects/", {
           params: parameters,
           paramsSerializer: function(params) {
             return qs.stringify(params, { arrayFormat: "repeat" });
@@ -281,17 +281,17 @@ export default new Vuex.Store({
       last_date.setDate(date.getDate() - delta);
       if (context.getters["getUser"].email != null) {
         await userApi
-        .getReports(null, last_date)
-        .then((response) => {
-          context.commit("INCLUDE_REPORTS_IN_CANDIDATES", response.data.results);
-        })
-        .catch((reason) => {
-          context.commit("SET_RESPONSE_REPORT", reason);
-        });
+          .getReports(null, last_date)
+          .then((response) => {
+            context.commit("INCLUDE_REPORTS_IN_CANDIDATES", response.data.results);
+          })
+          .catch((reason) => {
+            context.commit("SET_RESPONSE_REPORT", reason);
+          });
       }
       context.commit("CHANGE_DELTA", delta);
       context.commit("SET_ZOOM", false);
-      context.commit("UPDATE_TABLE", context.state.sneCandidates);      
+      context.commit("UPDATE_TABLE", context.state.sneCandidates);
     },
     cleanCandidates(context) {
       context.commit("CLEAN_CANDIDATES");
