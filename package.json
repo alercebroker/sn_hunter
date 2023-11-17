@@ -13,6 +13,7 @@
     "compression-webpack-plugin": "6.1.1",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
+    "htmx.org": "^1.9.8",
     "jquery": "^3.5.0",
     "julian": "^0.2.0",
     "vue": "^2.6.12",
