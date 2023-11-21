@@ -15,7 +15,7 @@
 <script>
 import * as htmx from "htmx.org";
 
-var htmx_lightcurve_base_url = "https://api.staging.alerce.online/v2/lightcurve";
+var htmx_lightcurve_base_url = process.env.VUE_APP_V2_API + "/lightcurve";
 
 export default {
   name: "lightcurvePlot",
