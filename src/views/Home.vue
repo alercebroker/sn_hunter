@@ -4,25 +4,31 @@
     <v-container fluid id="home">
      <v-layout row wrap >
        <v-flex md12 fill-height>
+         <LightCurve/>
+       </v-flex> 
+     </v-layout>
+
+     <v-layout row wrap >
+       <v-flex md12 fill-height>
          <MoreInfo/>
        </v-flex> <!-- table -->
      </v-layout>  <!-- map-table row-->
 
-      <v-layout row wrap>
-        <v-flex md7 fill-height>
-          <Celestial/>
-          <div class="text-xs-center">
-            <v-btn id="quickStartBtn" @click="startTour()" dark color="primary" :disabled="quickStart">
-              <v-icon>play_for_work</v-icon>
-              Quick Start
-            </v-btn>
-          </div>
+     <v-layout row wrap>
+       <v-flex md7 fill-height>
+         <Celestial/>
+         <div class="text-xs-center">
+           <v-btn id="quickStartBtn" @click="startTour()" dark color="primary" :disabled="quickStart">
+             <v-icon>play_for_work</v-icon>
+             Quick Start
+           </v-btn>
+         </div>
 
-        </v-flex> <!-- table -->
-        <v-flex id="table" md5 fill-height>
-          <Table/>
-        </v-flex> <!-- table -->
-      </v-layout>  <!-- map-table row-->
+       </v-flex> <!-- table -->
+       <v-flex id="table" md5 fill-height>
+         <Table/>
+       </v-flex> <!-- table -->
+     </v-layout>  <!-- map-table row-->
 
       <v-tour name="quickStart" :action="clickStep" :steps="steps"></v-tour>
     </v-container> <!-- contianer -->
@@ -34,6 +40,7 @@ import Table from '../components/Table'
 import Celestial from '../components/Celestial'
 import MoreInfo from '../components/MoreInfo'
 import ReportModal from '../components/ReportModal'
+import LightCurve from '../components/LightCurve'
 import $ from 'jquery'
 
 export default {
@@ -42,7 +49,8 @@ export default {
     Table,
     Celestial,
     MoreInfo,
-    ReportModal
+    ReportModal,
+    LightCurve
   },
   data () {
     return {
