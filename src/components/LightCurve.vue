@@ -14,6 +14,9 @@
 </template>
 <script>
 import * as htmx from "htmx.org";
+
+var htmx_lightcurve_base_url = "https://api.staging.alerce.online/v2/lightcurve";
+
 export default {
   name: "lightcurvePlot",
   components: {},
@@ -49,7 +52,7 @@ export default {
   watch: {
     oid(newval) {
       if (newval) {
-        const url = `http://127.0.0.1:8000/htmx/lightcurve?oid=${newval}`;
+        const url = `${htmx_lightcurve_base_url}/htmx/lightcurve?oid=${newval}`;
         const myDiv = document.getElementById("lightcurve-container");
         if (myDiv) {
           myDiv.innerHTML = `<div hx-get=${url} hx-trigger="updateLightcurve from:body" hx-swap="outerHTML">Loading light curve...</div>`;
@@ -65,5 +68,4 @@ export default {
 #lightcurve-container {
   height: 40vh;
 }
-
 </style>
