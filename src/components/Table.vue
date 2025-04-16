@@ -34,13 +34,25 @@
         </v-flex>
       </v-layout>
     </v-form>
-    <v-layout row> </v-layout>
     <v-layout row>
-      <v-flex>
+      <v-flex align-end justify-start>
+        <v-btn-toggle mandatory v-model="classifierText" @change="reloadTable()">
+              <v-btn flat value="stamp_classifier" >
+                Stamp classifier
+              </v-btn>
+              <v-btn flat value="clear">
+                clear
+              </v-btn>
+              <!--
+              <v-btn flat value="STAMP_2025_beta">
+                STAMP_2025_beta
+              </v-btn>
+              -->
+        </v-btn-toggle>
         <table
           id="sneCandidates"
           class="table table-hover table-bordered"
-          style="margin-top: 10px"
+          style="margin-top: 10px;"
         >
           <thead>
             <tr>
@@ -81,6 +93,7 @@ export default {
       { text: "Last 72 Hours", value: 3 },
       { text: "Last Week", value: 7 }
     ],
+    classifierText: "stamp_classifier",
     table: null,
     nCandidates: 100,
     nCandidatesSelect: [
@@ -130,7 +143,8 @@ export default {
     params() {
       return {
         delta: this.delta,
-        nCandidates: this.nCandidates
+        nCandidates: this.nCandidates,
+        classifier_selected: this.classifierText
       };
     },
     candidate() {

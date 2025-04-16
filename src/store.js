@@ -247,6 +247,7 @@ export default new Vuex.Store({
     async retrieveCandidates(context, params) {
       let delta = params.delta;
       let nCandidates = params.nCandidates;
+      let classifier_selected = params.classifier_selected
       context.commit('SET_NCANDIDATES', nCandidates);
       //Calculate stuff
       var date = new Date();
@@ -254,7 +255,7 @@ export default new Vuex.Store({
       var last_mjd = now_mjd - delta;
 
       var parameters = {
-        classifier: "stamp_classifier",
+        classifier: classifier_selected,
         class: "SN",
         ranking: 1,
         firstmjd: [last_mjd, now_mjd],
