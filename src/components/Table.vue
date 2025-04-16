@@ -94,7 +94,6 @@ export default {
       { text: "Last Week", value: 7 }
     ],
     classifierText: "stamp_classifier",
-    searchInput: "",
     table: null,
     nCandidates: 100,
     nCandidatesSelect: [
