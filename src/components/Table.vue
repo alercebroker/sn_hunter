@@ -42,7 +42,7 @@
               </v-btn>
               
               <v-btn flat value="stamp_classifier_2025_beta">
-                Stamp classifier 2025 beta
+                STAMP CLASSIFIER FULL BETA
               </v-btn>
              
         </v-btn-toggle>
