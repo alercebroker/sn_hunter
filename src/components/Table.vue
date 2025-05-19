@@ -40,14 +40,11 @@
               <v-btn flat value="stamp_classifier" >
                 Stamp classifier
               </v-btn>
-              <v-btn flat value="clear">
-                clear
+              
+              <v-btn flat value="stamp_classifier_2025_beta">
+                Stamp classifier 2025 beta
               </v-btn>
-              <!--
-              <v-btn flat value="STAMP_2025_beta">
-                STAMP_2025_beta
-              </v-btn>
-              -->
+             
         </v-btn-toggle>
         <table
           id="sneCandidates"
