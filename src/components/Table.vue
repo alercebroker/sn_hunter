@@ -34,18 +34,43 @@
         </v-flex>
       </v-layout>
     </v-form>
-    <v-layout row>
-      <v-flex align-end justify-start>
-        <v-btn-toggle mandatory v-model="classifierText" @change="reloadTable()">
-              <v-btn flat value="stamp_classifier" >
-                Stamp classifier
-              </v-btn>
-              
-              <v-btn flat value="stamp_classifier_2025_beta">
-                STAMP CLASSIFIER FULL BETA
-              </v-btn>
-             
+
+    <v-layout >
+      <v-flex align-center justify-start row>
+        <v-btn-toggle mandatory v-model="classifierText" @change="reloadTable()" class="mr-4">
+          <v-btn flat value="stamp_classifier" >
+            Stamp classifier
+          </v-btn>
+          
+          <v-btn flat value="stamp_classifier_2025_beta">
+            STAMP CLASSIFIER FULL BETA
+          </v-btn>
+            
         </v-btn-toggle>
+
+
+        <v-tooltip bottom close-delay="2000">
+          <template v-slot:activator="{ on }">
+            <span class="material-icons" v-on="on">help_outline</span>
+          </template>
+          
+          <v-list dark dense subheader class="transparent-list" >
+            <v-list-tile
+              v-for="(item, index) in itemsClassifiersInformation"
+              :key=index
+            >
+              <v-list-tile-content>
+                <span>{{item.text}} ( see  <a :href=item.link target="_blank" class="blue--text text--lighten-3">{{ item.paper }}</a> )</span>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-tooltip>
+      </v-flex>
+    </v-layout>
+
+    <v-layout row>
+      <v-flex >
+
         <table
           id="sneCandidates"
           class="table table-hover table-bordered"
@@ -69,15 +94,7 @@
 
 <script>
 /* eslint-disable */
-function jdToDate(jd) {
-  var date = (jd - 40588) * 86400000;
-  return new Date(date);
-}
 
-function pad(str, max) {
-  str = str.toString();
-  return str.length < max ? pad("0" + str, max) : str;
-}
 
 export default {
   data: () => ({
@@ -100,6 +117,18 @@ export default {
       { text: 200, value: 200 },
       { text: 400, value: 400 },
       { text: 1000, value: 1000 }
+    ],
+    itemsClassifiersInformation: [
+      {
+        text: "Stamp classifier",
+        paper: "Carrasco-Davis et al. 2021",
+        link: "https://ui.adsabs.harvard.edu/abs/2023ApJ...952L..43R/abstract",
+      },
+      {
+        text: "Beta version of full stamp classifier",
+        paper: "Reyes-Jainaga et al. 2023",
+        link: "https://ui.adsabs.harvard.edu/abs/2023ApJ...952L..43R/abstract"
+      },
     ]
   }),
   mounted: function() {
@@ -109,7 +138,6 @@ export default {
     this.$store.dispatch("retrieveCandidates", this.params);
     this.$store.dispatch("createTable");
     var app = this;
-    var oid = null;
     $("table tbody").on(
       {
         click: function() {
@@ -168,5 +196,9 @@ export default {
   border-radius: 5px;
   border-style: solid;
   border-color: black;
+}
+
+.transparent-list {
+  background-color: transparent !important;
 }
 </style>
